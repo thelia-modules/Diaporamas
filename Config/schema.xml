@@ -1,30 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database defaultIdMethod="native" name="thelia"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="../../../../core/vendor/propel/propel/resources/xsd/database.xsd" >
-    <!--
-    See propel documentation on http://propelorm.org for all information about schema file
+          xsi:noNamespaceSchemaLocation="../../../../core/vendor/propel/propel/resources/xsd/database.xsd" namespace="Diaporamas\Model" >
 
-    <table name="product_rel" namespace="Diaporamas\Model">
-        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
-        <column defaultValue="0" name="visible" required="true" type="TINYINT" />
-        <column defaultValue="0" name="position" required="true" type="INTEGER" />
-        <column name="title" size="255" type="VARCHAR" />
-        <column name="description" type="CLOB" />
-        <column name="chapo" type="LONGVARCHAR" />
-        <column name="postscriptum" type="LONGVARCHAR" />
-        <foreign-key foreignTable="product" name="fk_product_id" onDelete="CASCADE" onUpdate="RESTRICT">
-            <reference foreign="id" local="product_id" />
-        </foreign-key>
-        <behavior name="timestampable" />
+    <!-- Tables for diaporamas -->
+    <table name="diaporama">
+        <column name="id" primaryKey="true" required="true" type="INTEGER" autoIncrement="true" />
+        <column name="title" size="255" type="VARCHAR" required="true" default="" />
+        <column name="shortcode" size="32" type="VARCHAR" required="true" />
+        <unique name="un_shortcode">
+            <unique-column name="shortcode" />
+        </unique>
         <behavior name="i18n">
-            <parameter name="i18n_columns" value="title, description, chapo, postscriptum" />
-        </behavior>
-        <behavior name="versionable">
-            <parameter name="log_created_at" value="true" />
-            <parameter name="log_created_by" value="true" />
+            <parameter name="i18n_columns" value="title" />
         </behavior>
     </table>
-    -->
+
+    <table name="product_diaporama">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama" />
+        </behavior>
+        <column name="product_id" type="INTEGER" required="true" />
+        <foreign-key foreignTable="product">
+            <reference local="product_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="category_diaporama">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama" />
+        </behavior>
+        <column name="category_id" type="INTEGER" required="true" />
+        <foreign-key foreignTable="category">
+            <reference local="category_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="brand_diaporama">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama" />
+        </behavior>
+        <column name="brand_id" type="INTEGER" required="true" />
+        <foreign-key foreignTable="brand">
+            <reference local="brand_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="folder_diaporama">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama" />
+        </behavior>
+        <column name="folder_id" type="INTEGER" required="true" />
+        <foreign-key foreignTable="folder">
+            <reference local="folder_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="content_diaporama">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama" />
+        </behavior>
+        <column name="content_id" type="INTEGER" required="true" />
+        <foreign-key foreignTable="content">
+            <reference local="content_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+
+    <!-- Diaporama images tables -->
+    <table name="diaporama_image">
+        <column name="id" primaryKey="true" required="true" type="INTEGER" autoIncrement="true" />
+        <column name="diaporama_id" type="INTEGER" required="true" />
+        <column name="position" type="INTEGER" required="true" />
+        <foreign-key foreignTable="diaporama">
+            <reference local="diaporama_id" foreign="id" />
+        </foreign-key>
+        <behavior name="validate">
+            <parameter name="positionRule" value="{column: position, validator: GreaterThan, options: {value: 0}}" />
+        </behavior>
+    </table>
+
+    <table name="product_diaporama_image">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama_image" />
+        </behavior>
+        <column name="product_image_id" type="INTEGER" required="true" />
+        <column name="position" type="INTEGER" required="true" />
+        <unique name="un_image">
+            <unique-column name="diaporama_id" />
+            <unique-column name="product_image_id" />
+            <unique-column name="position" />
+        </unique>
+        <foreign-key foreignTable="product_image">
+            <reference local="product_image_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="category_diaporama_image">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama_image" />
+        </behavior>
+        <column name="category_image_id" type="INTEGER" required="true" />
+        <column name="position" type="INTEGER" required="true" />
+        <unique name="un_image">
+            <unique-column name="diaporama_id" />
+            <unique-column name="category_image_id" />
+            <unique-column name="position" />
+        </unique>
+        <foreign-key foreignTable="category_image">
+            <reference local="category_image_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="brand_diaporama_image">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama_image" />
+        </behavior>
+        <column name="brand_image_id" type="INTEGER" required="true" />
+        <column name="position" type="INTEGER" required="true" />
+        <unique name="un_image">
+            <unique-column name="diaporama_id" />
+            <unique-column name="brand_image_id" />
+            <unique-column name="position" />
+        </unique>
+        <foreign-key foreignTable="brand_image">
+            <reference local="brand_image_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="folder_diaporama_image">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama_image" />
+        </behavior>
+        <column name="folder_image_id" type="INTEGER" required="true" />
+        <column name="position" type="INTEGER" required="true" />
+        <unique name="un_image">
+            <unique-column name="diaporama_id" />
+            <unique-column name="folder_image_id" />
+            <unique-column name="position" />
+        </unique>
+        <foreign-key foreignTable="folder_image">
+            <reference local="folder_image_id" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <table name="content_diaporama_image">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="diaporama_image" />
+        </behavior>
+        <column name="content_image_id" type="INTEGER" required="true" />
+        <column name="position" type="INTEGER" required="true" />
+        <unique name="un_image">
+            <unique-column name="diaporama_id" />
+            <unique-column name="content_image_id" />
+            <unique-column name="position" />
+        </unique>
+        <foreign-key foreignTable="content_image">
+            <reference local="content_image_id" foreign="id" />
+        </foreign-key>
+    </table>
+
     <external-schema filename="local/config/schema.xml" referenceOnly="true" />
 </database>
