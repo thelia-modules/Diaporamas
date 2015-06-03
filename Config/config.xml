@@ -1,50 +1,95 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<config xmlns="http://thelia.net/schema/dic/config"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
-
-    <loops>
-        <!-- sample definition
-        <loop name="MySuperLoop" class="Diaporamas\Loop\MySuperLoop" />
-        -->
-    </loops>
-
-    <forms>
-        <!--
-        <form name="MyFormName" class="Diaporamas\Form\MySuperForm" />
-        -->
-    </forms>
-
-    <commands>
-        <!--
-        <command class="Diaporamas\Command\MySuperCommand" />
-        -->
-    </commands>
-
-    <!--
-    <services>
-
-    </services>
-    -->
-
-    <!--
-    <hooks>
-        <hook id="diaporamas.hook" class="Diaporamas\Hook\MySuperHook" scope="request">
-            <tag name="hook.event_listener" event="main.body.bottom" type="front|back|pdf|email" method="onMainBodyBottom" />
-        </hook>
-    </hooks>
-    -->
-
-    <!--
-    <exports>
-
-    </exports>
-    -->
-
-    <!--
-    <imports>
-
-    </imports>
-    -->
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://thelia.net/schema/dic/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+  <!--<loops>-->
+  <!--&lt;!&ndash; sample definition-->
+  <!--<loop name="MySuperLoop" class="Diaporamas\Loop\MySuperLoop" />-->
+  <!--&ndash;&gt;-->
+  <!--<loop name="diaporama" class="Diaporamas\Loop\Diaporama"/>-->
+  <!--<loop name="diaporama-image" class="Diaporamas\Loop\DiaporamaImage"/>-->
+  <!--</loops>-->
+  <!--<forms>-->
+  <!--&lt;!&ndash;-->
+  <!--<form name="MyFormName" class="Diaporamas\Form\MySuperForm" />-->
+  <!--&ndash;&gt;-->
+  <!--<form name="diaporama.create" class="Diaporamas\Form\DiaporamaCreateForm"/>-->
+  <!--<form name="diaporama.update" class="Diaporamas\Form\DiaporamaUpdateForm"/>-->
+  <!--<form name="diaporama_image.create" class="Diaporamas\Form\DiaporamaImageCreateForm"/>-->
+  <!--<form name="diaporama_image.update" class="Diaporamas\Form\DiaporamaImageUpdateForm"/>-->
+  <!--</forms>-->
+  <!--<commands>-->
+  <!--&lt;!&ndash;-->
+  <!--<command class="Diaporamas\Command\MySuperCommand" />-->
+  <!--&ndash;&gt;-->
+  <!--</commands>-->
+  <!--&lt;!&ndash;-->
+  <!--<services>-->
+  <!--</services>-->
+  <!--&ndash;&gt;-->
+  <!--&lt;!&ndash;-->
+  <!--<hooks>-->
+  <!--<hook id="diaporamas.hook" class="Diaporamas\Hook\MySuperHook" scope="request">-->
+  <!--<tag name="hook.event_listener" event="main.body.bottom" type="front|back|pdf|email" method="onMainBodyBottom" />-->
+  <!--</hook>-->
+  <!--</hooks>-->
+  <!--&ndash;&gt;-->
+  <!--&lt;!&ndash;-->
+  <!--<exports>-->
+  <!--</exports>-->
+  <!--&ndash;&gt;-->
+  <!--&lt;!&ndash;-->
+  <!--<imports>-->
+  <!--</imports>-->
+  <!--&ndash;&gt;-->
+  <!--<services>-->
+  <!--<service id="action.diaporamas.diaporama_table" class="Diaporamas\Action\DiaporamaAction">-->
+  <!--<tag name="kernel.event_subscriber"/>-->
+  <!--</service>-->
+  <!--<service id="diaporamas.form.type.diaporama_id" class="Diaporamas\Form\Type\DiaporamaIdType">-->
+  <!--<argument id="thelia.translator" type="service"/>-->
+  <!--<tag name="thelia.form.type"/>-->
+  <!--</service>-->
+  <!--<service id="action.diaporamas.diaporama_image_table" class="Diaporamas\Action\DiaporamaImageAction">-->
+  <!--<tag name="kernel.event_subscriber"/>-->
+  <!--</service>-->
+  <!--<service id="diaporamas.form.type.diaporama_image_id" class="Diaporamas\Form\Type\DiaporamaImageIdType">-->
+  <!--<argument id="thelia.translator" type="service"/>-->
+  <!--<tag name="thelia.form.type"/>-->
+  <!--</service>-->
+  <!--</services>-->
+  <forms>
+    <form name="diaporama.create" class="Diaporamas\Form\DiaporamaCreateForm"/>
+    <form name="diaporama.update" class="Diaporamas\Form\DiaporamaUpdateForm"/>
+    <form name="diaporama_type.create" class="Diaporamas\Form\DiaporamaTypeCreateForm"/>
+    <form name="diaporama_type.update" class="Diaporamas\Form\DiaporamaTypeUpdateForm"/>
+    <form name="diaporama_image.create" class="Diaporamas\Form\DiaporamaImageCreateForm"/>
+    <form name="diaporama_image.update" class="Diaporamas\Form\DiaporamaImageUpdateForm"/>
+  </forms>
+  <loops>
+    <loop name="diaporama" class="Diaporamas\Loop\Diaporama"/>
+    <loop name="diaporama-type" class="Diaporamas\Loop\DiaporamaType"/>
+    <loop name="diaporama-image" class="Diaporamas\Loop\DiaporamaImage"/>
+  </loops>
+  <services>
+    <service id="action.diaporamas.diaporama_table" class="Diaporamas\Action\DiaporamaAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="diaporamas.form.type.diaporama_id" class="Diaporamas\Form\Type\DiaporamaIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+    <service id="action.diaporamas.diaporama_type_table" class="Diaporamas\Action\DiaporamaTypeAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="diaporamas.form.type.diaporama_type_id" class="Diaporamas\Form\Type\DiaporamaTypeIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+    <service id="action.diaporamas.diaporama_image_table" class="Diaporamas\Action\DiaporamaImageAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="diaporamas.form.type.diaporama_image_id" class="Diaporamas\Form\Type\DiaporamaImageIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+  </services>
 </config>

@@ -6,7 +6,7 @@ use Diaporamas\Model\Base\ProductDiaporamaQuery as BaseProductDiaporamaQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'product_diaporama' table.
+ * Skeleton subclass for representing a query for one of the subclasses of the 'diaporama' table.
  *
  *
  *

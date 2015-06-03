@@ -4,24 +4,15 @@ namespace Diaporamas\Model\Base;
 
 use \Exception;
 use \PDO;
-use Diaporamas\Model\BrandDiaporamaImage as ChildBrandDiaporamaImage;
-use Diaporamas\Model\BrandDiaporamaImageQuery as ChildBrandDiaporamaImageQuery;
-use Diaporamas\Model\CategoryDiaporamaImage as ChildCategoryDiaporamaImage;
-use Diaporamas\Model\CategoryDiaporamaImageQuery as ChildCategoryDiaporamaImageQuery;
-use Diaporamas\Model\ContentDiaporamaImage as ChildContentDiaporamaImage;
-use Diaporamas\Model\ContentDiaporamaImageQuery as ChildContentDiaporamaImageQuery;
 use Diaporamas\Model\Diaporama as ChildDiaporama;
 use Diaporamas\Model\DiaporamaImageQuery as ChildDiaporamaImageQuery;
 use Diaporamas\Model\DiaporamaQuery as ChildDiaporamaQuery;
-use Diaporamas\Model\FolderDiaporamaImage as ChildFolderDiaporamaImage;
-use Diaporamas\Model\FolderDiaporamaImageQuery as ChildFolderDiaporamaImageQuery;
-use Diaporamas\Model\ProductDiaporamaImage as ChildProductDiaporamaImage;
-use Diaporamas\Model\ProductDiaporamaImageQuery as ChildProductDiaporamaImageQuery;
+use Diaporamas\Model\DiaporamaType as ChildDiaporamaType;
+use Diaporamas\Model\DiaporamaTypeQuery as ChildDiaporamaTypeQuery;
 use Diaporamas\Model\Map\DiaporamaImageTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\ActiveQuery\PropelQuery;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
@@ -85,16 +76,22 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     protected $diaporama_id;
 
     /**
+     * The value for the diaporama_type_id field.
+     * @var        int
+     */
+    protected $diaporama_type_id;
+
+    /**
+     * The value for the entity_id field.
+     * @var        int
+     */
+    protected $entity_id;
+
+    /**
      * The value for the position field.
      * @var        int
      */
     protected $position;
-
-    /**
-     * The value for the descendant_class field.
-     * @var        string
-     */
-    protected $descendant_class;
 
     /**
      * @var        Diaporama
@@ -102,29 +99,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     protected $aDiaporama;
 
     /**
-     * @var        ChildProductDiaporamaImage one-to-one related ChildProductDiaporamaImage object
+     * @var        DiaporamaType
      */
-    protected $singleProductDiaporamaImage;
-
-    /**
-     * @var        ChildCategoryDiaporamaImage one-to-one related ChildCategoryDiaporamaImage object
-     */
-    protected $singleCategoryDiaporamaImage;
-
-    /**
-     * @var        ChildBrandDiaporamaImage one-to-one related ChildBrandDiaporamaImage object
-     */
-    protected $singleBrandDiaporamaImage;
-
-    /**
-     * @var        ChildFolderDiaporamaImage one-to-one related ChildFolderDiaporamaImage object
-     */
-    protected $singleFolderDiaporamaImage;
-
-    /**
-     * @var        ChildContentDiaporamaImage one-to-one related ChildContentDiaporamaImage object
-     */
-    protected $singleContentDiaporamaImage;
+    protected $aDiaporamaType;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -432,6 +409,28 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     }
 
     /**
+     * Get the [diaporama_type_id] column value.
+     *
+     * @return   int
+     */
+    public function getDiaporamaTypeId()
+    {
+
+        return $this->diaporama_type_id;
+    }
+
+    /**
+     * Get the [entity_id] column value.
+     *
+     * @return   int
+     */
+    public function getEntityId()
+    {
+
+        return $this->entity_id;
+    }
+
+    /**
      * Get the [position] column value.
      *
      * @return   int
@@ -440,17 +439,6 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     {
 
         return $this->position;
-    }
-
-    /**
-     * Get the [descendant_class] column value.
-     *
-     * @return   string
-     */
-    public function getDescendantClass()
-    {
-
-        return $this->descendant_class;
     }
 
     /**
@@ -500,6 +488,52 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     } // setDiaporamaId()
 
     /**
+     * Set the value of [diaporama_type_id] column.
+     *
+     * @param      int $v new value
+     * @return   \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
+     */
+    public function setDiaporamaTypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->diaporama_type_id !== $v) {
+            $this->diaporama_type_id = $v;
+            $this->modifiedColumns[DiaporamaImageTableMap::DIAPORAMA_TYPE_ID] = true;
+        }
+
+        if ($this->aDiaporamaType !== null && $this->aDiaporamaType->getId() !== $v) {
+            $this->aDiaporamaType = null;
+        }
+
+
+        return $this;
+    } // setDiaporamaTypeId()
+
+    /**
+     * Set the value of [entity_id] column.
+     *
+     * @param      int $v new value
+     * @return   \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
+     */
+    public function setEntityId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->entity_id !== $v) {
+            $this->entity_id = $v;
+            $this->modifiedColumns[DiaporamaImageTableMap::ENTITY_ID] = true;
+        }
+
+
+        return $this;
+    } // setEntityId()
+
+    /**
      * Set the value of [position] column.
      *
      * @param      int $v new value
@@ -519,27 +553,6 @@ abstract class DiaporamaImage implements ActiveRecordInterface
 
         return $this;
     } // setPosition()
-
-    /**
-     * Set the value of [descendant_class] column.
-     *
-     * @param      string $v new value
-     * @return   \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
-     */
-    public function setDescendantClass($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->descendant_class !== $v) {
-            $this->descendant_class = $v;
-            $this->modifiedColumns[DiaporamaImageTableMap::DESCENDANT_CLASS] = true;
-        }
-
-
-        return $this;
-    } // setDescendantClass()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -584,11 +597,14 @@ abstract class DiaporamaImage implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : DiaporamaImageTableMap::translateFieldName('DiaporamaId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->diaporama_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaImageTableMap::translateFieldName('Position', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->position = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaImageTableMap::translateFieldName('DiaporamaTypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->diaporama_type_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : DiaporamaImageTableMap::translateFieldName('DescendantClass', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->descendant_class = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : DiaporamaImageTableMap::translateFieldName('EntityId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->entity_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : DiaporamaImageTableMap::translateFieldName('Position', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->position = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -597,7 +613,7 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = DiaporamaImageTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = DiaporamaImageTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Diaporamas\Model\DiaporamaImage object", 0, $e);
@@ -621,6 +637,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     {
         if ($this->aDiaporama !== null && $this->diaporama_id !== $this->aDiaporama->getId()) {
             $this->aDiaporama = null;
+        }
+        if ($this->aDiaporamaType !== null && $this->diaporama_type_id !== $this->aDiaporamaType->getId()) {
+            $this->aDiaporamaType = null;
         }
     } // ensureConsistency
 
@@ -662,16 +681,7 @@ abstract class DiaporamaImage implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aDiaporama = null;
-            $this->singleProductDiaporamaImage = null;
-
-            $this->singleCategoryDiaporamaImage = null;
-
-            $this->singleBrandDiaporamaImage = null;
-
-            $this->singleFolderDiaporamaImage = null;
-
-            $this->singleContentDiaporamaImage = null;
-
+            $this->aDiaporamaType = null;
         } // if (deep)
     }
 
@@ -795,6 +805,13 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                 $this->setDiaporama($this->aDiaporama);
             }
 
+            if ($this->aDiaporamaType !== null) {
+                if ($this->aDiaporamaType->isModified() || $this->aDiaporamaType->isNew()) {
+                    $affectedRows += $this->aDiaporamaType->save($con);
+                }
+                $this->setDiaporamaType($this->aDiaporamaType);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -804,36 +821,6 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->singleProductDiaporamaImage !== null) {
-                if (!$this->singleProductDiaporamaImage->isDeleted() && ($this->singleProductDiaporamaImage->isNew() || $this->singleProductDiaporamaImage->isModified())) {
-                    $affectedRows += $this->singleProductDiaporamaImage->save($con);
-                }
-            }
-
-            if ($this->singleCategoryDiaporamaImage !== null) {
-                if (!$this->singleCategoryDiaporamaImage->isDeleted() && ($this->singleCategoryDiaporamaImage->isNew() || $this->singleCategoryDiaporamaImage->isModified())) {
-                    $affectedRows += $this->singleCategoryDiaporamaImage->save($con);
-                }
-            }
-
-            if ($this->singleBrandDiaporamaImage !== null) {
-                if (!$this->singleBrandDiaporamaImage->isDeleted() && ($this->singleBrandDiaporamaImage->isNew() || $this->singleBrandDiaporamaImage->isModified())) {
-                    $affectedRows += $this->singleBrandDiaporamaImage->save($con);
-                }
-            }
-
-            if ($this->singleFolderDiaporamaImage !== null) {
-                if (!$this->singleFolderDiaporamaImage->isDeleted() && ($this->singleFolderDiaporamaImage->isNew() || $this->singleFolderDiaporamaImage->isModified())) {
-                    $affectedRows += $this->singleFolderDiaporamaImage->save($con);
-                }
-            }
-
-            if ($this->singleContentDiaporamaImage !== null) {
-                if (!$this->singleContentDiaporamaImage->isDeleted() && ($this->singleContentDiaporamaImage->isNew() || $this->singleContentDiaporamaImage->isModified())) {
-                    $affectedRows += $this->singleContentDiaporamaImage->save($con);
-                }
             }
 
             $this->alreadyInSave = false;
@@ -868,11 +855,14 @@ abstract class DiaporamaImage implements ActiveRecordInterface
         if ($this->isColumnModified(DiaporamaImageTableMap::DIAPORAMA_ID)) {
             $modifiedColumns[':p' . $index++]  = 'DIAPORAMA_ID';
         }
+        if ($this->isColumnModified(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'DIAPORAMA_TYPE_ID';
+        }
+        if ($this->isColumnModified(DiaporamaImageTableMap::ENTITY_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'ENTITY_ID';
+        }
         if ($this->isColumnModified(DiaporamaImageTableMap::POSITION)) {
             $modifiedColumns[':p' . $index++]  = 'POSITION';
-        }
-        if ($this->isColumnModified(DiaporamaImageTableMap::DESCENDANT_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = 'DESCENDANT_CLASS';
         }
 
         $sql = sprintf(
@@ -891,11 +881,14 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                     case 'DIAPORAMA_ID':
                         $stmt->bindValue($identifier, $this->diaporama_id, PDO::PARAM_INT);
                         break;
+                    case 'DIAPORAMA_TYPE_ID':
+                        $stmt->bindValue($identifier, $this->diaporama_type_id, PDO::PARAM_INT);
+                        break;
+                    case 'ENTITY_ID':
+                        $stmt->bindValue($identifier, $this->entity_id, PDO::PARAM_INT);
+                        break;
                     case 'POSITION':
                         $stmt->bindValue($identifier, $this->position, PDO::PARAM_INT);
-                        break;
-                    case 'DESCENDANT_CLASS':
-                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -966,10 +959,13 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                 return $this->getDiaporamaId();
                 break;
             case 2:
-                return $this->getPosition();
+                return $this->getDiaporamaTypeId();
                 break;
             case 3:
-                return $this->getDescendantClass();
+                return $this->getEntityId();
+                break;
+            case 4:
+                return $this->getPosition();
                 break;
             default:
                 return null;
@@ -1002,8 +998,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getDiaporamaId(),
-            $keys[2] => $this->getPosition(),
-            $keys[3] => $this->getDescendantClass(),
+            $keys[2] => $this->getDiaporamaTypeId(),
+            $keys[3] => $this->getEntityId(),
+            $keys[4] => $this->getPosition(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1014,20 +1011,8 @@ abstract class DiaporamaImage implements ActiveRecordInterface
             if (null !== $this->aDiaporama) {
                 $result['Diaporama'] = $this->aDiaporama->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->singleProductDiaporamaImage) {
-                $result['ProductDiaporamaImage'] = $this->singleProductDiaporamaImage->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleCategoryDiaporamaImage) {
-                $result['CategoryDiaporamaImage'] = $this->singleCategoryDiaporamaImage->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleBrandDiaporamaImage) {
-                $result['BrandDiaporamaImage'] = $this->singleBrandDiaporamaImage->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleFolderDiaporamaImage) {
-                $result['FolderDiaporamaImage'] = $this->singleFolderDiaporamaImage->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleContentDiaporamaImage) {
-                $result['ContentDiaporamaImage'] = $this->singleContentDiaporamaImage->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
+            if (null !== $this->aDiaporamaType) {
+                $result['DiaporamaType'] = $this->aDiaporamaType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1070,10 +1055,13 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                 $this->setDiaporamaId($value);
                 break;
             case 2:
-                $this->setPosition($value);
+                $this->setDiaporamaTypeId($value);
                 break;
             case 3:
-                $this->setDescendantClass($value);
+                $this->setEntityId($value);
+                break;
+            case 4:
+                $this->setPosition($value);
                 break;
         } // switch()
     }
@@ -1101,8 +1089,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setDiaporamaId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setPosition($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDescendantClass($arr[$keys[3]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDiaporamaTypeId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setEntityId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setPosition($arr[$keys[4]]);
     }
 
     /**
@@ -1116,8 +1105,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
 
         if ($this->isColumnModified(DiaporamaImageTableMap::ID)) $criteria->add(DiaporamaImageTableMap::ID, $this->id);
         if ($this->isColumnModified(DiaporamaImageTableMap::DIAPORAMA_ID)) $criteria->add(DiaporamaImageTableMap::DIAPORAMA_ID, $this->diaporama_id);
+        if ($this->isColumnModified(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID)) $criteria->add(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $this->diaporama_type_id);
+        if ($this->isColumnModified(DiaporamaImageTableMap::ENTITY_ID)) $criteria->add(DiaporamaImageTableMap::ENTITY_ID, $this->entity_id);
         if ($this->isColumnModified(DiaporamaImageTableMap::POSITION)) $criteria->add(DiaporamaImageTableMap::POSITION, $this->position);
-        if ($this->isColumnModified(DiaporamaImageTableMap::DESCENDANT_CLASS)) $criteria->add(DiaporamaImageTableMap::DESCENDANT_CLASS, $this->descendant_class);
 
         return $criteria;
     }
@@ -1182,41 +1172,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setDiaporamaId($this->getDiaporamaId());
+        $copyObj->setDiaporamaTypeId($this->getDiaporamaTypeId());
+        $copyObj->setEntityId($this->getEntityId());
         $copyObj->setPosition($this->getPosition());
-        $copyObj->setDescendantClass($this->getDescendantClass());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            $relObj = $this->getProductDiaporamaImage();
-            if ($relObj) {
-                $copyObj->setProductDiaporamaImage($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getCategoryDiaporamaImage();
-            if ($relObj) {
-                $copyObj->setCategoryDiaporamaImage($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getBrandDiaporamaImage();
-            if ($relObj) {
-                $copyObj->setBrandDiaporamaImage($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getFolderDiaporamaImage();
-            if ($relObj) {
-                $copyObj->setFolderDiaporamaImage($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getContentDiaporamaImage();
-            if ($relObj) {
-                $copyObj->setContentDiaporamaImage($relObj->copy($deepCopy));
-            }
-
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1296,197 +1254,55 @@ abstract class DiaporamaImage implements ActiveRecordInterface
         return $this->aDiaporama;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildDiaporamaType object.
      *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-    }
-
-    /**
-     * Gets a single ChildProductDiaporamaImage object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildProductDiaporamaImage
-     * @throws PropelException
-     */
-    public function getProductDiaporamaImage(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleProductDiaporamaImage === null && !$this->isNew()) {
-            $this->singleProductDiaporamaImage = ChildProductDiaporamaImageQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleProductDiaporamaImage;
-    }
-
-    /**
-     * Sets a single ChildProductDiaporamaImage object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildProductDiaporamaImage $v ChildProductDiaporamaImage
+     * @param                  ChildDiaporamaType $v
      * @return                 \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setProductDiaporamaImage(ChildProductDiaporamaImage $v = null)
+    public function setDiaporamaType(ChildDiaporamaType $v = null)
     {
-        $this->singleProductDiaporamaImage = $v;
-
-        // Make sure that that the passed-in ChildProductDiaporamaImage isn't already associated with this object
-        if ($v !== null && $v->getDiaporamaImage(null, false) === null) {
-            $v->setDiaporamaImage($this);
+        if ($v === null) {
+            $this->setDiaporamaTypeId(NULL);
+        } else {
+            $this->setDiaporamaTypeId($v->getId());
         }
+
+        $this->aDiaporamaType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildDiaporamaType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addDiaporamaImage($this);
+        }
+
 
         return $this;
     }
 
-    /**
-     * Gets a single ChildCategoryDiaporamaImage object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildCategoryDiaporamaImage
-     * @throws PropelException
-     */
-    public function getCategoryDiaporamaImage(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleCategoryDiaporamaImage === null && !$this->isNew()) {
-            $this->singleCategoryDiaporamaImage = ChildCategoryDiaporamaImageQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleCategoryDiaporamaImage;
-    }
 
     /**
-     * Sets a single ChildCategoryDiaporamaImage object as related to this object by a one-to-one relationship.
+     * Get the associated ChildDiaporamaType object
      *
-     * @param                  ChildCategoryDiaporamaImage $v ChildCategoryDiaporamaImage
-     * @return                 \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
+     * @param      ConnectionInterface $con Optional Connection object.
+     * @return                 ChildDiaporamaType The associated ChildDiaporamaType object.
      * @throws PropelException
      */
-    public function setCategoryDiaporamaImage(ChildCategoryDiaporamaImage $v = null)
+    public function getDiaporamaType(ConnectionInterface $con = null)
     {
-        $this->singleCategoryDiaporamaImage = $v;
-
-        // Make sure that that the passed-in ChildCategoryDiaporamaImage isn't already associated with this object
-        if ($v !== null && $v->getDiaporamaImage(null, false) === null) {
-            $v->setDiaporamaImage($this);
+        if ($this->aDiaporamaType === null && ($this->diaporama_type_id !== null)) {
+            $this->aDiaporamaType = ChildDiaporamaTypeQuery::create()->findPk($this->diaporama_type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDiaporamaType->addDiaporamaImages($this);
+             */
         }
 
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildBrandDiaporamaImage object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildBrandDiaporamaImage
-     * @throws PropelException
-     */
-    public function getBrandDiaporamaImage(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleBrandDiaporamaImage === null && !$this->isNew()) {
-            $this->singleBrandDiaporamaImage = ChildBrandDiaporamaImageQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleBrandDiaporamaImage;
-    }
-
-    /**
-     * Sets a single ChildBrandDiaporamaImage object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildBrandDiaporamaImage $v ChildBrandDiaporamaImage
-     * @return                 \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setBrandDiaporamaImage(ChildBrandDiaporamaImage $v = null)
-    {
-        $this->singleBrandDiaporamaImage = $v;
-
-        // Make sure that that the passed-in ChildBrandDiaporamaImage isn't already associated with this object
-        if ($v !== null && $v->getDiaporamaImage(null, false) === null) {
-            $v->setDiaporamaImage($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildFolderDiaporamaImage object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildFolderDiaporamaImage
-     * @throws PropelException
-     */
-    public function getFolderDiaporamaImage(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleFolderDiaporamaImage === null && !$this->isNew()) {
-            $this->singleFolderDiaporamaImage = ChildFolderDiaporamaImageQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleFolderDiaporamaImage;
-    }
-
-    /**
-     * Sets a single ChildFolderDiaporamaImage object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildFolderDiaporamaImage $v ChildFolderDiaporamaImage
-     * @return                 \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setFolderDiaporamaImage(ChildFolderDiaporamaImage $v = null)
-    {
-        $this->singleFolderDiaporamaImage = $v;
-
-        // Make sure that that the passed-in ChildFolderDiaporamaImage isn't already associated with this object
-        if ($v !== null && $v->getDiaporamaImage(null, false) === null) {
-            $v->setDiaporamaImage($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildContentDiaporamaImage object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildContentDiaporamaImage
-     * @throws PropelException
-     */
-    public function getContentDiaporamaImage(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleContentDiaporamaImage === null && !$this->isNew()) {
-            $this->singleContentDiaporamaImage = ChildContentDiaporamaImageQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleContentDiaporamaImage;
-    }
-
-    /**
-     * Sets a single ChildContentDiaporamaImage object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildContentDiaporamaImage $v ChildContentDiaporamaImage
-     * @return                 \Diaporamas\Model\DiaporamaImage The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setContentDiaporamaImage(ChildContentDiaporamaImage $v = null)
-    {
-        $this->singleContentDiaporamaImage = $v;
-
-        // Make sure that that the passed-in ChildContentDiaporamaImage isn't already associated with this object
-        if ($v !== null && $v->getDiaporamaImage(null, false) === null) {
-            $v->setDiaporamaImage($this);
-        }
-
-        return $this;
+        return $this->aDiaporamaType;
     }
 
     /**
@@ -1496,8 +1312,9 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     {
         $this->id = null;
         $this->diaporama_id = null;
+        $this->diaporama_type_id = null;
+        $this->entity_id = null;
         $this->position = null;
-        $this->descendant_class = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1517,29 +1334,10 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->singleProductDiaporamaImage) {
-                $this->singleProductDiaporamaImage->clearAllReferences($deep);
-            }
-            if ($this->singleCategoryDiaporamaImage) {
-                $this->singleCategoryDiaporamaImage->clearAllReferences($deep);
-            }
-            if ($this->singleBrandDiaporamaImage) {
-                $this->singleBrandDiaporamaImage->clearAllReferences($deep);
-            }
-            if ($this->singleFolderDiaporamaImage) {
-                $this->singleFolderDiaporamaImage->clearAllReferences($deep);
-            }
-            if ($this->singleContentDiaporamaImage) {
-                $this->singleContentDiaporamaImage->clearAllReferences($deep);
-            }
         } // if ($deep)
 
-        $this->singleProductDiaporamaImage = null;
-        $this->singleCategoryDiaporamaImage = null;
-        $this->singleBrandDiaporamaImage = null;
-        $this->singleFolderDiaporamaImage = null;
-        $this->singleContentDiaporamaImage = null;
         $this->aDiaporama = null;
+        $this->aDiaporamaType = null;
     }
 
     /**
@@ -1595,6 +1393,12 @@ abstract class DiaporamaImage implements ActiveRecordInterface
                     $failureMap->addAll($this->aDiaporama->getValidationFailures());
                 }
             }
+            // If validate() method exists, the validate-behavior is configured for related object
+            if (method_exists($this->aDiaporamaType, 'validate')) {
+                if (!$this->aDiaporamaType->validate($validator)) {
+                    $failureMap->addAll($this->aDiaporamaType->getValidationFailures());
+                }
+            }
 
             $retval = $validator->validate($this);
             if (count($retval) > 0) {
@@ -1621,34 +1425,6 @@ abstract class DiaporamaImage implements ActiveRecordInterface
     public function getValidationFailures()
     {
         return $this->validationFailures;
-    }
-
-    // concrete_inheritance_parent behavior
-
-    /**
-     * Whether or not this object is the parent of a child object
-     *
-     * @return    bool
-     */
-    public function hasChildObject()
-    {
-        return $this->getDescendantClass() !== null;
-    }
-
-    /**
-     * Get the child object of this object
-     *
-     * @return    mixed
-     */
-    public function getChildObject()
-    {
-        if (!$this->hasChildObject()) {
-            return null;
-        }
-        $childObjectClass = $this->getDescendantClass();
-        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
-
-        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
     }
 
     /**

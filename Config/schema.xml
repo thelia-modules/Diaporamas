@@ -8,62 +8,42 @@
         <column name="id" primaryKey="true" required="true" type="INTEGER" autoIncrement="true" />
         <column name="title" size="255" type="VARCHAR" required="true" default="" />
         <column name="shortcode" size="32" type="VARCHAR" required="true" />
+        <column name="diaporama_type_id" type="INTEGER" inheritance="single" required="true">
+            <inheritance key="1" class="ProductDiaporama"/>
+            <inheritance key="2" class="CategoryDiaporama"/>
+            <inheritance key="3" class="BrandDiaporama"/>
+            <inheritance key="4" class="FolderDiaporama"/>
+            <inheritance key="5" class="ContentDiaporama"/>
+        </column>
+        <column name="entity_id" type="INTEGER" required="true"/>
         <unique name="un_shortcode">
             <unique-column name="shortcode" />
+        </unique>
+        <foreign-key foreignTable="diaporama_type">
+            <reference local="diaporama_type_id" foreign="id" />
+        </foreign-key>
+        <behavior name="timestampable" />
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="title" />
+        </behavior>
+        <behavior name="versionable">
+            <parameter name="log_created_at" value="true" />
+            <parameter name="log_created_by" value="true" />
+        </behavior>
+        <!-- TODO : custom behaviors for entity_id foreign key (depending on type) and types correspondances between diaporama and diaporama_image -->
+    </table>
+
+    <!-- Diaporama type -->
+    <table name="diaporama_type">
+        <column name="id" primaryKey="true" required="true" type="INTEGER" autoIncrement="true" />
+        <column name="code" size="16" type="VARCHAR" required="true" />
+        <column name="title" size="16" type="VARCHAR" required="true" />
+        <unique name="un_code">
+            <unique-column name="code" />
         </unique>
         <behavior name="i18n">
             <parameter name="i18n_columns" value="title" />
         </behavior>
-    </table>
-
-    <table name="product_diaporama">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama" />
-        </behavior>
-        <column name="product_id" type="INTEGER" required="true" />
-        <foreign-key foreignTable="product">
-            <reference local="product_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="category_diaporama">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama" />
-        </behavior>
-        <column name="category_id" type="INTEGER" required="true" />
-        <foreign-key foreignTable="category">
-            <reference local="category_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="brand_diaporama">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama" />
-        </behavior>
-        <column name="brand_id" type="INTEGER" required="true" />
-        <foreign-key foreignTable="brand">
-            <reference local="brand_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="folder_diaporama">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama" />
-        </behavior>
-        <column name="folder_id" type="INTEGER" required="true" />
-        <foreign-key foreignTable="folder">
-            <reference local="folder_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="content_diaporama">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama" />
-        </behavior>
-        <column name="content_id" type="INTEGER" required="true" />
-        <foreign-key foreignTable="content">
-            <reference local="content_id" foreign="id" />
-        </foreign-key>
     </table>
 
 
@@ -71,93 +51,30 @@
     <table name="diaporama_image">
         <column name="id" primaryKey="true" required="true" type="INTEGER" autoIncrement="true" />
         <column name="diaporama_id" type="INTEGER" required="true" />
+        <column name="diaporama_type_id" type="INTEGER" inheritance="single" required="true">
+            <inheritance key="1" class="ProductImageDiaporama"/>
+            <inheritance key="2" class="CategoryImageDiaporama"/>
+            <inheritance key="3" class="BrandImageDiaporama"/>
+            <inheritance key="4" class="FolderImageDiaporama"/>
+            <inheritance key="5" class="ContentImageDiaporama"/>
+        </column>
+        <column name="entity_id" type="INTEGER" required="true"/>
         <column name="position" type="INTEGER" required="true" />
         <foreign-key foreignTable="diaporama">
             <reference local="diaporama_id" foreign="id" />
         </foreign-key>
+        <foreign-key foreignTable="diaporama_type">
+            <reference local="diaporama_type_id" foreign="id" />
+        </foreign-key>
+        <unique name="un_image">
+            <unique-column name="diaporama_id"/>
+            <unique-column name="diaporama_type_id"/>
+            <unique-column name="position"/>
+        </unique>
         <behavior name="validate">
             <parameter name="positionRule" value="{column: position, validator: GreaterThan, options: {value: 0}}" />
         </behavior>
-    </table>
-
-    <table name="product_diaporama_image">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama_image" />
-        </behavior>
-        <column name="product_image_id" type="INTEGER" required="true" />
-        <column name="position" type="INTEGER" required="true" />
-        <unique name="un_image">
-            <unique-column name="diaporama_id" />
-            <unique-column name="product_image_id" />
-            <unique-column name="position" />
-        </unique>
-        <foreign-key foreignTable="product_image">
-            <reference local="product_image_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="category_diaporama_image">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama_image" />
-        </behavior>
-        <column name="category_image_id" type="INTEGER" required="true" />
-        <column name="position" type="INTEGER" required="true" />
-        <unique name="un_image">
-            <unique-column name="diaporama_id" />
-            <unique-column name="category_image_id" />
-            <unique-column name="position" />
-        </unique>
-        <foreign-key foreignTable="category_image">
-            <reference local="category_image_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="brand_diaporama_image">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama_image" />
-        </behavior>
-        <column name="brand_image_id" type="INTEGER" required="true" />
-        <column name="position" type="INTEGER" required="true" />
-        <unique name="un_image">
-            <unique-column name="diaporama_id" />
-            <unique-column name="brand_image_id" />
-            <unique-column name="position" />
-        </unique>
-        <foreign-key foreignTable="brand_image">
-            <reference local="brand_image_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="folder_diaporama_image">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama_image" />
-        </behavior>
-        <column name="folder_image_id" type="INTEGER" required="true" />
-        <column name="position" type="INTEGER" required="true" />
-        <unique name="un_image">
-            <unique-column name="diaporama_id" />
-            <unique-column name="folder_image_id" />
-            <unique-column name="position" />
-        </unique>
-        <foreign-key foreignTable="folder_image">
-            <reference local="folder_image_id" foreign="id" />
-        </foreign-key>
-    </table>
-
-    <table name="content_diaporama_image">
-        <behavior name="concrete_inheritance">
-            <parameter name="extends" value="diaporama_image" />
-        </behavior>
-        <column name="content_image_id" type="INTEGER" required="true" />
-        <column name="position" type="INTEGER" required="true" />
-        <unique name="un_image">
-            <unique-column name="diaporama_id" />
-            <unique-column name="content_image_id" />
-            <unique-column name="position" />
-        </unique>
-        <foreign-key foreignTable="content_image">
-            <reference local="content_image_id" foreign="id" />
-        </foreign-key>
+        <!-- TODO : custom behaviors for entity_id foreign key (depending on type) and types correspondances between diaporama and diaporama_image + correspondance with the diaporama entity -->
     </table>
 
     <external-schema filename="local/config/schema.xml" referenceOnly="true" />

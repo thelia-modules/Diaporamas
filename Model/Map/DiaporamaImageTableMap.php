@@ -58,7 +58,7 @@ class DiaporamaImageTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class DiaporamaImageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the ID field
@@ -81,19 +81,69 @@ class DiaporamaImageTableMap extends TableMap
     const DIAPORAMA_ID = 'diaporama_image.DIAPORAMA_ID';
 
     /**
+     * the column name for the DIAPORAMA_TYPE_ID field
+     */
+    const DIAPORAMA_TYPE_ID = 'diaporama_image.DIAPORAMA_TYPE_ID';
+
+    /**
+     * the column name for the ENTITY_ID field
+     */
+    const ENTITY_ID = 'diaporama_image.ENTITY_ID';
+
+    /**
      * the column name for the POSITION field
      */
     const POSITION = 'diaporama_image.POSITION';
 
     /**
-     * the column name for the DESCENDANT_CLASS field
-     */
-    const DESCENDANT_CLASS = 'diaporama_image.DESCENDANT_CLASS';
-
-    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_1 = '1';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PRODUCTIMAGEDIAPORAMA = '\\Diaporamas\\Model\\ProductImageDiaporama';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_1 = '\\Diaporamas\\Model\\ProductImageDiaporama';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_2 = '2';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_CATEGORYIMAGEDIAPORAMA = '\\Diaporamas\\Model\\CategoryImageDiaporama';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_2 = '\\Diaporamas\\Model\\CategoryImageDiaporama';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_3 = '3';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_BRANDIMAGEDIAPORAMA = '\\Diaporamas\\Model\\BrandImageDiaporama';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_3 = '\\Diaporamas\\Model\\BrandImageDiaporama';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_4 = '4';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_FOLDERIMAGEDIAPORAMA = '\\Diaporamas\\Model\\FolderImageDiaporama';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_4 = '\\Diaporamas\\Model\\FolderImageDiaporama';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_5 = '5';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_CONTENTIMAGEDIAPORAMA = '\\Diaporamas\\Model\\ContentImageDiaporama';
+
+    /** A class that can be returned by this tableMap. */
+    const CLASSNAME_5 = '\\Diaporamas\\Model\\ContentImageDiaporama';
 
     /**
      * holds an array of fieldnames
@@ -102,12 +152,12 @@ class DiaporamaImageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'DiaporamaId', 'Position', 'DescendantClass', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'diaporamaId', 'position', 'descendantClass', ),
-        self::TYPE_COLNAME       => array(DiaporamaImageTableMap::ID, DiaporamaImageTableMap::DIAPORAMA_ID, DiaporamaImageTableMap::POSITION, DiaporamaImageTableMap::DESCENDANT_CLASS, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'DIAPORAMA_ID', 'POSITION', 'DESCENDANT_CLASS', ),
-        self::TYPE_FIELDNAME     => array('id', 'diaporama_id', 'position', 'descendant_class', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'DiaporamaId', 'DiaporamaTypeId', 'EntityId', 'Position', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'diaporamaId', 'diaporamaTypeId', 'entityId', 'position', ),
+        self::TYPE_COLNAME       => array(DiaporamaImageTableMap::ID, DiaporamaImageTableMap::DIAPORAMA_ID, DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, DiaporamaImageTableMap::ENTITY_ID, DiaporamaImageTableMap::POSITION, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'DIAPORAMA_ID', 'DIAPORAMA_TYPE_ID', 'ENTITY_ID', 'POSITION', ),
+        self::TYPE_FIELDNAME     => array('id', 'diaporama_id', 'diaporama_type_id', 'entity_id', 'position', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -117,12 +167,12 @@ class DiaporamaImageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'DiaporamaId' => 1, 'Position' => 2, 'DescendantClass' => 3, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'diaporamaId' => 1, 'position' => 2, 'descendantClass' => 3, ),
-        self::TYPE_COLNAME       => array(DiaporamaImageTableMap::ID => 0, DiaporamaImageTableMap::DIAPORAMA_ID => 1, DiaporamaImageTableMap::POSITION => 2, DiaporamaImageTableMap::DESCENDANT_CLASS => 3, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'DIAPORAMA_ID' => 1, 'POSITION' => 2, 'DESCENDANT_CLASS' => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'diaporama_id' => 1, 'position' => 2, 'descendant_class' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'DiaporamaId' => 1, 'DiaporamaTypeId' => 2, 'EntityId' => 3, 'Position' => 4, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'diaporamaId' => 1, 'diaporamaTypeId' => 2, 'entityId' => 3, 'position' => 4, ),
+        self::TYPE_COLNAME       => array(DiaporamaImageTableMap::ID => 0, DiaporamaImageTableMap::DIAPORAMA_ID => 1, DiaporamaImageTableMap::DIAPORAMA_TYPE_ID => 2, DiaporamaImageTableMap::ENTITY_ID => 3, DiaporamaImageTableMap::POSITION => 4, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'DIAPORAMA_ID' => 1, 'DIAPORAMA_TYPE_ID' => 2, 'ENTITY_ID' => 3, 'POSITION' => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'diaporama_id' => 1, 'diaporama_type_id' => 2, 'entity_id' => 3, 'position' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -140,11 +190,13 @@ class DiaporamaImageTableMap extends TableMap
         $this->setClassName('\\Diaporamas\\Model\\DiaporamaImage');
         $this->setPackage('Diaporamas.Model');
         $this->setUseIdGenerator(true);
+        $this->setSingleTableInheritance(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('DIAPORAMA_ID', 'DiaporamaId', 'INTEGER', 'diaporama', 'ID', true, null, null);
+        $this->addForeignKey('DIAPORAMA_TYPE_ID', 'DiaporamaTypeId', 'INTEGER', 'diaporama_type', 'ID', true, null, null);
+        $this->addColumn('ENTITY_ID', 'EntityId', 'INTEGER', true, null, null);
         $this->addColumn('POSITION', 'Position', 'INTEGER', true, null, null);
-        $this->addColumn('DESCENDANT_CLASS', 'DescendantClass', 'VARCHAR', false, 100, null);
     } // initialize()
 
     /**
@@ -153,11 +205,7 @@ class DiaporamaImageTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Diaporama', '\\Diaporamas\\Model\\Diaporama', RelationMap::MANY_TO_ONE, array('diaporama_id' => 'id', ), null, null);
-        $this->addRelation('ProductDiaporamaImage', '\\Diaporamas\\Model\\ProductDiaporamaImage', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CategoryDiaporamaImage', '\\Diaporamas\\Model\\CategoryDiaporamaImage', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('BrandDiaporamaImage', '\\Diaporamas\\Model\\BrandDiaporamaImage', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('FolderDiaporamaImage', '\\Diaporamas\\Model\\FolderDiaporamaImage', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('ContentDiaporamaImage', '\\Diaporamas\\Model\\ContentDiaporamaImage', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('DiaporamaType', '\\Diaporamas\\Model\\DiaporamaType', RelationMap::MANY_TO_ONE, array('diaporama_type_id' => 'id', ), null, null);
     } // buildRelations()
 
     /**
@@ -170,22 +218,8 @@ class DiaporamaImageTableMap extends TableMap
     {
         return array(
             'validate' => array('positionRule' => array ('column' => 'position','validator' => 'GreaterThan','options' => array ('value' => 0,),), ),
-            'concrete_inheritance_parent' => array('descendant_column' => 'descendant_class', ),
         );
     } // getBehaviors()
-    /**
-     * Method to invalidate the instance pool of all tables related to diaporama_image     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool()
-    {
-        // Invalidate objects in ".$this->getClassNameFromBuilder($joinedTableTableMapBuilder)." instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-                ProductDiaporamaImageTableMap::clearInstancePool();
-                CategoryDiaporamaImageTableMap::clearInstancePool();
-                BrandDiaporamaImageTableMap::clearInstancePool();
-                FolderDiaporamaImageTableMap::clearInstancePool();
-                ContentDiaporamaImageTableMap::clearInstancePool();
-            }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -231,19 +265,57 @@ class DiaporamaImageTableMap extends TableMap
     }
 
     /**
-     * The class that the tableMap will make instances of.
+     * The returned Class will contain objects of the default type or
+     * objects that inherit from the default.
      *
-     * If $withPrefix is true, the returned path
-     * uses a dot-path notation which is translated into a path
-     * relative to a location on the PHP include_path.
-     * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
-     *
+     * @param array   $row ConnectionInterface result row.
+     * @param int     $colnum Column to examine for OM class information (first is 0).
      * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @return string path.to.ClassName
+     * @throws PropelException Any exceptions caught during processing will be
+     *         rethrown wrapped into a PropelException.
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass($row, $colnum, $withPrefix = true)
     {
-        return $withPrefix ? DiaporamaImageTableMap::CLASS_DEFAULT : DiaporamaImageTableMap::OM_CLASS;
+        try {
+
+            $omClass = null;
+            $classKey = $row[$colnum + 2];
+
+            switch ($classKey) {
+
+                case DiaporamaImageTableMap::CLASSKEY_1:
+                    $omClass = DiaporamaImageTableMap::CLASSNAME_1;
+                    break;
+
+                case DiaporamaImageTableMap::CLASSKEY_2:
+                    $omClass = DiaporamaImageTableMap::CLASSNAME_2;
+                    break;
+
+                case DiaporamaImageTableMap::CLASSKEY_3:
+                    $omClass = DiaporamaImageTableMap::CLASSNAME_3;
+                    break;
+
+                case DiaporamaImageTableMap::CLASSKEY_4:
+                    $omClass = DiaporamaImageTableMap::CLASSNAME_4;
+                    break;
+
+                case DiaporamaImageTableMap::CLASSKEY_5:
+                    $omClass = DiaporamaImageTableMap::CLASSNAME_5;
+                    break;
+
+                default:
+                    $omClass = DiaporamaImageTableMap::CLASS_DEFAULT;
+
+            } // switch
+            if (!$withPrefix) {
+                $omClass = preg_replace('#\.#', '\\', $omClass);
+            }
+
+        } catch (\Exception $e) {
+            throw new PropelException('Unable to get OM class.', $e);
+        }
+
+        return $omClass;
     }
 
     /**
@@ -268,7 +340,7 @@ class DiaporamaImageTableMap extends TableMap
             // $obj->hydrate($row, $offset, true); // rehydrate
             $col = $offset + DiaporamaImageTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = DiaporamaImageTableMap::OM_CLASS;
+            $cls = static::getOMClass($row, $offset, false);
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
             DiaporamaImageTableMap::addInstanceToPool($obj, $key);
@@ -290,8 +362,6 @@ class DiaporamaImageTableMap extends TableMap
     {
         $results = array();
 
-        // set the class once to avoid overhead in the loop
-        $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
             $key = DiaporamaImageTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
@@ -301,6 +371,9 @@ class DiaporamaImageTableMap extends TableMap
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
+                // class must be set each time from the record row
+                $cls = static::getOMClass($row, 0);
+                $cls = preg_replace('#\.#', '\\', $cls);
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
@@ -327,13 +400,15 @@ class DiaporamaImageTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(DiaporamaImageTableMap::ID);
             $criteria->addSelectColumn(DiaporamaImageTableMap::DIAPORAMA_ID);
+            $criteria->addSelectColumn(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID);
+            $criteria->addSelectColumn(DiaporamaImageTableMap::ENTITY_ID);
             $criteria->addSelectColumn(DiaporamaImageTableMap::POSITION);
-            $criteria->addSelectColumn(DiaporamaImageTableMap::DESCENDANT_CLASS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.DIAPORAMA_ID');
+            $criteria->addSelectColumn($alias . '.DIAPORAMA_TYPE_ID');
+            $criteria->addSelectColumn($alias . '.ENTITY_ID');
             $criteria->addSelectColumn($alias . '.POSITION');
-            $criteria->addSelectColumn($alias . '.DESCENDANT_CLASS');
         }
     }
 

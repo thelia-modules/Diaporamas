@@ -2,39 +2,24 @@
 
 namespace Diaporamas\Model\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
-use Diaporamas\Model\BrandDiaporama as ChildBrandDiaporama;
-use Diaporamas\Model\BrandDiaporamaImage as ChildBrandDiaporamaImage;
-use Diaporamas\Model\BrandDiaporamaImageQuery as ChildBrandDiaporamaImageQuery;
-use Diaporamas\Model\BrandDiaporamaQuery as ChildBrandDiaporamaQuery;
-use Diaporamas\Model\CategoryDiaporama as ChildCategoryDiaporama;
-use Diaporamas\Model\CategoryDiaporamaImage as ChildCategoryDiaporamaImage;
-use Diaporamas\Model\CategoryDiaporamaImageQuery as ChildCategoryDiaporamaImageQuery;
-use Diaporamas\Model\CategoryDiaporamaQuery as ChildCategoryDiaporamaQuery;
-use Diaporamas\Model\ContentDiaporama as ChildContentDiaporama;
-use Diaporamas\Model\ContentDiaporamaImage as ChildContentDiaporamaImage;
-use Diaporamas\Model\ContentDiaporamaImageQuery as ChildContentDiaporamaImageQuery;
-use Diaporamas\Model\ContentDiaporamaQuery as ChildContentDiaporamaQuery;
 use Diaporamas\Model\Diaporama as ChildDiaporama;
 use Diaporamas\Model\DiaporamaI18n as ChildDiaporamaI18n;
 use Diaporamas\Model\DiaporamaI18nQuery as ChildDiaporamaI18nQuery;
 use Diaporamas\Model\DiaporamaImage as ChildDiaporamaImage;
 use Diaporamas\Model\DiaporamaImageQuery as ChildDiaporamaImageQuery;
 use Diaporamas\Model\DiaporamaQuery as ChildDiaporamaQuery;
-use Diaporamas\Model\FolderDiaporama as ChildFolderDiaporama;
-use Diaporamas\Model\FolderDiaporamaImage as ChildFolderDiaporamaImage;
-use Diaporamas\Model\FolderDiaporamaImageQuery as ChildFolderDiaporamaImageQuery;
-use Diaporamas\Model\FolderDiaporamaQuery as ChildFolderDiaporamaQuery;
-use Diaporamas\Model\ProductDiaporama as ChildProductDiaporama;
-use Diaporamas\Model\ProductDiaporamaImage as ChildProductDiaporamaImage;
-use Diaporamas\Model\ProductDiaporamaImageQuery as ChildProductDiaporamaImageQuery;
-use Diaporamas\Model\ProductDiaporamaQuery as ChildProductDiaporamaQuery;
+use Diaporamas\Model\DiaporamaType as ChildDiaporamaType;
+use Diaporamas\Model\DiaporamaTypeQuery as ChildDiaporamaTypeQuery;
+use Diaporamas\Model\DiaporamaVersion as ChildDiaporamaVersion;
+use Diaporamas\Model\DiaporamaVersionQuery as ChildDiaporamaVersionQuery;
 use Diaporamas\Model\Map\DiaporamaTableMap;
+use Diaporamas\Model\Map\DiaporamaVersionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\ActiveQuery\PropelQuery;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Collection\ObjectCollection;
@@ -43,6 +28,7 @@ use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 abstract class Diaporama implements ActiveRecordInterface
 {
@@ -91,10 +77,52 @@ abstract class Diaporama implements ActiveRecordInterface
     protected $shortcode;
 
     /**
-     * The value for the descendant_class field.
+     * The value for the diaporama_type_id field.
+     * @var        int
+     */
+    protected $diaporama_type_id;
+
+    /**
+     * The value for the entity_id field.
+     * @var        int
+     */
+    protected $entity_id;
+
+    /**
+     * The value for the created_at field.
      * @var        string
      */
-    protected $descendant_class;
+    protected $created_at;
+
+    /**
+     * The value for the updated_at field.
+     * @var        string
+     */
+    protected $updated_at;
+
+    /**
+     * The value for the version field.
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $version;
+
+    /**
+     * The value for the version_created_at field.
+     * @var        string
+     */
+    protected $version_created_at;
+
+    /**
+     * The value for the version_created_by field.
+     * @var        string
+     */
+    protected $version_created_by;
+
+    /**
+     * @var        DiaporamaType
+     */
+    protected $aDiaporamaType;
 
     /**
      * @var        ObjectCollection|ChildDiaporamaImage[] Collection to store aggregation of ChildDiaporamaImage objects.
@@ -103,65 +131,16 @@ abstract class Diaporama implements ActiveRecordInterface
     protected $collDiaporamaImagesPartial;
 
     /**
-     * @var        ChildProductDiaporama one-to-one related ChildProductDiaporama object
-     */
-    protected $singleProductDiaporama;
-
-    /**
-     * @var        ChildCategoryDiaporama one-to-one related ChildCategoryDiaporama object
-     */
-    protected $singleCategoryDiaporama;
-
-    /**
-     * @var        ChildBrandDiaporama one-to-one related ChildBrandDiaporama object
-     */
-    protected $singleBrandDiaporama;
-
-    /**
-     * @var        ChildFolderDiaporama one-to-one related ChildFolderDiaporama object
-     */
-    protected $singleFolderDiaporama;
-
-    /**
-     * @var        ChildContentDiaporama one-to-one related ChildContentDiaporama object
-     */
-    protected $singleContentDiaporama;
-
-    /**
-     * @var        ObjectCollection|ChildProductDiaporamaImage[] Collection to store aggregation of ChildProductDiaporamaImage objects.
-     */
-    protected $collProductDiaporamaImages;
-    protected $collProductDiaporamaImagesPartial;
-
-    /**
-     * @var        ObjectCollection|ChildCategoryDiaporamaImage[] Collection to store aggregation of ChildCategoryDiaporamaImage objects.
-     */
-    protected $collCategoryDiaporamaImages;
-    protected $collCategoryDiaporamaImagesPartial;
-
-    /**
-     * @var        ObjectCollection|ChildBrandDiaporamaImage[] Collection to store aggregation of ChildBrandDiaporamaImage objects.
-     */
-    protected $collBrandDiaporamaImages;
-    protected $collBrandDiaporamaImagesPartial;
-
-    /**
-     * @var        ObjectCollection|ChildFolderDiaporamaImage[] Collection to store aggregation of ChildFolderDiaporamaImage objects.
-     */
-    protected $collFolderDiaporamaImages;
-    protected $collFolderDiaporamaImagesPartial;
-
-    /**
-     * @var        ObjectCollection|ChildContentDiaporamaImage[] Collection to store aggregation of ChildContentDiaporamaImage objects.
-     */
-    protected $collContentDiaporamaImages;
-    protected $collContentDiaporamaImagesPartial;
-
-    /**
      * @var        ObjectCollection|ChildDiaporamaI18n[] Collection to store aggregation of ChildDiaporamaI18n objects.
      */
     protected $collDiaporamaI18ns;
     protected $collDiaporamaI18nsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildDiaporamaVersion[] Collection to store aggregation of ChildDiaporamaVersion objects.
+     */
+    protected $collDiaporamaVersions;
+    protected $collDiaporamaVersionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -185,6 +164,14 @@ abstract class Diaporama implements ActiveRecordInterface
      */
     protected $currentTranslations;
 
+    // versionable behavior
+
+
+    /**
+     * @var bool
+     */
+    protected $enforceVersion = false;
+
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection
@@ -195,43 +182,32 @@ abstract class Diaporama implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection
      */
-    protected $productDiaporamaImagesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection
-     */
-    protected $categoryDiaporamaImagesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection
-     */
-    protected $brandDiaporamaImagesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection
-     */
-    protected $folderDiaporamaImagesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection
-     */
-    protected $contentDiaporamaImagesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection
-     */
     protected $diaporamaI18nsScheduledForDeletion = null;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection
+     */
+    protected $diaporamaVersionsScheduledForDeletion = null;
+
+    /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->version = 0;
+    }
+
+    /**
      * Initializes internal state of Diaporamas\Model\Base\Diaporama object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -508,14 +484,107 @@ abstract class Diaporama implements ActiveRecordInterface
     }
 
     /**
-     * Get the [descendant_class] column value.
+     * Get the [diaporama_type_id] column value.
+     *
+     * @return   int
+     */
+    public function getDiaporamaTypeId()
+    {
+
+        return $this->diaporama_type_id;
+    }
+
+    /**
+     * Get the [entity_id] column value.
+     *
+     * @return   int
+     */
+    public function getEntityId()
+    {
+
+        return $this->entity_id;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [created_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getCreatedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->created_at;
+        } else {
+            return $this->created_at instanceof \DateTime ? $this->created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [updated_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getUpdatedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->updated_at;
+        } else {
+            return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version] column value.
+     *
+     * @return   int
+     */
+    public function getVersion()
+    {
+
+        return $this->version;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [version_created_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getVersionCreatedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->version_created_at;
+        } else {
+            return $this->version_created_at instanceof \DateTime ? $this->version_created_at->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [version_created_by] column value.
      *
      * @return   string
      */
-    public function getDescendantClass()
+    public function getVersionCreatedBy()
     {
 
-        return $this->descendant_class;
+        return $this->version_created_by;
     }
 
     /**
@@ -561,25 +630,155 @@ abstract class Diaporama implements ActiveRecordInterface
     } // setShortcode()
 
     /**
-     * Set the value of [descendant_class] column.
+     * Set the value of [diaporama_type_id] column.
+     *
+     * @param      int $v new value
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function setDiaporamaTypeId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->diaporama_type_id !== $v) {
+            $this->diaporama_type_id = $v;
+            $this->modifiedColumns[DiaporamaTableMap::DIAPORAMA_TYPE_ID] = true;
+        }
+
+        if ($this->aDiaporamaType !== null && $this->aDiaporamaType->getId() !== $v) {
+            $this->aDiaporamaType = null;
+        }
+
+
+        return $this;
+    } // setDiaporamaTypeId()
+
+    /**
+     * Set the value of [entity_id] column.
+     *
+     * @param      int $v new value
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function setEntityId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->entity_id !== $v) {
+            $this->entity_id = $v;
+            $this->modifiedColumns[DiaporamaTableMap::ENTITY_ID] = true;
+        }
+
+
+        return $this;
+    } // setEntityId()
+
+    /**
+     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function setCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->created_at !== null || $dt !== null) {
+            if ($dt !== $this->created_at) {
+                $this->created_at = $dt;
+                $this->modifiedColumns[DiaporamaTableMap::CREATED_AT] = true;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setCreatedAt()
+
+    /**
+     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function setUpdatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->updated_at !== null || $dt !== null) {
+            if ($dt !== $this->updated_at) {
+                $this->updated_at = $dt;
+                $this->modifiedColumns[DiaporamaTableMap::UPDATED_AT] = true;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setUpdatedAt()
+
+    /**
+     * Set the value of [version] column.
+     *
+     * @param      int $v new value
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function setVersion($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->version !== $v) {
+            $this->version = $v;
+            $this->modifiedColumns[DiaporamaTableMap::VERSION] = true;
+        }
+
+
+        return $this;
+    } // setVersion()
+
+    /**
+     * Sets the value of [version_created_at] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function setVersionCreatedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->version_created_at !== null || $dt !== null) {
+            if ($dt !== $this->version_created_at) {
+                $this->version_created_at = $dt;
+                $this->modifiedColumns[DiaporamaTableMap::VERSION_CREATED_AT] = true;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setVersionCreatedAt()
+
+    /**
+     * Set the value of [version_created_by] column.
      *
      * @param      string $v new value
      * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
      */
-    public function setDescendantClass($v)
+    public function setVersionCreatedBy($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->descendant_class !== $v) {
-            $this->descendant_class = $v;
-            $this->modifiedColumns[DiaporamaTableMap::DESCENDANT_CLASS] = true;
+        if ($this->version_created_by !== $v) {
+            $this->version_created_by = $v;
+            $this->modifiedColumns[DiaporamaTableMap::VERSION_CREATED_BY] = true;
         }
 
 
         return $this;
-    } // setDescendantClass()
+    } // setVersionCreatedBy()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -591,6 +790,10 @@ abstract class Diaporama implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->version !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -624,8 +827,35 @@ abstract class Diaporama implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : DiaporamaTableMap::translateFieldName('Shortcode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->shortcode = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaTableMap::translateFieldName('DescendantClass', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->descendant_class = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaTableMap::translateFieldName('DiaporamaTypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->diaporama_type_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : DiaporamaTableMap::translateFieldName('EntityId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->entity_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : DiaporamaTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : DiaporamaTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : DiaporamaTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : DiaporamaTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : DiaporamaTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->version_created_by = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -634,7 +864,7 @@ abstract class Diaporama implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = DiaporamaTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = DiaporamaTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Diaporamas\Model\Diaporama object", 0, $e);
@@ -656,6 +886,9 @@ abstract class Diaporama implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aDiaporamaType !== null && $this->diaporama_type_id !== $this->aDiaporamaType->getId()) {
+            $this->aDiaporamaType = null;
+        }
     } // ensureConsistency
 
     /**
@@ -695,29 +928,12 @@ abstract class Diaporama implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aDiaporamaType = null;
             $this->collDiaporamaImages = null;
 
-            $this->singleProductDiaporama = null;
-
-            $this->singleCategoryDiaporama = null;
-
-            $this->singleBrandDiaporama = null;
-
-            $this->singleFolderDiaporama = null;
-
-            $this->singleContentDiaporama = null;
-
-            $this->collProductDiaporamaImages = null;
-
-            $this->collCategoryDiaporamaImages = null;
-
-            $this->collBrandDiaporamaImages = null;
-
-            $this->collFolderDiaporamaImages = null;
-
-            $this->collContentDiaporamaImages = null;
-
             $this->collDiaporamaI18ns = null;
+
+            $this->collDiaporamaVersions = null;
 
         } // if (deep)
     }
@@ -787,10 +1003,29 @@ abstract class Diaporama implements ActiveRecordInterface
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // versionable behavior
+            if ($this->isVersioningNecessary()) {
+                $this->setVersion($this->isNew() ? 1 : $this->getLastVersionNumber($con) + 1);
+                if (!$this->isColumnModified(DiaporamaTableMap::VERSION_CREATED_AT)) {
+                    $this->setVersionCreatedAt(time());
+                }
+                $createVersion = true; // for postSave hook
+            }
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
+                // timestampable behavior
+                if (!$this->isColumnModified(DiaporamaTableMap::CREATED_AT)) {
+                    $this->setCreatedAt(time());
+                }
+                if (!$this->isColumnModified(DiaporamaTableMap::UPDATED_AT)) {
+                    $this->setUpdatedAt(time());
+                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
+                // timestampable behavior
+                if ($this->isModified() && !$this->isColumnModified(DiaporamaTableMap::UPDATED_AT)) {
+                    $this->setUpdatedAt(time());
+                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
@@ -800,6 +1035,10 @@ abstract class Diaporama implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // versionable behavior
+                if (isset($createVersion)) {
+                    $this->addVersion($con);
+                }
                 DiaporamaTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -830,6 +1069,18 @@ abstract class Diaporama implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aDiaporamaType !== null) {
+                if ($this->aDiaporamaType->isModified() || $this->aDiaporamaType->isNew()) {
+                    $affectedRows += $this->aDiaporamaType->save($con);
+                }
+                $this->setDiaporamaType($this->aDiaporamaType);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -858,121 +1109,6 @@ abstract class Diaporama implements ActiveRecordInterface
                 }
             }
 
-            if ($this->singleProductDiaporama !== null) {
-                if (!$this->singleProductDiaporama->isDeleted() && ($this->singleProductDiaporama->isNew() || $this->singleProductDiaporama->isModified())) {
-                    $affectedRows += $this->singleProductDiaporama->save($con);
-                }
-            }
-
-            if ($this->singleCategoryDiaporama !== null) {
-                if (!$this->singleCategoryDiaporama->isDeleted() && ($this->singleCategoryDiaporama->isNew() || $this->singleCategoryDiaporama->isModified())) {
-                    $affectedRows += $this->singleCategoryDiaporama->save($con);
-                }
-            }
-
-            if ($this->singleBrandDiaporama !== null) {
-                if (!$this->singleBrandDiaporama->isDeleted() && ($this->singleBrandDiaporama->isNew() || $this->singleBrandDiaporama->isModified())) {
-                    $affectedRows += $this->singleBrandDiaporama->save($con);
-                }
-            }
-
-            if ($this->singleFolderDiaporama !== null) {
-                if (!$this->singleFolderDiaporama->isDeleted() && ($this->singleFolderDiaporama->isNew() || $this->singleFolderDiaporama->isModified())) {
-                    $affectedRows += $this->singleFolderDiaporama->save($con);
-                }
-            }
-
-            if ($this->singleContentDiaporama !== null) {
-                if (!$this->singleContentDiaporama->isDeleted() && ($this->singleContentDiaporama->isNew() || $this->singleContentDiaporama->isModified())) {
-                    $affectedRows += $this->singleContentDiaporama->save($con);
-                }
-            }
-
-            if ($this->productDiaporamaImagesScheduledForDeletion !== null) {
-                if (!$this->productDiaporamaImagesScheduledForDeletion->isEmpty()) {
-                    \Diaporamas\Model\ProductDiaporamaImageQuery::create()
-                        ->filterByPrimaryKeys($this->productDiaporamaImagesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->productDiaporamaImagesScheduledForDeletion = null;
-                }
-            }
-
-                if ($this->collProductDiaporamaImages !== null) {
-            foreach ($this->collProductDiaporamaImages as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->categoryDiaporamaImagesScheduledForDeletion !== null) {
-                if (!$this->categoryDiaporamaImagesScheduledForDeletion->isEmpty()) {
-                    \Diaporamas\Model\CategoryDiaporamaImageQuery::create()
-                        ->filterByPrimaryKeys($this->categoryDiaporamaImagesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->categoryDiaporamaImagesScheduledForDeletion = null;
-                }
-            }
-
-                if ($this->collCategoryDiaporamaImages !== null) {
-            foreach ($this->collCategoryDiaporamaImages as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->brandDiaporamaImagesScheduledForDeletion !== null) {
-                if (!$this->brandDiaporamaImagesScheduledForDeletion->isEmpty()) {
-                    \Diaporamas\Model\BrandDiaporamaImageQuery::create()
-                        ->filterByPrimaryKeys($this->brandDiaporamaImagesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->brandDiaporamaImagesScheduledForDeletion = null;
-                }
-            }
-
-                if ($this->collBrandDiaporamaImages !== null) {
-            foreach ($this->collBrandDiaporamaImages as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->folderDiaporamaImagesScheduledForDeletion !== null) {
-                if (!$this->folderDiaporamaImagesScheduledForDeletion->isEmpty()) {
-                    \Diaporamas\Model\FolderDiaporamaImageQuery::create()
-                        ->filterByPrimaryKeys($this->folderDiaporamaImagesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->folderDiaporamaImagesScheduledForDeletion = null;
-                }
-            }
-
-                if ($this->collFolderDiaporamaImages !== null) {
-            foreach ($this->collFolderDiaporamaImages as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->contentDiaporamaImagesScheduledForDeletion !== null) {
-                if (!$this->contentDiaporamaImagesScheduledForDeletion->isEmpty()) {
-                    \Diaporamas\Model\ContentDiaporamaImageQuery::create()
-                        ->filterByPrimaryKeys($this->contentDiaporamaImagesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->contentDiaporamaImagesScheduledForDeletion = null;
-                }
-            }
-
-                if ($this->collContentDiaporamaImages !== null) {
-            foreach ($this->collContentDiaporamaImages as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             if ($this->diaporamaI18nsScheduledForDeletion !== null) {
                 if (!$this->diaporamaI18nsScheduledForDeletion->isEmpty()) {
                     \Diaporamas\Model\DiaporamaI18nQuery::create()
@@ -984,6 +1120,23 @@ abstract class Diaporama implements ActiveRecordInterface
 
                 if ($this->collDiaporamaI18ns !== null) {
             foreach ($this->collDiaporamaI18ns as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->diaporamaVersionsScheduledForDeletion !== null) {
+                if (!$this->diaporamaVersionsScheduledForDeletion->isEmpty()) {
+                    \Diaporamas\Model\DiaporamaVersionQuery::create()
+                        ->filterByPrimaryKeys($this->diaporamaVersionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->diaporamaVersionsScheduledForDeletion = null;
+                }
+            }
+
+                if ($this->collDiaporamaVersions !== null) {
+            foreach ($this->collDiaporamaVersions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1022,8 +1175,26 @@ abstract class Diaporama implements ActiveRecordInterface
         if ($this->isColumnModified(DiaporamaTableMap::SHORTCODE)) {
             $modifiedColumns[':p' . $index++]  = 'SHORTCODE';
         }
-        if ($this->isColumnModified(DiaporamaTableMap::DESCENDANT_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = 'DESCENDANT_CLASS';
+        if ($this->isColumnModified(DiaporamaTableMap::DIAPORAMA_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'DIAPORAMA_TYPE_ID';
+        }
+        if ($this->isColumnModified(DiaporamaTableMap::ENTITY_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'ENTITY_ID';
+        }
+        if ($this->isColumnModified(DiaporamaTableMap::CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
+        }
+        if ($this->isColumnModified(DiaporamaTableMap::UPDATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
+        }
+        if ($this->isColumnModified(DiaporamaTableMap::VERSION)) {
+            $modifiedColumns[':p' . $index++]  = 'VERSION';
+        }
+        if ($this->isColumnModified(DiaporamaTableMap::VERSION_CREATED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'VERSION_CREATED_AT';
+        }
+        if ($this->isColumnModified(DiaporamaTableMap::VERSION_CREATED_BY)) {
+            $modifiedColumns[':p' . $index++]  = 'VERSION_CREATED_BY';
         }
 
         $sql = sprintf(
@@ -1042,8 +1213,26 @@ abstract class Diaporama implements ActiveRecordInterface
                     case 'SHORTCODE':
                         $stmt->bindValue($identifier, $this->shortcode, PDO::PARAM_STR);
                         break;
-                    case 'DESCENDANT_CLASS':
-                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
+                    case 'DIAPORAMA_TYPE_ID':
+                        $stmt->bindValue($identifier, $this->diaporama_type_id, PDO::PARAM_INT);
+                        break;
+                    case 'ENTITY_ID':
+                        $stmt->bindValue($identifier, $this->entity_id, PDO::PARAM_INT);
+                        break;
+                    case 'CREATED_AT':
+                        $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'UPDATED_AT':
+                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'VERSION':
+                        $stmt->bindValue($identifier, $this->version, PDO::PARAM_INT);
+                        break;
+                    case 'VERSION_CREATED_AT':
+                        $stmt->bindValue($identifier, $this->version_created_at ? $this->version_created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'VERSION_CREATED_BY':
+                        $stmt->bindValue($identifier, $this->version_created_by, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1114,7 +1303,25 @@ abstract class Diaporama implements ActiveRecordInterface
                 return $this->getShortcode();
                 break;
             case 2:
-                return $this->getDescendantClass();
+                return $this->getDiaporamaTypeId();
+                break;
+            case 3:
+                return $this->getEntityId();
+                break;
+            case 4:
+                return $this->getCreatedAt();
+                break;
+            case 5:
+                return $this->getUpdatedAt();
+                break;
+            case 6:
+                return $this->getVersion();
+                break;
+            case 7:
+                return $this->getVersionCreatedAt();
+                break;
+            case 8:
+                return $this->getVersionCreatedBy();
                 break;
             default:
                 return null;
@@ -1147,7 +1354,13 @@ abstract class Diaporama implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getShortcode(),
-            $keys[2] => $this->getDescendantClass(),
+            $keys[2] => $this->getDiaporamaTypeId(),
+            $keys[3] => $this->getEntityId(),
+            $keys[4] => $this->getCreatedAt(),
+            $keys[5] => $this->getUpdatedAt(),
+            $keys[6] => $this->getVersion(),
+            $keys[7] => $this->getVersionCreatedAt(),
+            $keys[8] => $this->getVersionCreatedBy(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1155,41 +1368,17 @@ abstract class Diaporama implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aDiaporamaType) {
+                $result['DiaporamaType'] = $this->aDiaporamaType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->collDiaporamaImages) {
                 $result['DiaporamaImages'] = $this->collDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->singleProductDiaporama) {
-                $result['ProductDiaporama'] = $this->singleProductDiaporama->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleCategoryDiaporama) {
-                $result['CategoryDiaporama'] = $this->singleCategoryDiaporama->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleBrandDiaporama) {
-                $result['BrandDiaporama'] = $this->singleBrandDiaporama->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleFolderDiaporama) {
-                $result['FolderDiaporama'] = $this->singleFolderDiaporama->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleContentDiaporama) {
-                $result['ContentDiaporama'] = $this->singleContentDiaporama->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collProductDiaporamaImages) {
-                $result['ProductDiaporamaImages'] = $this->collProductDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collCategoryDiaporamaImages) {
-                $result['CategoryDiaporamaImages'] = $this->collCategoryDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collBrandDiaporamaImages) {
-                $result['BrandDiaporamaImages'] = $this->collBrandDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collFolderDiaporamaImages) {
-                $result['FolderDiaporamaImages'] = $this->collFolderDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collContentDiaporamaImages) {
-                $result['ContentDiaporamaImages'] = $this->collContentDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collDiaporamaI18ns) {
                 $result['DiaporamaI18ns'] = $this->collDiaporamaI18ns->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collDiaporamaVersions) {
+                $result['DiaporamaVersions'] = $this->collDiaporamaVersions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1232,7 +1421,25 @@ abstract class Diaporama implements ActiveRecordInterface
                 $this->setShortcode($value);
                 break;
             case 2:
-                $this->setDescendantClass($value);
+                $this->setDiaporamaTypeId($value);
+                break;
+            case 3:
+                $this->setEntityId($value);
+                break;
+            case 4:
+                $this->setCreatedAt($value);
+                break;
+            case 5:
+                $this->setUpdatedAt($value);
+                break;
+            case 6:
+                $this->setVersion($value);
+                break;
+            case 7:
+                $this->setVersionCreatedAt($value);
+                break;
+            case 8:
+                $this->setVersionCreatedBy($value);
                 break;
         } // switch()
     }
@@ -1260,7 +1467,13 @@ abstract class Diaporama implements ActiveRecordInterface
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setShortcode($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDescendantClass($arr[$keys[2]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDiaporamaTypeId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setEntityId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setVersion($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setVersionCreatedAt($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setVersionCreatedBy($arr[$keys[8]]);
     }
 
     /**
@@ -1274,7 +1487,13 @@ abstract class Diaporama implements ActiveRecordInterface
 
         if ($this->isColumnModified(DiaporamaTableMap::ID)) $criteria->add(DiaporamaTableMap::ID, $this->id);
         if ($this->isColumnModified(DiaporamaTableMap::SHORTCODE)) $criteria->add(DiaporamaTableMap::SHORTCODE, $this->shortcode);
-        if ($this->isColumnModified(DiaporamaTableMap::DESCENDANT_CLASS)) $criteria->add(DiaporamaTableMap::DESCENDANT_CLASS, $this->descendant_class);
+        if ($this->isColumnModified(DiaporamaTableMap::DIAPORAMA_TYPE_ID)) $criteria->add(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $this->diaporama_type_id);
+        if ($this->isColumnModified(DiaporamaTableMap::ENTITY_ID)) $criteria->add(DiaporamaTableMap::ENTITY_ID, $this->entity_id);
+        if ($this->isColumnModified(DiaporamaTableMap::CREATED_AT)) $criteria->add(DiaporamaTableMap::CREATED_AT, $this->created_at);
+        if ($this->isColumnModified(DiaporamaTableMap::UPDATED_AT)) $criteria->add(DiaporamaTableMap::UPDATED_AT, $this->updated_at);
+        if ($this->isColumnModified(DiaporamaTableMap::VERSION)) $criteria->add(DiaporamaTableMap::VERSION, $this->version);
+        if ($this->isColumnModified(DiaporamaTableMap::VERSION_CREATED_AT)) $criteria->add(DiaporamaTableMap::VERSION_CREATED_AT, $this->version_created_at);
+        if ($this->isColumnModified(DiaporamaTableMap::VERSION_CREATED_BY)) $criteria->add(DiaporamaTableMap::VERSION_CREATED_BY, $this->version_created_by);
 
         return $criteria;
     }
@@ -1339,7 +1558,13 @@ abstract class Diaporama implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setShortcode($this->getShortcode());
-        $copyObj->setDescendantClass($this->getDescendantClass());
+        $copyObj->setDiaporamaTypeId($this->getDiaporamaTypeId());
+        $copyObj->setEntityId($this->getEntityId());
+        $copyObj->setCreatedAt($this->getCreatedAt());
+        $copyObj->setUpdatedAt($this->getUpdatedAt());
+        $copyObj->setVersion($this->getVersion());
+        $copyObj->setVersionCreatedAt($this->getVersionCreatedAt());
+        $copyObj->setVersionCreatedBy($this->getVersionCreatedBy());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1352,64 +1577,15 @@ abstract class Diaporama implements ActiveRecordInterface
                 }
             }
 
-            $relObj = $this->getProductDiaporama();
-            if ($relObj) {
-                $copyObj->setProductDiaporama($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getCategoryDiaporama();
-            if ($relObj) {
-                $copyObj->setCategoryDiaporama($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getBrandDiaporama();
-            if ($relObj) {
-                $copyObj->setBrandDiaporama($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getFolderDiaporama();
-            if ($relObj) {
-                $copyObj->setFolderDiaporama($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getContentDiaporama();
-            if ($relObj) {
-                $copyObj->setContentDiaporama($relObj->copy($deepCopy));
-            }
-
-            foreach ($this->getProductDiaporamaImages() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addProductDiaporamaImage($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getCategoryDiaporamaImages() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCategoryDiaporamaImage($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getBrandDiaporamaImages() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addBrandDiaporamaImage($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getFolderDiaporamaImages() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addFolderDiaporamaImage($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getContentDiaporamaImages() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addContentDiaporamaImage($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getDiaporamaI18ns() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addDiaporamaI18n($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getDiaporamaVersions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addDiaporamaVersion($relObj->copy($deepCopy));
                 }
             }
 
@@ -1443,6 +1619,57 @@ abstract class Diaporama implements ActiveRecordInterface
         return $copyObj;
     }
 
+    /**
+     * Declares an association between this object and a ChildDiaporamaType object.
+     *
+     * @param                  ChildDiaporamaType $v
+     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setDiaporamaType(ChildDiaporamaType $v = null)
+    {
+        if ($v === null) {
+            $this->setDiaporamaTypeId(NULL);
+        } else {
+            $this->setDiaporamaTypeId($v->getId());
+        }
+
+        $this->aDiaporamaType = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildDiaporamaType object, it will not be re-added.
+        if ($v !== null) {
+            $v->addDiaporama($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildDiaporamaType object
+     *
+     * @param      ConnectionInterface $con Optional Connection object.
+     * @return                 ChildDiaporamaType The associated ChildDiaporamaType object.
+     * @throws PropelException
+     */
+    public function getDiaporamaType(ConnectionInterface $con = null)
+    {
+        if ($this->aDiaporamaType === null && ($this->diaporama_type_id !== null)) {
+            $this->aDiaporamaType = ChildDiaporamaTypeQuery::create()->findPk($this->diaporama_type_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDiaporamaType->addDiaporamas($this);
+             */
+        }
+
+        return $this->aDiaporamaType;
+    }
+
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -1457,23 +1684,11 @@ abstract class Diaporama implements ActiveRecordInterface
         if ('DiaporamaImage' == $relationName) {
             return $this->initDiaporamaImages();
         }
-        if ('ProductDiaporamaImage' == $relationName) {
-            return $this->initProductDiaporamaImages();
-        }
-        if ('CategoryDiaporamaImage' == $relationName) {
-            return $this->initCategoryDiaporamaImages();
-        }
-        if ('BrandDiaporamaImage' == $relationName) {
-            return $this->initBrandDiaporamaImages();
-        }
-        if ('FolderDiaporamaImage' == $relationName) {
-            return $this->initFolderDiaporamaImages();
-        }
-        if ('ContentDiaporamaImage' == $relationName) {
-            return $this->initContentDiaporamaImages();
-        }
         if ('DiaporamaI18n' == $relationName) {
             return $this->initDiaporamaI18ns();
+        }
+        if ('DiaporamaVersion' == $relationName) {
+            return $this->initDiaporamaVersions();
         }
     }
 
@@ -1647,13 +1862,13 @@ abstract class Diaporama implements ActiveRecordInterface
     }
 
     /**
-     * Method called to associate a ChildDiaporamaImage object to this object
-     * through the ChildDiaporamaImage foreign key attribute.
+     * Method called to associate a \Diaporamas\Model\Base\DiaporamaImage object to this object
+     * through the \Diaporamas\Model\Base\DiaporamaImage foreign key attribute.
      *
-     * @param    ChildDiaporamaImage $l ChildDiaporamaImage
+     * @param    \Diaporamas\Model\Base\DiaporamaImage $l \Diaporamas\Model\Base\DiaporamaImage
      * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
      */
-    public function addDiaporamaImage(ChildDiaporamaImage $l)
+    public function addDiaporamaImage(\Diaporamas\Model\Base\DiaporamaImage $l)
     {
         if ($this->collDiaporamaImages === null) {
             $this->initDiaporamaImages();
@@ -1695,411 +1910,13 @@ abstract class Diaporama implements ActiveRecordInterface
         return $this;
     }
 
-    /**
-     * Gets a single ChildProductDiaporama object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildProductDiaporama
-     * @throws PropelException
-     */
-    public function getProductDiaporama(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleProductDiaporama === null && !$this->isNew()) {
-            $this->singleProductDiaporama = ChildProductDiaporamaQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleProductDiaporama;
-    }
-
-    /**
-     * Sets a single ChildProductDiaporama object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildProductDiaporama $v ChildProductDiaporama
-     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setProductDiaporama(ChildProductDiaporama $v = null)
-    {
-        $this->singleProductDiaporama = $v;
-
-        // Make sure that that the passed-in ChildProductDiaporama isn't already associated with this object
-        if ($v !== null && $v->getDiaporama(null, false) === null) {
-            $v->setDiaporama($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildCategoryDiaporama object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildCategoryDiaporama
-     * @throws PropelException
-     */
-    public function getCategoryDiaporama(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleCategoryDiaporama === null && !$this->isNew()) {
-            $this->singleCategoryDiaporama = ChildCategoryDiaporamaQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleCategoryDiaporama;
-    }
-
-    /**
-     * Sets a single ChildCategoryDiaporama object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildCategoryDiaporama $v ChildCategoryDiaporama
-     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setCategoryDiaporama(ChildCategoryDiaporama $v = null)
-    {
-        $this->singleCategoryDiaporama = $v;
-
-        // Make sure that that the passed-in ChildCategoryDiaporama isn't already associated with this object
-        if ($v !== null && $v->getDiaporama(null, false) === null) {
-            $v->setDiaporama($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildBrandDiaporama object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildBrandDiaporama
-     * @throws PropelException
-     */
-    public function getBrandDiaporama(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleBrandDiaporama === null && !$this->isNew()) {
-            $this->singleBrandDiaporama = ChildBrandDiaporamaQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleBrandDiaporama;
-    }
-
-    /**
-     * Sets a single ChildBrandDiaporama object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildBrandDiaporama $v ChildBrandDiaporama
-     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setBrandDiaporama(ChildBrandDiaporama $v = null)
-    {
-        $this->singleBrandDiaporama = $v;
-
-        // Make sure that that the passed-in ChildBrandDiaporama isn't already associated with this object
-        if ($v !== null && $v->getDiaporama(null, false) === null) {
-            $v->setDiaporama($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildFolderDiaporama object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildFolderDiaporama
-     * @throws PropelException
-     */
-    public function getFolderDiaporama(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleFolderDiaporama === null && !$this->isNew()) {
-            $this->singleFolderDiaporama = ChildFolderDiaporamaQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleFolderDiaporama;
-    }
-
-    /**
-     * Sets a single ChildFolderDiaporama object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildFolderDiaporama $v ChildFolderDiaporama
-     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setFolderDiaporama(ChildFolderDiaporama $v = null)
-    {
-        $this->singleFolderDiaporama = $v;
-
-        // Make sure that that the passed-in ChildFolderDiaporama isn't already associated with this object
-        if ($v !== null && $v->getDiaporama(null, false) === null) {
-            $v->setDiaporama($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ChildContentDiaporama object, which is related to this object by a one-to-one relationship.
-     *
-     * @param      ConnectionInterface $con optional connection object
-     * @return                 ChildContentDiaporama
-     * @throws PropelException
-     */
-    public function getContentDiaporama(ConnectionInterface $con = null)
-    {
-
-        if ($this->singleContentDiaporama === null && !$this->isNew()) {
-            $this->singleContentDiaporama = ChildContentDiaporamaQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleContentDiaporama;
-    }
-
-    /**
-     * Sets a single ChildContentDiaporama object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ChildContentDiaporama $v ChildContentDiaporama
-     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setContentDiaporama(ChildContentDiaporama $v = null)
-    {
-        $this->singleContentDiaporama = $v;
-
-        // Make sure that that the passed-in ChildContentDiaporama isn't already associated with this object
-        if ($v !== null && $v->getDiaporama(null, false) === null) {
-            $v->setDiaporama($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Clears out the collProductDiaporamaImages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addProductDiaporamaImages()
-     */
-    public function clearProductDiaporamaImages()
-    {
-        $this->collProductDiaporamaImages = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collProductDiaporamaImages collection loaded partially.
-     */
-    public function resetPartialProductDiaporamaImages($v = true)
-    {
-        $this->collProductDiaporamaImagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collProductDiaporamaImages collection.
-     *
-     * By default this just sets the collProductDiaporamaImages collection to an empty array (like clearcollProductDiaporamaImages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initProductDiaporamaImages($overrideExisting = true)
-    {
-        if (null !== $this->collProductDiaporamaImages && !$overrideExisting) {
-            return;
-        }
-        $this->collProductDiaporamaImages = new ObjectCollection();
-        $this->collProductDiaporamaImages->setModel('\Diaporamas\Model\ProductDiaporamaImage');
-    }
-
-    /**
-     * Gets an array of ChildProductDiaporamaImage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildDiaporama is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return Collection|ChildProductDiaporamaImage[] List of ChildProductDiaporamaImage objects
-     * @throws PropelException
-     */
-    public function getProductDiaporamaImages($criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collProductDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collProductDiaporamaImages || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collProductDiaporamaImages) {
-                // return empty collection
-                $this->initProductDiaporamaImages();
-            } else {
-                $collProductDiaporamaImages = ChildProductDiaporamaImageQuery::create(null, $criteria)
-                    ->filterByDiaporama($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collProductDiaporamaImagesPartial && count($collProductDiaporamaImages)) {
-                        $this->initProductDiaporamaImages(false);
-
-                        foreach ($collProductDiaporamaImages as $obj) {
-                            if (false == $this->collProductDiaporamaImages->contains($obj)) {
-                                $this->collProductDiaporamaImages->append($obj);
-                            }
-                        }
-
-                        $this->collProductDiaporamaImagesPartial = true;
-                    }
-
-                    reset($collProductDiaporamaImages);
-
-                    return $collProductDiaporamaImages;
-                }
-
-                if ($partial && $this->collProductDiaporamaImages) {
-                    foreach ($this->collProductDiaporamaImages as $obj) {
-                        if ($obj->isNew()) {
-                            $collProductDiaporamaImages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collProductDiaporamaImages = $collProductDiaporamaImages;
-                $this->collProductDiaporamaImagesPartial = false;
-            }
-        }
-
-        return $this->collProductDiaporamaImages;
-    }
-
-    /**
-     * Sets a collection of ProductDiaporamaImage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $productDiaporamaImages A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return   ChildDiaporama The current object (for fluent API support)
-     */
-    public function setProductDiaporamaImages(Collection $productDiaporamaImages, ConnectionInterface $con = null)
-    {
-        $productDiaporamaImagesToDelete = $this->getProductDiaporamaImages(new Criteria(), $con)->diff($productDiaporamaImages);
-
-
-        $this->productDiaporamaImagesScheduledForDeletion = $productDiaporamaImagesToDelete;
-
-        foreach ($productDiaporamaImagesToDelete as $productDiaporamaImageRemoved) {
-            $productDiaporamaImageRemoved->setDiaporama(null);
-        }
-
-        $this->collProductDiaporamaImages = null;
-        foreach ($productDiaporamaImages as $productDiaporamaImage) {
-            $this->addProductDiaporamaImage($productDiaporamaImage);
-        }
-
-        $this->collProductDiaporamaImages = $productDiaporamaImages;
-        $this->collProductDiaporamaImagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related ProductDiaporamaImage objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related ProductDiaporamaImage objects.
-     * @throws PropelException
-     */
-    public function countProductDiaporamaImages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collProductDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collProductDiaporamaImages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collProductDiaporamaImages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getProductDiaporamaImages());
-            }
-
-            $query = ChildProductDiaporamaImageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByDiaporama($this)
-                ->count($con);
-        }
-
-        return count($this->collProductDiaporamaImages);
-    }
-
-    /**
-     * Method called to associate a ChildProductDiaporamaImage object to this object
-     * through the ChildProductDiaporamaImage foreign key attribute.
-     *
-     * @param    ChildProductDiaporamaImage $l ChildProductDiaporamaImage
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function addProductDiaporamaImage(ChildProductDiaporamaImage $l)
-    {
-        if ($this->collProductDiaporamaImages === null) {
-            $this->initProductDiaporamaImages();
-            $this->collProductDiaporamaImagesPartial = true;
-        }
-
-        if (!in_array($l, $this->collProductDiaporamaImages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddProductDiaporamaImage($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ProductDiaporamaImage $productDiaporamaImage The productDiaporamaImage object to add.
-     */
-    protected function doAddProductDiaporamaImage($productDiaporamaImage)
-    {
-        $this->collProductDiaporamaImages[]= $productDiaporamaImage;
-        $productDiaporamaImage->setDiaporama($this);
-    }
-
-    /**
-     * @param  ProductDiaporamaImage $productDiaporamaImage The productDiaporamaImage object to remove.
-     * @return ChildDiaporama The current object (for fluent API support)
-     */
-    public function removeProductDiaporamaImage($productDiaporamaImage)
-    {
-        if ($this->getProductDiaporamaImages()->contains($productDiaporamaImage)) {
-            $this->collProductDiaporamaImages->remove($this->collProductDiaporamaImages->search($productDiaporamaImage));
-            if (null === $this->productDiaporamaImagesScheduledForDeletion) {
-                $this->productDiaporamaImagesScheduledForDeletion = clone $this->collProductDiaporamaImages;
-                $this->productDiaporamaImagesScheduledForDeletion->clear();
-            }
-            $this->productDiaporamaImagesScheduledForDeletion[]= clone $productDiaporamaImage;
-            $productDiaporamaImage->setDiaporama(null);
-        }
-
-        return $this;
-    }
-
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
      * Otherwise if this Diaporama is new, it will return
      * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related ProductDiaporamaImages from storage.
+     * been saved, it will retrieve related DiaporamaImages from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2108,1111 +1925,14 @@ abstract class Diaporama implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildProductDiaporamaImage[] List of ChildProductDiaporamaImage objects
+     * @return Collection|ChildDiaporamaImage[] List of ChildDiaporamaImage objects
      */
-    public function getProductDiaporamaImagesJoinProductImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getDiaporamaImagesJoinDiaporamaType($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildProductDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('ProductImage', $joinBehavior);
+        $query = ChildDiaporamaImageQuery::create(null, $criteria);
+        $query->joinWith('DiaporamaType', $joinBehavior);
 
-        return $this->getProductDiaporamaImages($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related ProductDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildProductDiaporamaImage[] List of ChildProductDiaporamaImage objects
-     */
-    public function getProductDiaporamaImagesJoinDiaporamaImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildProductDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('DiaporamaImage', $joinBehavior);
-
-        return $this->getProductDiaporamaImages($query, $con);
-    }
-
-    /**
-     * Clears out the collCategoryDiaporamaImages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addCategoryDiaporamaImages()
-     */
-    public function clearCategoryDiaporamaImages()
-    {
-        $this->collCategoryDiaporamaImages = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collCategoryDiaporamaImages collection loaded partially.
-     */
-    public function resetPartialCategoryDiaporamaImages($v = true)
-    {
-        $this->collCategoryDiaporamaImagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collCategoryDiaporamaImages collection.
-     *
-     * By default this just sets the collCategoryDiaporamaImages collection to an empty array (like clearcollCategoryDiaporamaImages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initCategoryDiaporamaImages($overrideExisting = true)
-    {
-        if (null !== $this->collCategoryDiaporamaImages && !$overrideExisting) {
-            return;
-        }
-        $this->collCategoryDiaporamaImages = new ObjectCollection();
-        $this->collCategoryDiaporamaImages->setModel('\Diaporamas\Model\CategoryDiaporamaImage');
-    }
-
-    /**
-     * Gets an array of ChildCategoryDiaporamaImage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildDiaporama is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return Collection|ChildCategoryDiaporamaImage[] List of ChildCategoryDiaporamaImage objects
-     * @throws PropelException
-     */
-    public function getCategoryDiaporamaImages($criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collCategoryDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collCategoryDiaporamaImages || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collCategoryDiaporamaImages) {
-                // return empty collection
-                $this->initCategoryDiaporamaImages();
-            } else {
-                $collCategoryDiaporamaImages = ChildCategoryDiaporamaImageQuery::create(null, $criteria)
-                    ->filterByDiaporama($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collCategoryDiaporamaImagesPartial && count($collCategoryDiaporamaImages)) {
-                        $this->initCategoryDiaporamaImages(false);
-
-                        foreach ($collCategoryDiaporamaImages as $obj) {
-                            if (false == $this->collCategoryDiaporamaImages->contains($obj)) {
-                                $this->collCategoryDiaporamaImages->append($obj);
-                            }
-                        }
-
-                        $this->collCategoryDiaporamaImagesPartial = true;
-                    }
-
-                    reset($collCategoryDiaporamaImages);
-
-                    return $collCategoryDiaporamaImages;
-                }
-
-                if ($partial && $this->collCategoryDiaporamaImages) {
-                    foreach ($this->collCategoryDiaporamaImages as $obj) {
-                        if ($obj->isNew()) {
-                            $collCategoryDiaporamaImages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collCategoryDiaporamaImages = $collCategoryDiaporamaImages;
-                $this->collCategoryDiaporamaImagesPartial = false;
-            }
-        }
-
-        return $this->collCategoryDiaporamaImages;
-    }
-
-    /**
-     * Sets a collection of CategoryDiaporamaImage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $categoryDiaporamaImages A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return   ChildDiaporama The current object (for fluent API support)
-     */
-    public function setCategoryDiaporamaImages(Collection $categoryDiaporamaImages, ConnectionInterface $con = null)
-    {
-        $categoryDiaporamaImagesToDelete = $this->getCategoryDiaporamaImages(new Criteria(), $con)->diff($categoryDiaporamaImages);
-
-
-        $this->categoryDiaporamaImagesScheduledForDeletion = $categoryDiaporamaImagesToDelete;
-
-        foreach ($categoryDiaporamaImagesToDelete as $categoryDiaporamaImageRemoved) {
-            $categoryDiaporamaImageRemoved->setDiaporama(null);
-        }
-
-        $this->collCategoryDiaporamaImages = null;
-        foreach ($categoryDiaporamaImages as $categoryDiaporamaImage) {
-            $this->addCategoryDiaporamaImage($categoryDiaporamaImage);
-        }
-
-        $this->collCategoryDiaporamaImages = $categoryDiaporamaImages;
-        $this->collCategoryDiaporamaImagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related CategoryDiaporamaImage objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related CategoryDiaporamaImage objects.
-     * @throws PropelException
-     */
-    public function countCategoryDiaporamaImages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collCategoryDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collCategoryDiaporamaImages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCategoryDiaporamaImages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getCategoryDiaporamaImages());
-            }
-
-            $query = ChildCategoryDiaporamaImageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByDiaporama($this)
-                ->count($con);
-        }
-
-        return count($this->collCategoryDiaporamaImages);
-    }
-
-    /**
-     * Method called to associate a ChildCategoryDiaporamaImage object to this object
-     * through the ChildCategoryDiaporamaImage foreign key attribute.
-     *
-     * @param    ChildCategoryDiaporamaImage $l ChildCategoryDiaporamaImage
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function addCategoryDiaporamaImage(ChildCategoryDiaporamaImage $l)
-    {
-        if ($this->collCategoryDiaporamaImages === null) {
-            $this->initCategoryDiaporamaImages();
-            $this->collCategoryDiaporamaImagesPartial = true;
-        }
-
-        if (!in_array($l, $this->collCategoryDiaporamaImages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddCategoryDiaporamaImage($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param CategoryDiaporamaImage $categoryDiaporamaImage The categoryDiaporamaImage object to add.
-     */
-    protected function doAddCategoryDiaporamaImage($categoryDiaporamaImage)
-    {
-        $this->collCategoryDiaporamaImages[]= $categoryDiaporamaImage;
-        $categoryDiaporamaImage->setDiaporama($this);
-    }
-
-    /**
-     * @param  CategoryDiaporamaImage $categoryDiaporamaImage The categoryDiaporamaImage object to remove.
-     * @return ChildDiaporama The current object (for fluent API support)
-     */
-    public function removeCategoryDiaporamaImage($categoryDiaporamaImage)
-    {
-        if ($this->getCategoryDiaporamaImages()->contains($categoryDiaporamaImage)) {
-            $this->collCategoryDiaporamaImages->remove($this->collCategoryDiaporamaImages->search($categoryDiaporamaImage));
-            if (null === $this->categoryDiaporamaImagesScheduledForDeletion) {
-                $this->categoryDiaporamaImagesScheduledForDeletion = clone $this->collCategoryDiaporamaImages;
-                $this->categoryDiaporamaImagesScheduledForDeletion->clear();
-            }
-            $this->categoryDiaporamaImagesScheduledForDeletion[]= clone $categoryDiaporamaImage;
-            $categoryDiaporamaImage->setDiaporama(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related CategoryDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildCategoryDiaporamaImage[] List of ChildCategoryDiaporamaImage objects
-     */
-    public function getCategoryDiaporamaImagesJoinCategoryImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildCategoryDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('CategoryImage', $joinBehavior);
-
-        return $this->getCategoryDiaporamaImages($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related CategoryDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildCategoryDiaporamaImage[] List of ChildCategoryDiaporamaImage objects
-     */
-    public function getCategoryDiaporamaImagesJoinDiaporamaImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildCategoryDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('DiaporamaImage', $joinBehavior);
-
-        return $this->getCategoryDiaporamaImages($query, $con);
-    }
-
-    /**
-     * Clears out the collBrandDiaporamaImages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addBrandDiaporamaImages()
-     */
-    public function clearBrandDiaporamaImages()
-    {
-        $this->collBrandDiaporamaImages = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collBrandDiaporamaImages collection loaded partially.
-     */
-    public function resetPartialBrandDiaporamaImages($v = true)
-    {
-        $this->collBrandDiaporamaImagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collBrandDiaporamaImages collection.
-     *
-     * By default this just sets the collBrandDiaporamaImages collection to an empty array (like clearcollBrandDiaporamaImages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initBrandDiaporamaImages($overrideExisting = true)
-    {
-        if (null !== $this->collBrandDiaporamaImages && !$overrideExisting) {
-            return;
-        }
-        $this->collBrandDiaporamaImages = new ObjectCollection();
-        $this->collBrandDiaporamaImages->setModel('\Diaporamas\Model\BrandDiaporamaImage');
-    }
-
-    /**
-     * Gets an array of ChildBrandDiaporamaImage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildDiaporama is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return Collection|ChildBrandDiaporamaImage[] List of ChildBrandDiaporamaImage objects
-     * @throws PropelException
-     */
-    public function getBrandDiaporamaImages($criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collBrandDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collBrandDiaporamaImages || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collBrandDiaporamaImages) {
-                // return empty collection
-                $this->initBrandDiaporamaImages();
-            } else {
-                $collBrandDiaporamaImages = ChildBrandDiaporamaImageQuery::create(null, $criteria)
-                    ->filterByDiaporama($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collBrandDiaporamaImagesPartial && count($collBrandDiaporamaImages)) {
-                        $this->initBrandDiaporamaImages(false);
-
-                        foreach ($collBrandDiaporamaImages as $obj) {
-                            if (false == $this->collBrandDiaporamaImages->contains($obj)) {
-                                $this->collBrandDiaporamaImages->append($obj);
-                            }
-                        }
-
-                        $this->collBrandDiaporamaImagesPartial = true;
-                    }
-
-                    reset($collBrandDiaporamaImages);
-
-                    return $collBrandDiaporamaImages;
-                }
-
-                if ($partial && $this->collBrandDiaporamaImages) {
-                    foreach ($this->collBrandDiaporamaImages as $obj) {
-                        if ($obj->isNew()) {
-                            $collBrandDiaporamaImages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collBrandDiaporamaImages = $collBrandDiaporamaImages;
-                $this->collBrandDiaporamaImagesPartial = false;
-            }
-        }
-
-        return $this->collBrandDiaporamaImages;
-    }
-
-    /**
-     * Sets a collection of BrandDiaporamaImage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $brandDiaporamaImages A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return   ChildDiaporama The current object (for fluent API support)
-     */
-    public function setBrandDiaporamaImages(Collection $brandDiaporamaImages, ConnectionInterface $con = null)
-    {
-        $brandDiaporamaImagesToDelete = $this->getBrandDiaporamaImages(new Criteria(), $con)->diff($brandDiaporamaImages);
-
-
-        $this->brandDiaporamaImagesScheduledForDeletion = $brandDiaporamaImagesToDelete;
-
-        foreach ($brandDiaporamaImagesToDelete as $brandDiaporamaImageRemoved) {
-            $brandDiaporamaImageRemoved->setDiaporama(null);
-        }
-
-        $this->collBrandDiaporamaImages = null;
-        foreach ($brandDiaporamaImages as $brandDiaporamaImage) {
-            $this->addBrandDiaporamaImage($brandDiaporamaImage);
-        }
-
-        $this->collBrandDiaporamaImages = $brandDiaporamaImages;
-        $this->collBrandDiaporamaImagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related BrandDiaporamaImage objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related BrandDiaporamaImage objects.
-     * @throws PropelException
-     */
-    public function countBrandDiaporamaImages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collBrandDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collBrandDiaporamaImages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collBrandDiaporamaImages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getBrandDiaporamaImages());
-            }
-
-            $query = ChildBrandDiaporamaImageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByDiaporama($this)
-                ->count($con);
-        }
-
-        return count($this->collBrandDiaporamaImages);
-    }
-
-    /**
-     * Method called to associate a ChildBrandDiaporamaImage object to this object
-     * through the ChildBrandDiaporamaImage foreign key attribute.
-     *
-     * @param    ChildBrandDiaporamaImage $l ChildBrandDiaporamaImage
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function addBrandDiaporamaImage(ChildBrandDiaporamaImage $l)
-    {
-        if ($this->collBrandDiaporamaImages === null) {
-            $this->initBrandDiaporamaImages();
-            $this->collBrandDiaporamaImagesPartial = true;
-        }
-
-        if (!in_array($l, $this->collBrandDiaporamaImages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddBrandDiaporamaImage($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param BrandDiaporamaImage $brandDiaporamaImage The brandDiaporamaImage object to add.
-     */
-    protected function doAddBrandDiaporamaImage($brandDiaporamaImage)
-    {
-        $this->collBrandDiaporamaImages[]= $brandDiaporamaImage;
-        $brandDiaporamaImage->setDiaporama($this);
-    }
-
-    /**
-     * @param  BrandDiaporamaImage $brandDiaporamaImage The brandDiaporamaImage object to remove.
-     * @return ChildDiaporama The current object (for fluent API support)
-     */
-    public function removeBrandDiaporamaImage($brandDiaporamaImage)
-    {
-        if ($this->getBrandDiaporamaImages()->contains($brandDiaporamaImage)) {
-            $this->collBrandDiaporamaImages->remove($this->collBrandDiaporamaImages->search($brandDiaporamaImage));
-            if (null === $this->brandDiaporamaImagesScheduledForDeletion) {
-                $this->brandDiaporamaImagesScheduledForDeletion = clone $this->collBrandDiaporamaImages;
-                $this->brandDiaporamaImagesScheduledForDeletion->clear();
-            }
-            $this->brandDiaporamaImagesScheduledForDeletion[]= clone $brandDiaporamaImage;
-            $brandDiaporamaImage->setDiaporama(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related BrandDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildBrandDiaporamaImage[] List of ChildBrandDiaporamaImage objects
-     */
-    public function getBrandDiaporamaImagesJoinBrandImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildBrandDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('BrandImage', $joinBehavior);
-
-        return $this->getBrandDiaporamaImages($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related BrandDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildBrandDiaporamaImage[] List of ChildBrandDiaporamaImage objects
-     */
-    public function getBrandDiaporamaImagesJoinDiaporamaImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildBrandDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('DiaporamaImage', $joinBehavior);
-
-        return $this->getBrandDiaporamaImages($query, $con);
-    }
-
-    /**
-     * Clears out the collFolderDiaporamaImages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addFolderDiaporamaImages()
-     */
-    public function clearFolderDiaporamaImages()
-    {
-        $this->collFolderDiaporamaImages = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collFolderDiaporamaImages collection loaded partially.
-     */
-    public function resetPartialFolderDiaporamaImages($v = true)
-    {
-        $this->collFolderDiaporamaImagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collFolderDiaporamaImages collection.
-     *
-     * By default this just sets the collFolderDiaporamaImages collection to an empty array (like clearcollFolderDiaporamaImages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initFolderDiaporamaImages($overrideExisting = true)
-    {
-        if (null !== $this->collFolderDiaporamaImages && !$overrideExisting) {
-            return;
-        }
-        $this->collFolderDiaporamaImages = new ObjectCollection();
-        $this->collFolderDiaporamaImages->setModel('\Diaporamas\Model\FolderDiaporamaImage');
-    }
-
-    /**
-     * Gets an array of ChildFolderDiaporamaImage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildDiaporama is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return Collection|ChildFolderDiaporamaImage[] List of ChildFolderDiaporamaImage objects
-     * @throws PropelException
-     */
-    public function getFolderDiaporamaImages($criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collFolderDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collFolderDiaporamaImages || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collFolderDiaporamaImages) {
-                // return empty collection
-                $this->initFolderDiaporamaImages();
-            } else {
-                $collFolderDiaporamaImages = ChildFolderDiaporamaImageQuery::create(null, $criteria)
-                    ->filterByDiaporama($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collFolderDiaporamaImagesPartial && count($collFolderDiaporamaImages)) {
-                        $this->initFolderDiaporamaImages(false);
-
-                        foreach ($collFolderDiaporamaImages as $obj) {
-                            if (false == $this->collFolderDiaporamaImages->contains($obj)) {
-                                $this->collFolderDiaporamaImages->append($obj);
-                            }
-                        }
-
-                        $this->collFolderDiaporamaImagesPartial = true;
-                    }
-
-                    reset($collFolderDiaporamaImages);
-
-                    return $collFolderDiaporamaImages;
-                }
-
-                if ($partial && $this->collFolderDiaporamaImages) {
-                    foreach ($this->collFolderDiaporamaImages as $obj) {
-                        if ($obj->isNew()) {
-                            $collFolderDiaporamaImages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collFolderDiaporamaImages = $collFolderDiaporamaImages;
-                $this->collFolderDiaporamaImagesPartial = false;
-            }
-        }
-
-        return $this->collFolderDiaporamaImages;
-    }
-
-    /**
-     * Sets a collection of FolderDiaporamaImage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $folderDiaporamaImages A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return   ChildDiaporama The current object (for fluent API support)
-     */
-    public function setFolderDiaporamaImages(Collection $folderDiaporamaImages, ConnectionInterface $con = null)
-    {
-        $folderDiaporamaImagesToDelete = $this->getFolderDiaporamaImages(new Criteria(), $con)->diff($folderDiaporamaImages);
-
-
-        $this->folderDiaporamaImagesScheduledForDeletion = $folderDiaporamaImagesToDelete;
-
-        foreach ($folderDiaporamaImagesToDelete as $folderDiaporamaImageRemoved) {
-            $folderDiaporamaImageRemoved->setDiaporama(null);
-        }
-
-        $this->collFolderDiaporamaImages = null;
-        foreach ($folderDiaporamaImages as $folderDiaporamaImage) {
-            $this->addFolderDiaporamaImage($folderDiaporamaImage);
-        }
-
-        $this->collFolderDiaporamaImages = $folderDiaporamaImages;
-        $this->collFolderDiaporamaImagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related FolderDiaporamaImage objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related FolderDiaporamaImage objects.
-     * @throws PropelException
-     */
-    public function countFolderDiaporamaImages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collFolderDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collFolderDiaporamaImages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collFolderDiaporamaImages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getFolderDiaporamaImages());
-            }
-
-            $query = ChildFolderDiaporamaImageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByDiaporama($this)
-                ->count($con);
-        }
-
-        return count($this->collFolderDiaporamaImages);
-    }
-
-    /**
-     * Method called to associate a ChildFolderDiaporamaImage object to this object
-     * through the ChildFolderDiaporamaImage foreign key attribute.
-     *
-     * @param    ChildFolderDiaporamaImage $l ChildFolderDiaporamaImage
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function addFolderDiaporamaImage(ChildFolderDiaporamaImage $l)
-    {
-        if ($this->collFolderDiaporamaImages === null) {
-            $this->initFolderDiaporamaImages();
-            $this->collFolderDiaporamaImagesPartial = true;
-        }
-
-        if (!in_array($l, $this->collFolderDiaporamaImages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddFolderDiaporamaImage($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param FolderDiaporamaImage $folderDiaporamaImage The folderDiaporamaImage object to add.
-     */
-    protected function doAddFolderDiaporamaImage($folderDiaporamaImage)
-    {
-        $this->collFolderDiaporamaImages[]= $folderDiaporamaImage;
-        $folderDiaporamaImage->setDiaporama($this);
-    }
-
-    /**
-     * @param  FolderDiaporamaImage $folderDiaporamaImage The folderDiaporamaImage object to remove.
-     * @return ChildDiaporama The current object (for fluent API support)
-     */
-    public function removeFolderDiaporamaImage($folderDiaporamaImage)
-    {
-        if ($this->getFolderDiaporamaImages()->contains($folderDiaporamaImage)) {
-            $this->collFolderDiaporamaImages->remove($this->collFolderDiaporamaImages->search($folderDiaporamaImage));
-            if (null === $this->folderDiaporamaImagesScheduledForDeletion) {
-                $this->folderDiaporamaImagesScheduledForDeletion = clone $this->collFolderDiaporamaImages;
-                $this->folderDiaporamaImagesScheduledForDeletion->clear();
-            }
-            $this->folderDiaporamaImagesScheduledForDeletion[]= clone $folderDiaporamaImage;
-            $folderDiaporamaImage->setDiaporama(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related FolderDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildFolderDiaporamaImage[] List of ChildFolderDiaporamaImage objects
-     */
-    public function getFolderDiaporamaImagesJoinFolderImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildFolderDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('FolderImage', $joinBehavior);
-
-        return $this->getFolderDiaporamaImages($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related FolderDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildFolderDiaporamaImage[] List of ChildFolderDiaporamaImage objects
-     */
-    public function getFolderDiaporamaImagesJoinDiaporamaImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildFolderDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('DiaporamaImage', $joinBehavior);
-
-        return $this->getFolderDiaporamaImages($query, $con);
-    }
-
-    /**
-     * Clears out the collContentDiaporamaImages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addContentDiaporamaImages()
-     */
-    public function clearContentDiaporamaImages()
-    {
-        $this->collContentDiaporamaImages = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collContentDiaporamaImages collection loaded partially.
-     */
-    public function resetPartialContentDiaporamaImages($v = true)
-    {
-        $this->collContentDiaporamaImagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collContentDiaporamaImages collection.
-     *
-     * By default this just sets the collContentDiaporamaImages collection to an empty array (like clearcollContentDiaporamaImages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initContentDiaporamaImages($overrideExisting = true)
-    {
-        if (null !== $this->collContentDiaporamaImages && !$overrideExisting) {
-            return;
-        }
-        $this->collContentDiaporamaImages = new ObjectCollection();
-        $this->collContentDiaporamaImages->setModel('\Diaporamas\Model\ContentDiaporamaImage');
-    }
-
-    /**
-     * Gets an array of ChildContentDiaporamaImage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildDiaporama is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return Collection|ChildContentDiaporamaImage[] List of ChildContentDiaporamaImage objects
-     * @throws PropelException
-     */
-    public function getContentDiaporamaImages($criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collContentDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collContentDiaporamaImages || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collContentDiaporamaImages) {
-                // return empty collection
-                $this->initContentDiaporamaImages();
-            } else {
-                $collContentDiaporamaImages = ChildContentDiaporamaImageQuery::create(null, $criteria)
-                    ->filterByDiaporama($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collContentDiaporamaImagesPartial && count($collContentDiaporamaImages)) {
-                        $this->initContentDiaporamaImages(false);
-
-                        foreach ($collContentDiaporamaImages as $obj) {
-                            if (false == $this->collContentDiaporamaImages->contains($obj)) {
-                                $this->collContentDiaporamaImages->append($obj);
-                            }
-                        }
-
-                        $this->collContentDiaporamaImagesPartial = true;
-                    }
-
-                    reset($collContentDiaporamaImages);
-
-                    return $collContentDiaporamaImages;
-                }
-
-                if ($partial && $this->collContentDiaporamaImages) {
-                    foreach ($this->collContentDiaporamaImages as $obj) {
-                        if ($obj->isNew()) {
-                            $collContentDiaporamaImages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collContentDiaporamaImages = $collContentDiaporamaImages;
-                $this->collContentDiaporamaImagesPartial = false;
-            }
-        }
-
-        return $this->collContentDiaporamaImages;
-    }
-
-    /**
-     * Sets a collection of ContentDiaporamaImage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $contentDiaporamaImages A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return   ChildDiaporama The current object (for fluent API support)
-     */
-    public function setContentDiaporamaImages(Collection $contentDiaporamaImages, ConnectionInterface $con = null)
-    {
-        $contentDiaporamaImagesToDelete = $this->getContentDiaporamaImages(new Criteria(), $con)->diff($contentDiaporamaImages);
-
-
-        $this->contentDiaporamaImagesScheduledForDeletion = $contentDiaporamaImagesToDelete;
-
-        foreach ($contentDiaporamaImagesToDelete as $contentDiaporamaImageRemoved) {
-            $contentDiaporamaImageRemoved->setDiaporama(null);
-        }
-
-        $this->collContentDiaporamaImages = null;
-        foreach ($contentDiaporamaImages as $contentDiaporamaImage) {
-            $this->addContentDiaporamaImage($contentDiaporamaImage);
-        }
-
-        $this->collContentDiaporamaImages = $contentDiaporamaImages;
-        $this->collContentDiaporamaImagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related ContentDiaporamaImage objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related ContentDiaporamaImage objects.
-     * @throws PropelException
-     */
-    public function countContentDiaporamaImages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collContentDiaporamaImagesPartial && !$this->isNew();
-        if (null === $this->collContentDiaporamaImages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collContentDiaporamaImages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getContentDiaporamaImages());
-            }
-
-            $query = ChildContentDiaporamaImageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByDiaporama($this)
-                ->count($con);
-        }
-
-        return count($this->collContentDiaporamaImages);
-    }
-
-    /**
-     * Method called to associate a ChildContentDiaporamaImage object to this object
-     * through the ChildContentDiaporamaImage foreign key attribute.
-     *
-     * @param    ChildContentDiaporamaImage $l ChildContentDiaporamaImage
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function addContentDiaporamaImage(ChildContentDiaporamaImage $l)
-    {
-        if ($this->collContentDiaporamaImages === null) {
-            $this->initContentDiaporamaImages();
-            $this->collContentDiaporamaImagesPartial = true;
-        }
-
-        if (!in_array($l, $this->collContentDiaporamaImages->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddContentDiaporamaImage($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ContentDiaporamaImage $contentDiaporamaImage The contentDiaporamaImage object to add.
-     */
-    protected function doAddContentDiaporamaImage($contentDiaporamaImage)
-    {
-        $this->collContentDiaporamaImages[]= $contentDiaporamaImage;
-        $contentDiaporamaImage->setDiaporama($this);
-    }
-
-    /**
-     * @param  ContentDiaporamaImage $contentDiaporamaImage The contentDiaporamaImage object to remove.
-     * @return ChildDiaporama The current object (for fluent API support)
-     */
-    public function removeContentDiaporamaImage($contentDiaporamaImage)
-    {
-        if ($this->getContentDiaporamaImages()->contains($contentDiaporamaImage)) {
-            $this->collContentDiaporamaImages->remove($this->collContentDiaporamaImages->search($contentDiaporamaImage));
-            if (null === $this->contentDiaporamaImagesScheduledForDeletion) {
-                $this->contentDiaporamaImagesScheduledForDeletion = clone $this->collContentDiaporamaImages;
-                $this->contentDiaporamaImagesScheduledForDeletion->clear();
-            }
-            $this->contentDiaporamaImagesScheduledForDeletion[]= clone $contentDiaporamaImage;
-            $contentDiaporamaImage->setDiaporama(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related ContentDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildContentDiaporamaImage[] List of ChildContentDiaporamaImage objects
-     */
-    public function getContentDiaporamaImagesJoinContentImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildContentDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('ContentImage', $joinBehavior);
-
-        return $this->getContentDiaporamaImages($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related ContentDiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildContentDiaporamaImage[] List of ChildContentDiaporamaImage objects
-     */
-    public function getContentDiaporamaImagesJoinDiaporamaImage($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildContentDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('DiaporamaImage', $joinBehavior);
-
-        return $this->getContentDiaporamaImages($query, $con);
+        return $this->getDiaporamaImages($query, $con);
     }
 
     /**
@@ -3441,15 +2161,243 @@ abstract class Diaporama implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collDiaporamaVersions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addDiaporamaVersions()
+     */
+    public function clearDiaporamaVersions()
+    {
+        $this->collDiaporamaVersions = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collDiaporamaVersions collection loaded partially.
+     */
+    public function resetPartialDiaporamaVersions($v = true)
+    {
+        $this->collDiaporamaVersionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collDiaporamaVersions collection.
+     *
+     * By default this just sets the collDiaporamaVersions collection to an empty array (like clearcollDiaporamaVersions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initDiaporamaVersions($overrideExisting = true)
+    {
+        if (null !== $this->collDiaporamaVersions && !$overrideExisting) {
+            return;
+        }
+        $this->collDiaporamaVersions = new ObjectCollection();
+        $this->collDiaporamaVersions->setModel('\Diaporamas\Model\DiaporamaVersion');
+    }
+
+    /**
+     * Gets an array of ChildDiaporamaVersion objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildDiaporama is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return Collection|ChildDiaporamaVersion[] List of ChildDiaporamaVersion objects
+     * @throws PropelException
+     */
+    public function getDiaporamaVersions($criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collDiaporamaVersionsPartial && !$this->isNew();
+        if (null === $this->collDiaporamaVersions || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collDiaporamaVersions) {
+                // return empty collection
+                $this->initDiaporamaVersions();
+            } else {
+                $collDiaporamaVersions = ChildDiaporamaVersionQuery::create(null, $criteria)
+                    ->filterByDiaporama($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collDiaporamaVersionsPartial && count($collDiaporamaVersions)) {
+                        $this->initDiaporamaVersions(false);
+
+                        foreach ($collDiaporamaVersions as $obj) {
+                            if (false == $this->collDiaporamaVersions->contains($obj)) {
+                                $this->collDiaporamaVersions->append($obj);
+                            }
+                        }
+
+                        $this->collDiaporamaVersionsPartial = true;
+                    }
+
+                    reset($collDiaporamaVersions);
+
+                    return $collDiaporamaVersions;
+                }
+
+                if ($partial && $this->collDiaporamaVersions) {
+                    foreach ($this->collDiaporamaVersions as $obj) {
+                        if ($obj->isNew()) {
+                            $collDiaporamaVersions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collDiaporamaVersions = $collDiaporamaVersions;
+                $this->collDiaporamaVersionsPartial = false;
+            }
+        }
+
+        return $this->collDiaporamaVersions;
+    }
+
+    /**
+     * Sets a collection of DiaporamaVersion objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $diaporamaVersions A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return   ChildDiaporama The current object (for fluent API support)
+     */
+    public function setDiaporamaVersions(Collection $diaporamaVersions, ConnectionInterface $con = null)
+    {
+        $diaporamaVersionsToDelete = $this->getDiaporamaVersions(new Criteria(), $con)->diff($diaporamaVersions);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->diaporamaVersionsScheduledForDeletion = clone $diaporamaVersionsToDelete;
+
+        foreach ($diaporamaVersionsToDelete as $diaporamaVersionRemoved) {
+            $diaporamaVersionRemoved->setDiaporama(null);
+        }
+
+        $this->collDiaporamaVersions = null;
+        foreach ($diaporamaVersions as $diaporamaVersion) {
+            $this->addDiaporamaVersion($diaporamaVersion);
+        }
+
+        $this->collDiaporamaVersions = $diaporamaVersions;
+        $this->collDiaporamaVersionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related DiaporamaVersion objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related DiaporamaVersion objects.
+     * @throws PropelException
+     */
+    public function countDiaporamaVersions(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collDiaporamaVersionsPartial && !$this->isNew();
+        if (null === $this->collDiaporamaVersions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collDiaporamaVersions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getDiaporamaVersions());
+            }
+
+            $query = ChildDiaporamaVersionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByDiaporama($this)
+                ->count($con);
+        }
+
+        return count($this->collDiaporamaVersions);
+    }
+
+    /**
+     * Method called to associate a \Diaporamas\Model\Base\DiaporamaVersion object to this object
+     * through the \Diaporamas\Model\Base\DiaporamaVersion foreign key attribute.
+     *
+     * @param    \Diaporamas\Model\Base\DiaporamaVersion $l \Diaporamas\Model\Base\DiaporamaVersion
+     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
+     */
+    public function addDiaporamaVersion(\Diaporamas\Model\Base\DiaporamaVersion $l)
+    {
+        if ($this->collDiaporamaVersions === null) {
+            $this->initDiaporamaVersions();
+            $this->collDiaporamaVersionsPartial = true;
+        }
+
+        if (!in_array($l, $this->collDiaporamaVersions->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddDiaporamaVersion($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param DiaporamaVersion $diaporamaVersion The diaporamaVersion object to add.
+     */
+    protected function doAddDiaporamaVersion($diaporamaVersion)
+    {
+        $this->collDiaporamaVersions[]= $diaporamaVersion;
+        $diaporamaVersion->setDiaporama($this);
+    }
+
+    /**
+     * @param  DiaporamaVersion $diaporamaVersion The diaporamaVersion object to remove.
+     * @return ChildDiaporama The current object (for fluent API support)
+     */
+    public function removeDiaporamaVersion($diaporamaVersion)
+    {
+        if ($this->getDiaporamaVersions()->contains($diaporamaVersion)) {
+            $this->collDiaporamaVersions->remove($this->collDiaporamaVersions->search($diaporamaVersion));
+            if (null === $this->diaporamaVersionsScheduledForDeletion) {
+                $this->diaporamaVersionsScheduledForDeletion = clone $this->collDiaporamaVersions;
+                $this->diaporamaVersionsScheduledForDeletion->clear();
+            }
+            $this->diaporamaVersionsScheduledForDeletion[]= clone $diaporamaVersion;
+            $diaporamaVersion->setDiaporama(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
     {
         $this->id = null;
         $this->shortcode = null;
-        $this->descendant_class = null;
+        $this->diaporama_type_id = null;
+        $this->entity_id = null;
+        $this->created_at = null;
+        $this->updated_at = null;
+        $this->version = null;
+        $this->version_created_at = null;
+        $this->version_created_by = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -3472,48 +2420,13 @@ abstract class Diaporama implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->singleProductDiaporama) {
-                $this->singleProductDiaporama->clearAllReferences($deep);
-            }
-            if ($this->singleCategoryDiaporama) {
-                $this->singleCategoryDiaporama->clearAllReferences($deep);
-            }
-            if ($this->singleBrandDiaporama) {
-                $this->singleBrandDiaporama->clearAllReferences($deep);
-            }
-            if ($this->singleFolderDiaporama) {
-                $this->singleFolderDiaporama->clearAllReferences($deep);
-            }
-            if ($this->singleContentDiaporama) {
-                $this->singleContentDiaporama->clearAllReferences($deep);
-            }
-            if ($this->collProductDiaporamaImages) {
-                foreach ($this->collProductDiaporamaImages as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collCategoryDiaporamaImages) {
-                foreach ($this->collCategoryDiaporamaImages as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collBrandDiaporamaImages) {
-                foreach ($this->collBrandDiaporamaImages as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collFolderDiaporamaImages) {
-                foreach ($this->collFolderDiaporamaImages as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collContentDiaporamaImages) {
-                foreach ($this->collContentDiaporamaImages as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collDiaporamaI18ns) {
                 foreach ($this->collDiaporamaI18ns as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collDiaporamaVersions) {
+                foreach ($this->collDiaporamaVersions as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -3524,17 +2437,9 @@ abstract class Diaporama implements ActiveRecordInterface
         $this->currentTranslations = null;
 
         $this->collDiaporamaImages = null;
-        $this->singleProductDiaporama = null;
-        $this->singleCategoryDiaporama = null;
-        $this->singleBrandDiaporama = null;
-        $this->singleFolderDiaporama = null;
-        $this->singleContentDiaporama = null;
-        $this->collProductDiaporamaImages = null;
-        $this->collCategoryDiaporamaImages = null;
-        $this->collBrandDiaporamaImages = null;
-        $this->collFolderDiaporamaImages = null;
-        $this->collContentDiaporamaImages = null;
         $this->collDiaporamaI18ns = null;
+        $this->collDiaporamaVersions = null;
+        $this->aDiaporamaType = null;
     }
 
     /**
@@ -3545,6 +2450,20 @@ abstract class Diaporama implements ActiveRecordInterface
     public function __toString()
     {
         return (string) $this->exportTo(DiaporamaTableMap::DEFAULT_STRING_FORMAT);
+    }
+
+    // timestampable behavior
+
+    /**
+     * Mark the current object so that the update date doesn't get updated during next save
+     *
+     * @return     ChildDiaporama The current object (for fluent API support)
+     */
+    public function keepUpdateDateUnchanged()
+    {
+        $this->modifiedColumns[DiaporamaTableMap::UPDATED_AT] = true;
+
+        return $this;
     }
 
     // i18n behavior
@@ -3670,34 +2589,290 @@ abstract class Diaporama implements ActiveRecordInterface
         return $this;
     }
 
-    // concrete_inheritance_parent behavior
+    // versionable behavior
 
     /**
-     * Whether or not this object is the parent of a child object
+     * Enforce a new Version of this object upon next save.
      *
-     * @return    bool
+     * @return \Diaporamas\Model\Diaporama
      */
-    public function hasChildObject()
+    public function enforceVersioning()
     {
-        return $this->getDescendantClass() !== null;
+        $this->enforceVersion = true;
+
+        return $this;
     }
 
     /**
-     * Get the child object of this object
+     * Checks whether the current state must be recorded as a version
      *
-     * @return    mixed
+     * @return  boolean
      */
-    public function getChildObject()
+    public function isVersioningNecessary($con = null)
     {
-        if (!$this->hasChildObject()) {
-            return null;
+        if ($this->alreadyInSave) {
+            return false;
         }
-        $childObjectClass = $this->getDescendantClass();
-        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
 
-        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
+        if ($this->enforceVersion) {
+            return true;
+        }
+
+        if (ChildDiaporamaQuery::isVersioningEnabled() && ($this->isNew() || $this->isModified()) || $this->isDeleted()) {
+            return true;
+        }
+
+        return false;
     }
 
+    /**
+     * Creates a version of the current object and saves it.
+     *
+     * @param   ConnectionInterface $con the connection to use
+     *
+     * @return  ChildDiaporamaVersion A version object
+     */
+    public function addVersion($con = null)
+    {
+        $this->enforceVersion = false;
+
+        $version = new ChildDiaporamaVersion();
+        $version->setId($this->getId());
+        $version->setShortcode($this->getShortcode());
+        $version->setDiaporamaTypeId($this->getDiaporamaTypeId());
+        $version->setEntityId($this->getEntityId());
+        $version->setCreatedAt($this->getCreatedAt());
+        $version->setUpdatedAt($this->getUpdatedAt());
+        $version->setVersion($this->getVersion());
+        $version->setVersionCreatedAt($this->getVersionCreatedAt());
+        $version->setVersionCreatedBy($this->getVersionCreatedBy());
+        $version->setDiaporama($this);
+        $version->save($con);
+
+        return $version;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param   integer $versionNumber The version number to read
+     * @param   ConnectionInterface $con The connection to use
+     *
+     * @return  ChildDiaporama The current object (for fluent API support)
+     */
+    public function toVersion($versionNumber, $con = null)
+    {
+        $version = $this->getOneVersion($versionNumber, $con);
+        if (!$version) {
+            throw new PropelException(sprintf('No ChildDiaporama object found with version %d', $version));
+        }
+        $this->populateFromVersion($version, $con);
+
+        return $this;
+    }
+
+    /**
+     * Sets the properties of the current object to the value they had at a specific version
+     *
+     * @param ChildDiaporamaVersion $version The version object to use
+     * @param ConnectionInterface   $con the connection to use
+     * @param array                 $loadedObjects objects that been loaded in a chain of populateFromVersion calls on referrer or fk objects.
+     *
+     * @return ChildDiaporama The current object (for fluent API support)
+     */
+    public function populateFromVersion($version, $con = null, &$loadedObjects = array())
+    {
+        $loadedObjects['ChildDiaporama'][$version->getId()][$version->getVersion()] = $this;
+        $this->setId($version->getId());
+        $this->setShortcode($version->getShortcode());
+        $this->setDiaporamaTypeId($version->getDiaporamaTypeId());
+        $this->setEntityId($version->getEntityId());
+        $this->setCreatedAt($version->getCreatedAt());
+        $this->setUpdatedAt($version->getUpdatedAt());
+        $this->setVersion($version->getVersion());
+        $this->setVersionCreatedAt($version->getVersionCreatedAt());
+        $this->setVersionCreatedBy($version->getVersionCreatedBy());
+
+        return $this;
+    }
+
+    /**
+     * Gets the latest persisted version number for the current object
+     *
+     * @param   ConnectionInterface $con the connection to use
+     *
+     * @return  integer
+     */
+    public function getLastVersionNumber($con = null)
+    {
+        $v = ChildDiaporamaVersionQuery::create()
+            ->filterByDiaporama($this)
+            ->orderByVersion('desc')
+            ->findOne($con);
+        if (!$v) {
+            return 0;
+        }
+
+        return $v->getVersion();
+    }
+
+    /**
+     * Checks whether the current object is the latest one
+     *
+     * @param   ConnectionInterface $con the connection to use
+     *
+     * @return  Boolean
+     */
+    public function isLastVersion($con = null)
+    {
+        return $this->getLastVersionNumber($con) == $this->getVersion();
+    }
+
+    /**
+     * Retrieves a version object for this entity and a version number
+     *
+     * @param   integer $versionNumber The version number to read
+     * @param   ConnectionInterface $con the connection to use
+     *
+     * @return  ChildDiaporamaVersion A version object
+     */
+    public function getOneVersion($versionNumber, $con = null)
+    {
+        return ChildDiaporamaVersionQuery::create()
+            ->filterByDiaporama($this)
+            ->filterByVersion($versionNumber)
+            ->findOne($con);
+    }
+
+    /**
+     * Gets all the versions of this object, in incremental order
+     *
+     * @param   ConnectionInterface $con the connection to use
+     *
+     * @return  ObjectCollection A list of ChildDiaporamaVersion objects
+     */
+    public function getAllVersions($con = null)
+    {
+        $criteria = new Criteria();
+        $criteria->addAscendingOrderByColumn(DiaporamaVersionTableMap::VERSION);
+
+        return $this->getDiaporamaVersions($criteria, $con);
+    }
+
+    /**
+     * Compares the current object with another of its version.
+     * <code>
+     * print_r($book->compareVersion(1));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param   integer             $versionNumber
+     * @param   string              $keys Main key used for the result diff (versions|columns)
+     * @param   ConnectionInterface $con the connection to use
+     * @param   array               $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return  array A list of differences
+     */
+    public function compareVersion($versionNumber, $keys = 'columns', $con = null, $ignoredColumns = array())
+    {
+        $fromVersion = $this->toArray();
+        $toVersion = $this->getOneVersion($versionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Compares two versions of the current object.
+     * <code>
+     * print_r($book->compareVersions(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param   integer             $fromVersionNumber
+     * @param   integer             $toVersionNumber
+     * @param   string              $keys Main key used for the result diff (versions|columns)
+     * @param   ConnectionInterface $con the connection to use
+     * @param   array               $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return  array A list of differences
+     */
+    public function compareVersions($fromVersionNumber, $toVersionNumber, $keys = 'columns', $con = null, $ignoredColumns = array())
+    {
+        $fromVersion = $this->getOneVersion($fromVersionNumber, $con)->toArray();
+        $toVersion = $this->getOneVersion($toVersionNumber, $con)->toArray();
+
+        return $this->computeDiff($fromVersion, $toVersion, $keys, $ignoredColumns);
+    }
+
+    /**
+     * Computes the diff between two versions.
+     * <code>
+     * print_r($book->computeDiff(1, 2));
+     * => array(
+     *   '1' => array('Title' => 'Book title at version 1'),
+     *   '2' => array('Title' => 'Book title at version 2')
+     * );
+     * </code>
+     *
+     * @param   array     $fromVersion     An array representing the original version.
+     * @param   array     $toVersion       An array representing the destination version.
+     * @param   string    $keys            Main key used for the result diff (versions|columns).
+     * @param   array     $ignoredColumns  The columns to exclude from the diff.
+     *
+     * @return  array A list of differences
+     */
+    protected function computeDiff($fromVersion, $toVersion, $keys = 'columns', $ignoredColumns = array())
+    {
+        $fromVersionNumber = $fromVersion['Version'];
+        $toVersionNumber = $toVersion['Version'];
+        $ignoredColumns = array_merge(array(
+            'Version',
+            'VersionCreatedAt',
+            'VersionCreatedBy',
+        ), $ignoredColumns);
+        $diff = array();
+        foreach ($fromVersion as $key => $value) {
+            if (in_array($key, $ignoredColumns)) {
+                continue;
+            }
+            if ($toVersion[$key] != $value) {
+                switch ($keys) {
+                    case 'versions':
+                        $diff[$fromVersionNumber][$key] = $value;
+                        $diff[$toVersionNumber][$key] = $toVersion[$key];
+                        break;
+                    default:
+                        $diff[$key] = array(
+                            $fromVersionNumber => $value,
+                            $toVersionNumber => $toVersion[$key],
+                        );
+                        break;
+                }
+            }
+        }
+
+        return $diff;
+    }
+    /**
+     * retrieve the last $number versions.
+     *
+     * @param Integer $number the number of record to return.
+     * @return PropelCollection|array \Diaporamas\Model\DiaporamaVersion[] List of \Diaporamas\Model\DiaporamaVersion objects
+     */
+    public function getLastVersions($number = 10, $criteria = null, $con = null)
+    {
+        $criteria = ChildDiaporamaVersionQuery::create(null, $criteria);
+        $criteria->addDescendingOrderByColumn(DiaporamaVersionTableMap::VERSION);
+        $criteria->limit($number);
+
+        return $this->getDiaporamaVersions($criteria, $con);
+    }
     /**
      * Code to be run before persisting the object
      * @param  ConnectionInterface $con

@@ -1,0 +1,124 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='diaporamas.bo.default'}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='Diaporama'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}update{/block}
+{block name="check-module"}Diaporamas{/block}
+
+{block name="main-content"}
+
+    {form name="diaporama.update"}
+        <div id="wrapper" class="container">
+
+            {if $form_error}
+                <div class="alert alert-danger">{$form_error_message}</div>
+            {/if}
+
+            <div class="general-block-decorator">
+                <div class="title title-without-tabs">
+                    {intl l="Diaporama edit" d="diaporamas.bo.default"}
+                </div>
+
+                <div class="form-container">
+                    <form method="POST" action="{$current_url}" {form_enctype form=$form} class="clearfix" >
+
+                        {include "includes/inner-form-toolbar.html"
+                        close_url = {url path="/admin/module/Diaporamas/diaporama"}
+                        }
+
+                        {form_field form=$form field="id"}
+                        {assign "diaporama_id" $value}
+                            <input type="hidden" name="{$name}" value="{$value}"/>
+                        {/form_field}
+                        {form_field form=$form field="locale"}
+                            <input type="hidden" name="{$name}" value="{$edit_language_locale}"/>
+                        {/form_field}
+                        {form_field form=$form field="success_url"}
+                            <input type="hidden" name="{$name}" value="{url path='/admin/module/Diaporamas'}/diaporama"/>
+                        {/form_field}
+                        {form_hidden_fields form=$form}
+
+                        {loop name="diaporama_update" type="diaporama" backend_context="yes" id=$diaporama_id lang=$edit_language_id}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {form_field form=$form field="title"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="title"}{$message}{/form_error}
+
+                                                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$TITLE}" placeholder="{intl l='The Diaporama title'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="shortcode"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="shortcode"}{$message}{/form_error}
+
+                                                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SHORTCODE}" placeholder="{intl l='The Diaporama shortcode'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="diaporama_type_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="diaporama_type_id"}{$message}{/form_error}
+
+                                                <input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$DIAPORAMA_TYPE_ID}" placeholder="{intl l='The Diaporama diaporama_type_id'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="entity_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="entity_id"}{$message}{/form_error}
+
+                                                <input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ENTITY_ID}" placeholder="{intl l='The Diaporama entity_id'}" />
+                                        </div>
+                                    {/form_field}
+
+                                    {include "includes/inner-form-toolbar.html"
+                                        hide_flags = true
+                                        close_url = {url path="/admin/module/Diaporamas/diaporama"}
+                                    }
+
+                                    <small>
+                                        {intl
+                                            l="Diaporama created on %created_at. Last modification: %updated_at"
+                                            created_at={format_date date=$CREATE_DATE}
+                                            updated_at={format_date date=$UPDATE_DATE}
+                                            d="diaporamas.bo.default"
+                                        }
+                                    </small>
+                                </div>
+                            </div>
+                        {/loop}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    {/form}
+{/block}
+
+{block name="javascript-initialization"}
+{/block}

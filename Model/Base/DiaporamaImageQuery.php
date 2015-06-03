@@ -23,13 +23,15 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaImageQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildDiaporamaImageQuery orderByDiaporamaId($order = Criteria::ASC) Order by the diaporama_id column
+ * @method     ChildDiaporamaImageQuery orderByDiaporamaTypeId($order = Criteria::ASC) Order by the diaporama_type_id column
+ * @method     ChildDiaporamaImageQuery orderByEntityId($order = Criteria::ASC) Order by the entity_id column
  * @method     ChildDiaporamaImageQuery orderByPosition($order = Criteria::ASC) Order by the position column
- * @method     ChildDiaporamaImageQuery orderByDescendantClass($order = Criteria::ASC) Order by the descendant_class column
  *
  * @method     ChildDiaporamaImageQuery groupById() Group by the id column
  * @method     ChildDiaporamaImageQuery groupByDiaporamaId() Group by the diaporama_id column
+ * @method     ChildDiaporamaImageQuery groupByDiaporamaTypeId() Group by the diaporama_type_id column
+ * @method     ChildDiaporamaImageQuery groupByEntityId() Group by the entity_id column
  * @method     ChildDiaporamaImageQuery groupByPosition() Group by the position column
- * @method     ChildDiaporamaImageQuery groupByDescendantClass() Group by the descendant_class column
  *
  * @method     ChildDiaporamaImageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildDiaporamaImageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -39,38 +41,24 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDiaporamaImageQuery rightJoinDiaporama($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Diaporama relation
  * @method     ChildDiaporamaImageQuery innerJoinDiaporama($relationAlias = null) Adds a INNER JOIN clause to the query using the Diaporama relation
  *
- * @method     ChildDiaporamaImageQuery leftJoinProductDiaporamaImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery rightJoinProductDiaporamaImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery innerJoinProductDiaporamaImage($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductDiaporamaImage relation
- *
- * @method     ChildDiaporamaImageQuery leftJoinCategoryDiaporamaImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the CategoryDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery rightJoinCategoryDiaporamaImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CategoryDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery innerJoinCategoryDiaporamaImage($relationAlias = null) Adds a INNER JOIN clause to the query using the CategoryDiaporamaImage relation
- *
- * @method     ChildDiaporamaImageQuery leftJoinBrandDiaporamaImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the BrandDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery rightJoinBrandDiaporamaImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BrandDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery innerJoinBrandDiaporamaImage($relationAlias = null) Adds a INNER JOIN clause to the query using the BrandDiaporamaImage relation
- *
- * @method     ChildDiaporamaImageQuery leftJoinFolderDiaporamaImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the FolderDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery rightJoinFolderDiaporamaImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the FolderDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery innerJoinFolderDiaporamaImage($relationAlias = null) Adds a INNER JOIN clause to the query using the FolderDiaporamaImage relation
- *
- * @method     ChildDiaporamaImageQuery leftJoinContentDiaporamaImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the ContentDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery rightJoinContentDiaporamaImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ContentDiaporamaImage relation
- * @method     ChildDiaporamaImageQuery innerJoinContentDiaporamaImage($relationAlias = null) Adds a INNER JOIN clause to the query using the ContentDiaporamaImage relation
+ * @method     ChildDiaporamaImageQuery leftJoinDiaporamaType($relationAlias = null) Adds a LEFT JOIN clause to the query using the DiaporamaType relation
+ * @method     ChildDiaporamaImageQuery rightJoinDiaporamaType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DiaporamaType relation
+ * @method     ChildDiaporamaImageQuery innerJoinDiaporamaType($relationAlias = null) Adds a INNER JOIN clause to the query using the DiaporamaType relation
  *
  * @method     ChildDiaporamaImage findOne(ConnectionInterface $con = null) Return the first ChildDiaporamaImage matching the query
  * @method     ChildDiaporamaImage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildDiaporamaImage matching the query, or a new ChildDiaporamaImage object populated from the query conditions when no match is found
  *
  * @method     ChildDiaporamaImage findOneById(int $id) Return the first ChildDiaporamaImage filtered by the id column
  * @method     ChildDiaporamaImage findOneByDiaporamaId(int $diaporama_id) Return the first ChildDiaporamaImage filtered by the diaporama_id column
+ * @method     ChildDiaporamaImage findOneByDiaporamaTypeId(int $diaporama_type_id) Return the first ChildDiaporamaImage filtered by the diaporama_type_id column
+ * @method     ChildDiaporamaImage findOneByEntityId(int $entity_id) Return the first ChildDiaporamaImage filtered by the entity_id column
  * @method     ChildDiaporamaImage findOneByPosition(int $position) Return the first ChildDiaporamaImage filtered by the position column
- * @method     ChildDiaporamaImage findOneByDescendantClass(string $descendant_class) Return the first ChildDiaporamaImage filtered by the descendant_class column
  *
  * @method     array findById(int $id) Return ChildDiaporamaImage objects filtered by the id column
  * @method     array findByDiaporamaId(int $diaporama_id) Return ChildDiaporamaImage objects filtered by the diaporama_id column
+ * @method     array findByDiaporamaTypeId(int $diaporama_type_id) Return ChildDiaporamaImage objects filtered by the diaporama_type_id column
+ * @method     array findByEntityId(int $entity_id) Return ChildDiaporamaImage objects filtered by the entity_id column
  * @method     array findByPosition(int $position) Return ChildDiaporamaImage objects filtered by the position column
- * @method     array findByDescendantClass(string $descendant_class) Return ChildDiaporamaImage objects filtered by the descendant_class column
  *
  */
 abstract class DiaporamaImageQuery extends ModelCriteria
@@ -159,7 +147,7 @@ abstract class DiaporamaImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, DIAPORAMA_ID, POSITION, DESCENDANT_CLASS FROM diaporama_image WHERE ID = :p0';
+        $sql = 'SELECT ID, DIAPORAMA_ID, DIAPORAMA_TYPE_ID, ENTITY_ID, POSITION FROM diaporama_image WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -170,7 +158,8 @@ abstract class DiaporamaImageQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            $obj = new ChildDiaporamaImage();
+            $cls = DiaporamaImageTableMap::getOMClass($row, 0, false);
+            $obj = new $cls();
             $obj->hydrate($row);
             DiaporamaImageTableMap::addInstanceToPool($obj, (string) $key);
         }
@@ -333,6 +322,90 @@ abstract class DiaporamaImageQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the diaporama_type_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDiaporamaTypeId(1234); // WHERE diaporama_type_id = 1234
+     * $query->filterByDiaporamaTypeId(array(12, 34)); // WHERE diaporama_type_id IN (12, 34)
+     * $query->filterByDiaporamaTypeId(array('min' => 12)); // WHERE diaporama_type_id > 12
+     * </code>
+     *
+     * @see       filterByDiaporamaType()
+     *
+     * @param     mixed $diaporamaTypeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function filterByDiaporamaTypeId($diaporamaTypeId = null, $comparison = null)
+    {
+        if (is_array($diaporamaTypeId)) {
+            $useMinMax = false;
+            if (isset($diaporamaTypeId['min'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($diaporamaTypeId['max'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId, $comparison);
+    }
+
+    /**
+     * Filter the query on the entity_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByEntityId(1234); // WHERE entity_id = 1234
+     * $query->filterByEntityId(array(12, 34)); // WHERE entity_id IN (12, 34)
+     * $query->filterByEntityId(array('min' => 12)); // WHERE entity_id > 12
+     * </code>
+     *
+     * @param     mixed $entityId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function filterByEntityId($entityId = null, $comparison = null)
+    {
+        if (is_array($entityId)) {
+            $useMinMax = false;
+            if (isset($entityId['min'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::ENTITY_ID, $entityId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($entityId['max'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::ENTITY_ID, $entityId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DiaporamaImageTableMap::ENTITY_ID, $entityId, $comparison);
+    }
+
+    /**
      * Filter the query on the position column
      *
      * Example usage:
@@ -371,35 +444,6 @@ abstract class DiaporamaImageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DiaporamaImageTableMap::POSITION, $position, $comparison);
-    }
-
-    /**
-     * Filter the query on the descendant_class column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDescendantClass('fooValue');   // WHERE descendant_class = 'fooValue'
-     * $query->filterByDescendantClass('%fooValue%'); // WHERE descendant_class LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $descendantClass The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function filterByDescendantClass($descendantClass = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($descendantClass)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $descendantClass)) {
-                $descendantClass = str_replace('*', '%', $descendantClass);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(DiaporamaImageTableMap::DESCENDANT_CLASS, $descendantClass, $comparison);
     }
 
     /**
@@ -478,40 +522,42 @@ abstract class DiaporamaImageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Diaporamas\Model\ProductDiaporamaImage object
+     * Filter the query by a related \Diaporamas\Model\DiaporamaType object
      *
-     * @param \Diaporamas\Model\ProductDiaporamaImage|ObjectCollection $productDiaporamaImage  the related object to use as filter
+     * @param \Diaporamas\Model\DiaporamaType|ObjectCollection $diaporamaType The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildDiaporamaImageQuery The current query, for fluid interface
      */
-    public function filterByProductDiaporamaImage($productDiaporamaImage, $comparison = null)
+    public function filterByDiaporamaType($diaporamaType, $comparison = null)
     {
-        if ($productDiaporamaImage instanceof \Diaporamas\Model\ProductDiaporamaImage) {
+        if ($diaporamaType instanceof \Diaporamas\Model\DiaporamaType) {
             return $this
-                ->addUsingAlias(DiaporamaImageTableMap::ID, $productDiaporamaImage->getId(), $comparison);
-        } elseif ($productDiaporamaImage instanceof ObjectCollection) {
+                ->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaType->getId(), $comparison);
+        } elseif ($diaporamaType instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
             return $this
-                ->useProductDiaporamaImageQuery()
-                ->filterByPrimaryKeys($productDiaporamaImage->getPrimaryKeys())
-                ->endUse();
+                ->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaType->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByProductDiaporamaImage() only accepts arguments of type \Diaporamas\Model\ProductDiaporamaImage or Collection');
+            throw new PropelException('filterByDiaporamaType() only accepts arguments of type \Diaporamas\Model\DiaporamaType or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the ProductDiaporamaImage relation
+     * Adds a JOIN clause to the query using the DiaporamaType relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return ChildDiaporamaImageQuery The current query, for fluid interface
      */
-    public function joinProductDiaporamaImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinDiaporamaType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ProductDiaporamaImage');
+        $relationMap = $tableMap->getRelation('DiaporamaType');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -526,14 +572,14 @@ abstract class DiaporamaImageQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'ProductDiaporamaImage');
+            $this->addJoinObject($join, 'DiaporamaType');
         }
 
         return $this;
     }
 
     /**
-     * Use the ProductDiaporamaImage relation ProductDiaporamaImage object
+     * Use the DiaporamaType relation DiaporamaType object
      *
      * @see useQuery()
      *
@@ -541,305 +587,13 @@ abstract class DiaporamaImageQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Diaporamas\Model\ProductDiaporamaImageQuery A secondary query class using the current class as primary query
+     * @return   \Diaporamas\Model\DiaporamaTypeQuery A secondary query class using the current class as primary query
      */
-    public function useProductDiaporamaImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useDiaporamaTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinProductDiaporamaImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ProductDiaporamaImage', '\Diaporamas\Model\ProductDiaporamaImageQuery');
-    }
-
-    /**
-     * Filter the query by a related \Diaporamas\Model\CategoryDiaporamaImage object
-     *
-     * @param \Diaporamas\Model\CategoryDiaporamaImage|ObjectCollection $categoryDiaporamaImage  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function filterByCategoryDiaporamaImage($categoryDiaporamaImage, $comparison = null)
-    {
-        if ($categoryDiaporamaImage instanceof \Diaporamas\Model\CategoryDiaporamaImage) {
-            return $this
-                ->addUsingAlias(DiaporamaImageTableMap::ID, $categoryDiaporamaImage->getId(), $comparison);
-        } elseif ($categoryDiaporamaImage instanceof ObjectCollection) {
-            return $this
-                ->useCategoryDiaporamaImageQuery()
-                ->filterByPrimaryKeys($categoryDiaporamaImage->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByCategoryDiaporamaImage() only accepts arguments of type \Diaporamas\Model\CategoryDiaporamaImage or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the CategoryDiaporamaImage relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function joinCategoryDiaporamaImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CategoryDiaporamaImage');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'CategoryDiaporamaImage');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the CategoryDiaporamaImage relation CategoryDiaporamaImage object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Diaporamas\Model\CategoryDiaporamaImageQuery A secondary query class using the current class as primary query
-     */
-    public function useCategoryDiaporamaImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinCategoryDiaporamaImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CategoryDiaporamaImage', '\Diaporamas\Model\CategoryDiaporamaImageQuery');
-    }
-
-    /**
-     * Filter the query by a related \Diaporamas\Model\BrandDiaporamaImage object
-     *
-     * @param \Diaporamas\Model\BrandDiaporamaImage|ObjectCollection $brandDiaporamaImage  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function filterByBrandDiaporamaImage($brandDiaporamaImage, $comparison = null)
-    {
-        if ($brandDiaporamaImage instanceof \Diaporamas\Model\BrandDiaporamaImage) {
-            return $this
-                ->addUsingAlias(DiaporamaImageTableMap::ID, $brandDiaporamaImage->getId(), $comparison);
-        } elseif ($brandDiaporamaImage instanceof ObjectCollection) {
-            return $this
-                ->useBrandDiaporamaImageQuery()
-                ->filterByPrimaryKeys($brandDiaporamaImage->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByBrandDiaporamaImage() only accepts arguments of type \Diaporamas\Model\BrandDiaporamaImage or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the BrandDiaporamaImage relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function joinBrandDiaporamaImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('BrandDiaporamaImage');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'BrandDiaporamaImage');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the BrandDiaporamaImage relation BrandDiaporamaImage object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Diaporamas\Model\BrandDiaporamaImageQuery A secondary query class using the current class as primary query
-     */
-    public function useBrandDiaporamaImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinBrandDiaporamaImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'BrandDiaporamaImage', '\Diaporamas\Model\BrandDiaporamaImageQuery');
-    }
-
-    /**
-     * Filter the query by a related \Diaporamas\Model\FolderDiaporamaImage object
-     *
-     * @param \Diaporamas\Model\FolderDiaporamaImage|ObjectCollection $folderDiaporamaImage  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function filterByFolderDiaporamaImage($folderDiaporamaImage, $comparison = null)
-    {
-        if ($folderDiaporamaImage instanceof \Diaporamas\Model\FolderDiaporamaImage) {
-            return $this
-                ->addUsingAlias(DiaporamaImageTableMap::ID, $folderDiaporamaImage->getId(), $comparison);
-        } elseif ($folderDiaporamaImage instanceof ObjectCollection) {
-            return $this
-                ->useFolderDiaporamaImageQuery()
-                ->filterByPrimaryKeys($folderDiaporamaImage->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByFolderDiaporamaImage() only accepts arguments of type \Diaporamas\Model\FolderDiaporamaImage or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the FolderDiaporamaImage relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function joinFolderDiaporamaImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('FolderDiaporamaImage');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'FolderDiaporamaImage');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the FolderDiaporamaImage relation FolderDiaporamaImage object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Diaporamas\Model\FolderDiaporamaImageQuery A secondary query class using the current class as primary query
-     */
-    public function useFolderDiaporamaImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinFolderDiaporamaImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'FolderDiaporamaImage', '\Diaporamas\Model\FolderDiaporamaImageQuery');
-    }
-
-    /**
-     * Filter the query by a related \Diaporamas\Model\ContentDiaporamaImage object
-     *
-     * @param \Diaporamas\Model\ContentDiaporamaImage|ObjectCollection $contentDiaporamaImage  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function filterByContentDiaporamaImage($contentDiaporamaImage, $comparison = null)
-    {
-        if ($contentDiaporamaImage instanceof \Diaporamas\Model\ContentDiaporamaImage) {
-            return $this
-                ->addUsingAlias(DiaporamaImageTableMap::ID, $contentDiaporamaImage->getId(), $comparison);
-        } elseif ($contentDiaporamaImage instanceof ObjectCollection) {
-            return $this
-                ->useContentDiaporamaImageQuery()
-                ->filterByPrimaryKeys($contentDiaporamaImage->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByContentDiaporamaImage() only accepts arguments of type \Diaporamas\Model\ContentDiaporamaImage or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the ContentDiaporamaImage relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ChildDiaporamaImageQuery The current query, for fluid interface
-     */
-    public function joinContentDiaporamaImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ContentDiaporamaImage');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'ContentDiaporamaImage');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the ContentDiaporamaImage relation ContentDiaporamaImage object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Diaporamas\Model\ContentDiaporamaImageQuery A secondary query class using the current class as primary query
-     */
-    public function useContentDiaporamaImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinContentDiaporamaImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ContentDiaporamaImage', '\Diaporamas\Model\ContentDiaporamaImageQuery');
+            ->joinDiaporamaType($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DiaporamaType', '\Diaporamas\Model\DiaporamaTypeQuery');
     }
 
     /**
