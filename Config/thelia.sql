@@ -38,6 +38,7 @@ CREATE TABLE `diaporama_type`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `code` VARCHAR(16) NOT NULL,
+    `path` VARCHAR(64) DEFAULT '',
     PRIMARY KEY (`id`),
     UNIQUE INDEX `un_code` (`code`)
 ) ENGINE=InnoDB;

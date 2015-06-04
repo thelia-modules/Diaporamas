@@ -29,7 +29,7 @@
 
                         {loop name="auth-create" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="Diaporamas"}
                             <div class="pull-right">
-                                <a class="btn btn-default btn-primary" title="{intl l='Create a new Diaporama entry' d='diaporamas.bo.default'}" data-target="#diaporama-create" data-toggle="modal">
+                                <a class="btn btn-default btn-primary" title="{intl l='diaporama.create.dialog_title' d='diaporamas.bo.default'}" data-target="#diaporama-create" data-toggle="modal">
                                     <i class="glyphicon glyphicon-plus-sign"></i>
                                 </a>
                             </div>
@@ -44,7 +44,7 @@
                                 order='id'
                                 reverse_order='id-reverse'
                                 path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='Id' d='diaporamas.bo.default'}"
+                                label="{intl l='diaporama.read.id' d='diaporamas.bo.default'}"
                             }
                         </th>
                         <th>
@@ -53,7 +53,7 @@
                                 order='title'
                                 reverse_order='title-reverse'
                                 path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='Title' d='diaporamas.bo.default'}"
+                                label="{intl l='diaporama.read.title' d='diaporamas.bo.default'}"
                             }
                         </th>
                         <th>
@@ -62,7 +62,7 @@
                                 order='shortcode'
                                 reverse_order='shortcode-reverse'
                                 path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='Shortcode' d='diaporamas.bo.default'}"
+                                label="{intl l='diaporama.read.shortcode' d='diaporamas.bo.default'}"
                             }
                         </th>
                         <th>
@@ -71,7 +71,7 @@
                                 order='diaporama_type_id'
                                 reverse_order='diaporama_type_id-reverse'
                                 path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='DiaporamaTypeId' d='diaporamas.bo.default'}"
+                                label="{intl l='diaporama.read.diaporama_type' d='diaporamas.bo.default'}"
                             }
                         </th>
                         <th>
@@ -80,7 +80,7 @@
                                 order='entity_id'
                                 reverse_order='entity_id-reverse'
                                 path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='EntityId' d='diaporamas.bo.default'}"
+                                label="{intl l='diaporama.read.entity' d='diaporamas.bo.default'}"
                             }
                         </th>
                         <th>
@@ -102,21 +102,22 @@
                                 {$SHORTCODE}
                             </td>
                             <td>
-                                {$DIAPORAMA_TYPE_ID}
+                                {$DIAPORAMA_TYPE_TITLE}
                             </td>
                             <td>
-                                {$ENTITY_ID}
+                                <a href="{url path={$ENTITY_PATH} id={$ENTITY_ID}}">{$ENTITY_TITLE}</a>
                             </td>
                             {* Actions *}
                             <td>
                                 <div class="btn-group">
+                                    <a class="btn btn-default btn-xs diaporama-see" title="{intl l='diaporama.read.see' d='diaporamas.bo.default'}"><i class="glyphicon glyphicon-eye-open"></i></a>
                                     {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="Diaporamas"}
-                                        <a class="btn btn-default btn-xs" title="{intl l='Edit this Diaporama' d='diaporamas.bo.default'}"  href="{url path='/admin/module/Diaporamas/diaporama/edit' diaporama_id=$ID}">
+                                        <a class="btn btn-default btn-xs" title="{intl l='diaporama.read.edit' d='diaporamas.bo.default'}"  href="{url path='/admin/module/Diaporamas/diaporama/edit' diaporama_id=$ID}">
                                             <i class="glyphicon glyphicon-edit"></i>
                                         </a>
                                     {/loop}
                                     {loop name="auth-delete" type="auth" role="ADMIN" resource="admin.module" access="DELETE" module="Diaporamas"}
-                                        <a class="btn btn-default btn-xs diaporama-delete" title="{intl l='Delete this Diaporama' d='diaporamas.bo.default'}" data-target="#diaporama-delete" data-toggle="modal" data-id="{$ID}">
+                                        <a class="btn btn-default btn-xs diaporama-delete" title="{intl l='diaporama.read.delete' d='diaporamas.bo.default'}" data-target="#diaporama-delete" data-toggle="modal" data-id="{$ID}">
                                             <i class="glyphicon glyphicon-trash"></i>
                                         </a>
                                     {/loop}
@@ -128,7 +129,7 @@
                         <tr>
                             <td colspan="1000">
                                 <div class="alert alert-info">
-                                    {intl l="There is no Diaporama" d="diaporamas.bo.default"}
+                                    {intl l="diaporama.read.no_diaporama" d="diaporamas.bo.default"}
                                 </div>
                             </td>
                         </tr>
@@ -190,4 +191,6 @@
     </script>
     {* Create form JS *}
     <script>{include 'assets/js/create-diaporama-form.js'}</script>
+    {* Create form JS *}
+    <script>{include 'assets/js/diaporama-list.js'}</script>
 {/block}

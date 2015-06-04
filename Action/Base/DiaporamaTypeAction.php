@@ -63,6 +63,10 @@ class DiaporamaTypeAction extends BaseAction implements EventSubscriberInterface
                 $model->setTitle($title);
             }
 
+            if (null !== $path = $event->getPath()) {
+                $model->setPath($path);
+            }
+
             $model->save($con);
 
             $con->commit();

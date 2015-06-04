@@ -68,6 +68,7 @@ class DiaporamaTypeController extends AbstractCrudController
             "id" => $object->getId(),
             "code" => $object->getCode(),
             "title" => $object->getTitle(),
+            "path" => $object->getPath(),
         );
 
         return $this->getUpdateForm($data);
@@ -85,6 +86,7 @@ class DiaporamaTypeController extends AbstractCrudController
 
         $event->setCode($formData["code"]);
         $event->setTitle($formData["title"]);
+        $event->setPath($formData["path"]);
 
         return $event;
     }
@@ -102,6 +104,7 @@ class DiaporamaTypeController extends AbstractCrudController
         $event->setId($formData["id"]);
         $event->setCode($formData["code"]);
         $event->setTitle($formData["title"]);
+        $event->setPath($formData["path"]);
 
         return $event;
     }

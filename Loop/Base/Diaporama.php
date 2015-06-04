@@ -174,7 +174,7 @@ class Diaporama extends BaseI18nLoop implements PropelSearchLoopInterface
         return $query;
     }
 
-    protected function addMoreResults(LoopResultRow $row, $entryObject)
+    protected function addMoreResults(LoopResultRow $row, \Diaporamas\Model\Diaporama $entryObject)
     {
     }
 }

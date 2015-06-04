@@ -24,6 +24,14 @@ use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\DefaultTranslator;
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
 
 abstract class DiaporamaType implements ActiveRecordInterface
 {
@@ -72,6 +80,13 @@ abstract class DiaporamaType implements ActiveRecordInterface
     protected $code;
 
     /**
+     * The value for the path field.
+     * Note: this column has a database default value of: ''
+     * @var        string
+     */
+    protected $path;
+
+    /**
      * @var        ObjectCollection|ChildDiaporama[] Collection to store aggregation of ChildDiaporama objects.
      */
     protected $collDiaporamas;
@@ -111,6 +126,23 @@ abstract class DiaporamaType implements ActiveRecordInterface
      */
     protected $currentTranslations;
 
+    // validate behavior
+
+    /**
+     * Flag to prevent endless validation loop, if this object is referenced
+     * by another object which falls in this transaction.
+     * @var        boolean
+     */
+    protected $alreadyInValidation = false;
+
+    /**
+     * ConstraintViolationList object
+     *
+     * @see     http://api.symfony.com/2.0/Symfony/Component/Validator/ConstraintViolationList.html
+     * @var     ConstraintViolationList
+     */
+    protected $validationFailures;
+
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection
@@ -130,10 +162,23 @@ abstract class DiaporamaType implements ActiveRecordInterface
     protected $diaporamaTypeI18nsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->path = '';
+    }
+
+    /**
      * Initializes internal state of Diaporamas\Model\Base\DiaporamaType object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -410,6 +455,17 @@ abstract class DiaporamaType implements ActiveRecordInterface
     }
 
     /**
+     * Get the [path] column value.
+     *
+     * @return   string
+     */
+    public function getPath()
+    {
+
+        return $this->path;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param      int $v new value
@@ -452,6 +508,27 @@ abstract class DiaporamaType implements ActiveRecordInterface
     } // setCode()
 
     /**
+     * Set the value of [path] column.
+     *
+     * @param      string $v new value
+     * @return   \Diaporamas\Model\DiaporamaType The current object (for fluent API support)
+     */
+    public function setPath($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->path !== $v) {
+            $this->path = $v;
+            $this->modifiedColumns[DiaporamaTypeTableMap::PATH] = true;
+        }
+
+
+        return $this;
+    } // setPath()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -461,6 +538,10 @@ abstract class DiaporamaType implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->path !== '') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -493,6 +574,9 @@ abstract class DiaporamaType implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : DiaporamaTypeTableMap::translateFieldName('Code', TableMap::TYPE_PHPNAME, $indexType)];
             $this->code = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaTypeTableMap::translateFieldName('Path', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->path = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -501,7 +585,7 @@ abstract class DiaporamaType implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = DiaporamaTypeTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = DiaporamaTypeTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Diaporamas\Model\DiaporamaType object", 0, $e);
@@ -773,6 +857,9 @@ abstract class DiaporamaType implements ActiveRecordInterface
         if ($this->isColumnModified(DiaporamaTypeTableMap::CODE)) {
             $modifiedColumns[':p' . $index++]  = 'CODE';
         }
+        if ($this->isColumnModified(DiaporamaTypeTableMap::PATH)) {
+            $modifiedColumns[':p' . $index++]  = 'PATH';
+        }
 
         $sql = sprintf(
             'INSERT INTO diaporama_type (%s) VALUES (%s)',
@@ -789,6 +876,9 @@ abstract class DiaporamaType implements ActiveRecordInterface
                         break;
                     case 'CODE':
                         $stmt->bindValue($identifier, $this->code, PDO::PARAM_STR);
+                        break;
+                    case 'PATH':
+                        $stmt->bindValue($identifier, $this->path, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -858,6 +948,9 @@ abstract class DiaporamaType implements ActiveRecordInterface
             case 1:
                 return $this->getCode();
                 break;
+            case 2:
+                return $this->getPath();
+                break;
             default:
                 return null;
                 break;
@@ -889,6 +982,7 @@ abstract class DiaporamaType implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getCode(),
+            $keys[2] => $this->getPath(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -945,6 +1039,9 @@ abstract class DiaporamaType implements ActiveRecordInterface
             case 1:
                 $this->setCode($value);
                 break;
+            case 2:
+                $this->setPath($value);
+                break;
         } // switch()
     }
 
@@ -971,6 +1068,7 @@ abstract class DiaporamaType implements ActiveRecordInterface
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setCode($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setPath($arr[$keys[2]]);
     }
 
     /**
@@ -984,6 +1082,7 @@ abstract class DiaporamaType implements ActiveRecordInterface
 
         if ($this->isColumnModified(DiaporamaTypeTableMap::ID)) $criteria->add(DiaporamaTypeTableMap::ID, $this->id);
         if ($this->isColumnModified(DiaporamaTypeTableMap::CODE)) $criteria->add(DiaporamaTypeTableMap::CODE, $this->code);
+        if ($this->isColumnModified(DiaporamaTypeTableMap::PATH)) $criteria->add(DiaporamaTypeTableMap::PATH, $this->path);
 
         return $criteria;
     }
@@ -1048,6 +1147,7 @@ abstract class DiaporamaType implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setCode($this->getCode());
+        $copyObj->setPath($this->getPath());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1817,8 +1917,10 @@ abstract class DiaporamaType implements ActiveRecordInterface
     {
         $this->id = null;
         $this->code = null;
+        $this->path = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1993,6 +2095,93 @@ abstract class DiaporamaType implements ActiveRecordInterface
         {    $this->getCurrentTranslation()->setTitle($v);
 
         return $this;
+    }
+
+    // validate behavior
+
+    /**
+     * Configure validators constraints. The Validator object uses this method
+     * to perform object validation.
+     *
+     * @param ClassMetadata $metadata
+     */
+    static public function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('path', new NotNull());
+    }
+
+    /**
+     * Validates the object and all objects related to this table.
+     *
+     * @see        getValidationFailures()
+     * @param      object $validator A Validator class instance
+     * @return     boolean Whether all objects pass validation.
+     */
+    public function validate(Validator $validator = null)
+    {
+        if (null === $validator) {
+            $validator = new Validator(new ClassMetadataFactory(new StaticMethodLoader()), new ConstraintValidatorFactory(), new DefaultTranslator());
+        }
+
+        $failureMap = new ConstraintViolationList();
+
+        if (!$this->alreadyInValidation) {
+            $this->alreadyInValidation = true;
+            $retval = null;
+
+
+            $retval = $validator->validate($this);
+            if (count($retval) > 0) {
+                $failureMap->addAll($retval);
+            }
+
+            if (null !== $this->collDiaporamas) {
+                foreach ($this->collDiaporamas as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collDiaporamaImages) {
+                foreach ($this->collDiaporamaImages as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+            if (null !== $this->collDiaporamaTypeI18ns) {
+                foreach ($this->collDiaporamaTypeI18ns as $referrerFK) {
+                    if (method_exists($referrerFK, 'validate')) {
+                        if (!$referrerFK->validate($validator)) {
+                            $failureMap->addAll($referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+            }
+
+            $this->alreadyInValidation = false;
+        }
+
+        $this->validationFailures = $failureMap;
+
+        return (Boolean) (!(count($this->validationFailures) > 0));
+
+    }
+
+    /**
+     * Gets any ConstraintViolation objects that resulted from last call to validate().
+     *
+     *
+     * @return     object ConstraintViolationList
+     * @see        validate()
+     */
+    public function getValidationFailures()
+    {
+        return $this->validationFailures;
     }
 
     /**

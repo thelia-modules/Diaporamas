@@ -58,7 +58,7 @@ class DiaporamaTypeTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 2;
+    const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class DiaporamaTypeTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 2;
+    const NUM_HYDRATE_COLUMNS = 3;
 
     /**
      * the column name for the ID field
@@ -79,6 +79,11 @@ class DiaporamaTypeTableMap extends TableMap
      * the column name for the CODE field
      */
     const CODE = 'diaporama_type.CODE';
+
+    /**
+     * the column name for the PATH field
+     */
+    const PATH = 'diaporama_type.PATH';
 
     /**
      * The default string format for model objects of the related table
@@ -101,12 +106,12 @@ class DiaporamaTypeTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Code', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'code', ),
-        self::TYPE_COLNAME       => array(DiaporamaTypeTableMap::ID, DiaporamaTypeTableMap::CODE, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'CODE', ),
-        self::TYPE_FIELDNAME     => array('id', 'code', ),
-        self::TYPE_NUM           => array(0, 1, )
+        self::TYPE_PHPNAME       => array('Id', 'Code', 'Path', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'code', 'path', ),
+        self::TYPE_COLNAME       => array(DiaporamaTypeTableMap::ID, DiaporamaTypeTableMap::CODE, DiaporamaTypeTableMap::PATH, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'CODE', 'PATH', ),
+        self::TYPE_FIELDNAME     => array('id', 'code', 'path', ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -116,12 +121,12 @@ class DiaporamaTypeTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'code' => 1, ),
-        self::TYPE_COLNAME       => array(DiaporamaTypeTableMap::ID => 0, DiaporamaTypeTableMap::CODE => 1, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CODE' => 1, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, ),
-        self::TYPE_NUM           => array(0, 1, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Path' => 2, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'code' => 1, 'path' => 2, ),
+        self::TYPE_COLNAME       => array(DiaporamaTypeTableMap::ID => 0, DiaporamaTypeTableMap::CODE => 1, DiaporamaTypeTableMap::PATH => 2, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CODE' => 1, 'PATH' => 2, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'path' => 2, ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -142,6 +147,7 @@ class DiaporamaTypeTableMap extends TableMap
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('CODE', 'Code', 'VARCHAR', true, 16, null);
+        $this->addColumn('PATH', 'Path', 'VARCHAR', false, 64, '');
     } // initialize()
 
     /**
@@ -164,6 +170,7 @@ class DiaporamaTypeTableMap extends TableMap
     {
         return array(
             'i18n' => array('i18n_table' => '%TABLE%_i18n', 'i18n_phpname' => '%PHPNAME%I18n', 'i18n_columns' => 'title', 'locale_column' => 'locale', 'locale_length' => '5', 'default_locale' => '', 'locale_alias' => '', ),
+            'validate' => array('pathRule' => array ('column' => 'path','validator' => 'NotNull',), ),
         );
     } // getBehaviors()
     /**
@@ -316,9 +323,11 @@ class DiaporamaTypeTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(DiaporamaTypeTableMap::ID);
             $criteria->addSelectColumn(DiaporamaTypeTableMap::CODE);
+            $criteria->addSelectColumn(DiaporamaTypeTableMap::PATH);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.CODE');
+            $criteria->addSelectColumn($alias . '.PATH');
         }
     }
 

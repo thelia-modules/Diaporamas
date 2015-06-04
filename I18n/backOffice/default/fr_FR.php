@@ -11,6 +11,17 @@ return array(
             'entity_id' => 'Entité',
             'invalid_entity' => '%entity non valide',
         ),
+        'read' => array(
+            'id' => 'ID',
+            'title' => 'Titre',
+            'shortcode' => 'Shortcode',
+            'diaporama_type' => 'Diaporama pour',
+            'entity' => 'Sujet du diaporama',
+            'see' => 'Voir le diaporama',
+            'edit' => 'Modifier le diaporama',
+            'delete' => 'Supprimer le diaporama',
+            'no_diaporama' => 'Il n\'y a aucun diaporama.'
+        ),
     ),
 
     // Diaporama types

@@ -38,11 +38,15 @@
         <column name="id" primaryKey="true" required="true" type="INTEGER" autoIncrement="true" />
         <column name="code" size="16" type="VARCHAR" required="true" />
         <column name="title" size="16" type="VARCHAR" required="true" />
+        <column name="path" size="64" type="VARCHAR" default="" />
         <unique name="un_code">
             <unique-column name="code" />
         </unique>
         <behavior name="i18n">
             <parameter name="i18n_columns" value="title" />
+        </behavior>
+        <behavior name="validate">
+            <parameter name="pathRule" value="{column: path, validator: NotNull}"/>
         </behavior>
     </table>
 

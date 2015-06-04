@@ -14,4 +14,10 @@ use Diaporamas\Model\Base\Diaporama as BaseDiaporama;
  */
 class Diaporama extends BaseDiaporama
 {
+    public function getEntityTitle()
+    {
+        $code = DiaporamaType::getCodeById($this->diaporama_type_id, true);
+        $queryClass = '\\Thelia\\Model\\'.$code.'Query';
+        return $queryClass::create()->findOneById($this->entity_id)->getTitle();
+    }
 }

@@ -19,6 +19,7 @@ class DiaporamaTypeEvent extends ActionEvent
     protected $id;
     protected $code;
     protected $title;
+    protected $path;
     protected $diaporamaType;
     protected $locale;
 
@@ -66,6 +67,18 @@ class DiaporamaTypeEvent extends ActionEvent
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function setPath($path)
+    {
+        $this->path = $path;
 
         return $this;
     }

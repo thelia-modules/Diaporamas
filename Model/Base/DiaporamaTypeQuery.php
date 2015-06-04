@@ -24,9 +24,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaTypeQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildDiaporamaTypeQuery orderByCode($order = Criteria::ASC) Order by the code column
+ * @method     ChildDiaporamaTypeQuery orderByPath($order = Criteria::ASC) Order by the path column
  *
  * @method     ChildDiaporamaTypeQuery groupById() Group by the id column
  * @method     ChildDiaporamaTypeQuery groupByCode() Group by the code column
+ * @method     ChildDiaporamaTypeQuery groupByPath() Group by the path column
  *
  * @method     ChildDiaporamaTypeQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildDiaporamaTypeQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,9 +51,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaType findOneById(int $id) Return the first ChildDiaporamaType filtered by the id column
  * @method     ChildDiaporamaType findOneByCode(string $code) Return the first ChildDiaporamaType filtered by the code column
+ * @method     ChildDiaporamaType findOneByPath(string $path) Return the first ChildDiaporamaType filtered by the path column
  *
  * @method     array findById(int $id) Return ChildDiaporamaType objects filtered by the id column
  * @method     array findByCode(string $code) Return ChildDiaporamaType objects filtered by the code column
+ * @method     array findByPath(string $path) Return ChildDiaporamaType objects filtered by the path column
  *
  */
 abstract class DiaporamaTypeQuery extends ModelCriteria
@@ -140,7 +144,7 @@ abstract class DiaporamaTypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, CODE FROM diaporama_type WHERE ID = :p0';
+        $sql = 'SELECT ID, CODE, PATH FROM diaporama_type WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -297,6 +301,35 @@ abstract class DiaporamaTypeQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DiaporamaTypeTableMap::CODE, $code, $comparison);
+    }
+
+    /**
+     * Filter the query on the path column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPath('fooValue');   // WHERE path = 'fooValue'
+     * $query->filterByPath('%fooValue%'); // WHERE path LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $path The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildDiaporamaTypeQuery The current query, for fluid interface
+     */
+    public function filterByPath($path = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($path)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $path)) {
+                $path = str_replace('*', '%', $path);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(DiaporamaTypeTableMap::PATH, $path, $comparison);
     }
 
     /**

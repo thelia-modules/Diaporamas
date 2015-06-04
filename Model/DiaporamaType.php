@@ -14,4 +14,29 @@ use Diaporamas\Model\Base\DiaporamaType as BaseDiaporamaType;
  */
 class DiaporamaType extends BaseDiaporamaType
 {
+    public static function getAllCodes($ucfirst = false)
+    {
+        $codes = DiaporamaTypeQuery::create()
+            ->select(array('DiaporamaType.Id', 'DiaporamaType.Code'))
+            ->orderBy('DiaporamaType.Id')
+            ->find()
+            ->toKeyValue('DiaporamaType.Id', 'DiaporamaType.Code')
+        ;
+
+        if ($ucfirst) {
+            foreach ($codes as &$code) {
+                $code = ucfirst($code);
+            }
+        }
+
+        return $codes;
+    }
+
+    public static function getCodeById($id, $ucfirst = false)
+    {
+        $code = DiaporamaTypeQuery::create()->findOneById($id);
+        $code = $code->getCode();
+        $ucfirst and $code = ucfirst($code);
+        return $code;
+    }
 }

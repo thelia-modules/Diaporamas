@@ -26,6 +26,7 @@ class DiaporamaTypeCreateForm extends BaseForm
 
         $this->addCodeField($translationKeys, $fieldsIdKeys);
         $this->addTitleField($translationKeys, $fieldsIdKeys);
+        $this->addPathField($translationKeys, $fieldsIdKeys);
         $this->addLocaleField();
     }
 
@@ -69,6 +70,19 @@ class DiaporamaTypeCreateForm extends BaseForm
         ));
     }
 
+    protected function addPathField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder->add("path", "text", array(
+            "label" => $this->translator->trans($this->readKey("path", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label_attr" => ["for" => $this->readKey("path", $fieldsIdKeys)],
+            "required" => false,
+            "constraints" => array(
+            ),
+            "attr" => array(
+            )
+        ));
+    }
+
     public function getName()
     {
         return static::FORM_NAME;
@@ -93,6 +107,7 @@ class DiaporamaTypeCreateForm extends BaseForm
         return array(
             "code" => "diaporama_type_code",
             "title" => "diaporama_type_title",
+            "path" => "diaporama_type_path",
         );
     }
 }

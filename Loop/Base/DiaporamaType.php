@@ -39,6 +39,7 @@ class DiaporamaType extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("ID", $entry->getId())
                 ->set("CODE", $entry->getCode())
                 ->set("TITLE", $entry->getVirtualColumn("i18n_TITLE"))
+                ->set("PATH", $entry->getPath())
             ;
 
             $this->addMoreResults($row, $entry);
@@ -79,6 +80,7 @@ class DiaporamaType extends BaseI18nLoop implements PropelSearchLoopInterface
             Argument::createIntListTypeArgument("id"),
             Argument::createAnyTypeArgument("code"),
             Argument::createAnyTypeArgument("title"),
+            Argument::createAnyTypeArgument("path"),
             Argument::createEnumListTypeArgument(
                 "order",
                 [
@@ -88,6 +90,8 @@ class DiaporamaType extends BaseI18nLoop implements PropelSearchLoopInterface
                     "code-reverse",
                     "title",
                     "title-reverse",
+                    "path",
+                    "path-reverse",
                 ],
                 "id"
             )
@@ -118,6 +122,11 @@ class DiaporamaType extends BaseI18nLoop implements PropelSearchLoopInterface
             $query->filterByTitle($title);
         }
 
+        if (null !== $path = $this->getPath()) {
+            $path = array_map("trim", explode(",", $path));
+            $query->filterByPath($path);
+        }
+
         foreach ($this->getOrder() as $order) {
             switch ($order) {
                 case "id":
@@ -137,6 +146,12 @@ class DiaporamaType extends BaseI18nLoop implements PropelSearchLoopInterface
                     break;
                 case "title-reverse":
                     $query->addDescendingOrderByColumn("i18n_TITLE");
+                    break;
+                case "path":
+                    $query->orderByPath();
+                    break;
+                case "path-reverse":
+                    $query->orderByPath(Criteria::DESC);
                     break;
             }
         }
