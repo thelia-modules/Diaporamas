@@ -17,6 +17,7 @@ use Thelia\Install\Database;
 class Diaporamas extends BaseModule
 {
     const MESSAGE_DOMAIN = "diaporamas";
+    const BO_MESSAGE_DOMAIN = "diaporamas.bo.default";
     const ROUTER = "router.diaporamas";
 
     public function postActivation(ConnectionInterface $con = null)

@@ -1,0 +1,69 @@
+{form name="diaporama.create"}
+    {capture "diaporama_create"}
+
+        {form_hidden_fields form=$form}
+
+        {form_field form=$form field="locale"}
+            <input type="hidden" name="{$name}" value="{$edit_language_locale}" />
+        {/form_field}
+
+        {render_form_field form=$form field="success_url" value={url path='/admin/module/Diaporamas/diaporama/edit?diaporama_id=_ID_'}}
+
+        {form_field form=$form field="title"}
+            <div class="form-group">
+                <label class="control-label" for="{$label_attr.for}">
+                    {$label}
+                    {if $required}<span class="required">*</span>{/if}
+                </label>
+
+                {form_error form=$form field="title"}{$message}{/form_error}
+
+                <div class="input-group">
+                    <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$TITLE}" placeholder="{intl l='diaporama.create.title.placeholder' d='diaporamas.bo.default'}" />
+                    {loop type="lang" name="default-lang" default_only="1"}
+                        <span class="input-group-addon"><img src="{image file="assets/img/flags/{$CODE}.png"}" alt="{$TITLE}" /></span>
+                    {/loop}
+                </div>
+            </div>
+        {/form_field}
+        {form_field form=$form field="shortcode"}
+        <div class="form-group">
+            <label class="control-label" for="{$label_attr.for}">
+                {$label}
+                {if $required}<span class="required">*</span>{/if}
+            </label>
+
+            {form_error form=$form field="shortcode"}{$message}{/form_error}
+
+            <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SHORTCODE}" placeholder="{intl l='diaporama.create.shortcode.placeholder' d='diaporamas.bo.default'}" />
+        </div>
+        {/form_field}
+        {render_form_field form=$form field='diaporama_type_id'}
+        {*render_form_field form=$form field='entity_id'*}
+        {form_field form=$form field='entity_id'}
+        <div class="form-group">
+            <label class="control-label" for="{$label_attr.for}">
+                <span id="entity_label">{$label}</span>
+                {if $required}<span class="required">*</span>{/if}
+            </label>
+
+            {form_error form=$form field='entity_id'}{$message}{/form_error}
+
+            <select name="{$name}" id="{$label_attr.for}" class="form-control" {if $required} required aria-required="true" {/if}></select>
+        </div>
+        {/form_field}
+    {/capture}
+
+    {include
+        file="includes/generic-create-dialog.html"
+        dialog_id       = "diaporama-create"
+        dialog_title    = {intl l='diaporama.create.dialog_title' d='diaporamas.bo.default'}
+        dialog_body     = {$smarty.capture.diaporama_create nofilter}
+
+        dialog_ok_label     = {intl l="Create"}
+        dialog_cancel_label = {intl l="Cancel"}
+
+        form_action        = {$current_url}
+        form_enctype       = {form_enctype form=$form}
+    }
+{/form}

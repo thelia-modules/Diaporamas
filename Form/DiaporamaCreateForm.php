@@ -6,21 +6,205 @@
 
 namespace Diaporamas\Form;
 
-use Diaporamas\Form\Base\DiaporamaCreateForm as BaseDiaporamaCreateForm;
+use Diaporamas\Diaporamas;
+use Diaporamas\Model\DiaporamaTypeQuery;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\ExecutionContextInterface;
+use Thelia\Form\BaseForm;
 
 /**
  * Class DiaporamaCreateForm
  * @package Diaporamas\Form
  */
-class DiaporamaCreateForm extends BaseDiaporamaCreateForm
+class DiaporamaCreateForm extends BaseForm
 {
+    const FORM_NAME = 'diaporama_create';
+
+    public function buildForm()
+    {
+        $translationKeys = $this->getTranslationKeys();
+        $fieldsIdKeys = $this->getFieldsIdKeys();
+
+        $this->addTitleField($translationKeys, $fieldsIdKeys);
+        $this->addShortcodeField($translationKeys, $fieldsIdKeys);
+        $this->addDiaporamaTypeIdField($translationKeys, $fieldsIdKeys);
+        $this->addEntityIdField($translationKeys, $fieldsIdKeys);
+        $this->addLocaleField();
+    }
+
+    public function addLocaleField()
+    {
+        $this->formBuilder->add(
+            'locale',
+            'hidden',
+            [
+                'constraints' => [ new NotBlank() ],
+                'required'    => true,
+            ]
+        );
+    }
+
+    protected function addTitleField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder->add("title", "text", array(
+            "label" => $this->trans($this->readKey('title', $translationKeys)),
+            "label_attr" => ["for" => $this->readKey("title", $fieldsIdKeys)],
+            "required" => true,
+            "constraints" => array(
+                new NotBlank(),
+            ),
+            "attr" => array(
+            )
+        ));
+    }
+
+    protected function addShortcodeField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder->add("shortcode", "text", array(
+            "label" => $this->trans($this->readKey("shortcode", $translationKeys)),
+            "label_attr" => ["for" => $this->readKey("shortcode", $fieldsIdKeys)],
+            "required" => true,
+            "constraints" => array(
+                new NotBlank(),
+            ),
+            "attr" => array(
+            )
+        ));
+    }
+
+    protected function addDiaporamaTypeIdField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder->add('diaporama_type_id', 'choice', array(
+            'expanded' => false,
+            'multiple' => false,
+            "label" => $this->trans($this->readKey("diaporama_type_id", $translationKeys)),
+            "label_attr" => ["for" => $this->readKey("diaporama_type_id", $fieldsIdKeys)],
+            "required" => true,
+            "constraints" => array(
+                new NotBlank(),
+            ),
+            'choices' => $this->getDiaporamaTypeChoices(),
+        ));
+    }
+
+    protected function addEntityIdField(array $translationKeys, array $fieldsIdKeys)
+    {
+        $this->formBuilder->add("entity_id", 'choice', array(
+            'expanded' => false,
+            'multiple' => false,
+            "label" => $this->trans($this->readKey("entity_id", $translationKeys)),
+            "label_attr" => ["for" => $this->readKey("entity_id", $fieldsIdKeys)],
+            "required" => true,
+            "constraints" => array(
+                new NotBlank(),
+                new Callback(array(
+                    'methods' => array(
+                        array($this, 'checkEntity')
+                    )
+                )),
+            ),
+            'choices' => $this->getEntityChoices(),
+        ));
+    }
+
+    public function checkEntity($value, ExecutionContextInterface $context)
+    {
+        $diaporama_type_id = $this->getRequest()->request->get(self::FORM_NAME)['diaporama_type_id'];
+        $entity_id = $this->getRequest()->request->get(self::FORM_NAME)['entity_id'];
+
+        $diaporama_type_code = ucfirst(
+            DiaporamaTypeQuery::create()
+                ->filterById($diaporama_type_id)
+                ->select('DiaporamaType.Code')
+                ->find()
+                ->toArray()[0]
+        );
+
+        $queryClass = '\\Thelia\\Model\\'.$diaporama_type_code.'Query';
+
+        if ($queryClass::create()->filterById($entity_id)->count() < 1) {
+            $context->addViolation($this->trans(
+                'diaporama_type.create.invalid_entity',
+                array('entity' => $diaporama_type_code)
+            ));
+        }
+    }
+
+    public function getEntityChoices()
+    {
+        $diaporama_type_codes = DiaporamaTypeQuery::create()
+            ->select('DiaporamaType.Code')
+            ->find()
+            ->toArray()
+        ;
+
+        $res = array();
+
+        foreach ($diaporama_type_codes as $diaporama_code) {
+            $diaporama_code = ucfirst($diaporama_code);
+            $queryClass = '\\Thelia\\Model\\'.$diaporama_code.'Query';
+            $typeTable = $diaporama_code;
+            $typeTableI18n = $diaporama_code.'I18n';
+            $id_field = "$typeTable.Id";
+            $title_field = "$typeTableI18n.Title";
+            $entities = $queryClass::create()
+                ->join("$typeTable.$typeTableI18n")
+                ->where("$typeTableI18n.Locale = ?", $this->translator->getLocale())
+                ->select(array($id_field, $title_field))
+                ->find()
+                ->toKeyValue($id_field, $title_field)
+            ;
+
+            $res = array_merge($res, $entities);
+        }
+
+        return $res;
+    }
+
+    public function getName()
+    {
+        return static::FORM_NAME;
+    }
+
+    public function readKey($key, array $keys, $default = '')
+    {
+        return isset($keys[$key]) ? $keys[$key] : $default;
+    }
+
+    public function getFieldsIdKeys()
+    {
+        return array(
+            'title' => "diaporama_title",
+            'shortcode' => "diaporama_shortcode",
+            'diaporama_type_id' => "diaporama_diaporama_type_id",
+            'entity_id' => "diaporama_entity_id",
+        );
+    }
+
     public function getTranslationKeys()
     {
         return array(
-            "title" => "Title",
-            "shortcode" => "Shortcode",
-            "diaporama_type_id" => "Diaporama type id",
-            "entity_id" => "Entity id",
+            'title' => 'diaporama.create.title',
+            'shortcode' => 'diaporama.create.shortcode',
+            'diaporama_type_id' => 'diaporama.create.diaporama_type',
+            'entity_id' => 'diaporama.create.entity_id',
         );
+    }
+
+    public function getDiaporamaTypeChoices()
+    {
+        $choices = array();
+
+        foreach (DiaporamaTypeQuery::create()->orderBy('id')->find()->toKeyValue('id', 'code') as $id => $code) {
+            $choices[$id] = ucfirst($this->trans("diaporama_type.$code"));
+        }
+
+        return $choices;
+    }
+
+    public function trans($code, array $parameters = array(), $domain = Diaporamas::BO_MESSAGE_DOMAIN)
+    {
+        return $this->translator->trans($code, $parameters, $domain);
     }
 }

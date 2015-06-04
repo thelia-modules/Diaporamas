@@ -4,7 +4,6 @@ namespace Diaporamas\Model;
 
 use Diaporamas\Model\Base\DiaporamaQuery as BaseDiaporamaQuery;
 
-
 /**
  * Skeleton subclass for performing query and update operations on the 'diaporama' table.
  *

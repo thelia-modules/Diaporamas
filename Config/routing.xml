@@ -1,107 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes xmlns="http://symfony.com/schema/routing" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
-  <!--
-
-    if a /admin/module/diaporamas/ route is provided, a "Configuration" button will be displayed
-    for the module in the module list. Clicking this button will invoke this route.
-
-    <route id="my_route_id" path="/admin/module/diaporamas">
-        <default key="_controller">Diaporamas\Full\Class\Name\Of\YourConfigurationController::methodName</default>
+    <!-- TheliaStudio routes -->
+    <route id="diaporamas.diaporama.list" path="/admin/module/Diaporamas/diaporama" methods="get">
+        <default key="_controller">Diaporamas:Diaporama:default</default>
+    </route>
+    <route id="diaporamas.diaporama.create" path="/admin/module/Diaporamas/diaporama" methods="post">
+        <default key="_controller">Diaporamas:Diaporama:create</default>
+    </route>
+    <route id="diaporamas.diaporama.view" path="/admin/module/Diaporamas/diaporama/edit" methods="get">
+        <default key="_controller">Diaporamas:Diaporama:update</default>
+    </route>
+    <route id="diaporamas.diaporama.edit" path="/admin/module/Diaporamas/diaporama/edit" methods="post">
+        <default key="_controller">Diaporamas:Diaporama:processUpdate</default>
+    </route>
+    <route id="diaporamas.diaporama.delete" path="/admin/module/Diaporamas/diaporama/delete" methods="post">
+        <default key="_controller">Diaporamas:Diaporama:delete</default>
+    </route>
+    <route id="diaporamas.diaporama_type.list" path="/admin/module/Diaporamas/diaporama_type" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaType:default</default>
+    </route>
+    <route id="diaporamas.diaporama_type.create" path="/admin/module/Diaporamas/diaporama_type" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaType:create</default>
+    </route>
+    <route id="diaporamas.diaporama_type.view" path="/admin/module/Diaporamas/diaporama_type/edit" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaType:update</default>
+    </route>
+    <route id="diaporamas.diaporama_type.edit" path="/admin/module/Diaporamas/diaporama_type/edit" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaType:processUpdate</default>
+    </route>
+    <route id="diaporamas.diaporama_type.delete" path="/admin/module/Diaporamas/diaporama_type/delete" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaType:delete</default>
+    </route>
+    <route id="diaporamas.diaporama_image.list" path="/admin/module/Diaporamas/diaporama_image" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaImage:default</default>
+    </route>
+    <route id="diaporamas.diaporama_image.create" path="/admin/module/Diaporamas/diaporama_image" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaImage:create</default>
+    </route>
+    <route id="diaporamas.diaporama_image.view" path="/admin/module/Diaporamas/diaporama_image/edit" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaImage:update</default>
+    </route>
+    <route id="diaporamas.diaporama_image.edit" path="/admin/module/Diaporamas/diaporama_image/edit" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaImage:processUpdate</default>
+    </route>
+    <route id="diaporamas.diaporama_image.delete" path="/admin/module/Diaporamas/diaporama_image/delete" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaImage:delete</default>
+    </route>
+    <route id="diaporamas.diaporama_image.update_position" path="/admin/module/Diaporamas/diaporama_image/updatePosition" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaImage:updatePosition</default>
     </route>
 
-    <route id="my_route_id" path="/admin/module/diaporamas/route-name">
-        <default key="_controller">Diaporamas\Full\Class\Name\Of\YourAdminController::methodName</default>
+    <!-- Route for loading entities choices -->
+    <route id="diaporamas.diaporama.entity_choices" path="/admin/module/Diaporamas/diaporama/entity_choices/{diaporama_type_id}" methods="get">
+        <default key="_controller">Diaporamas:Diaporama:retrieveEntityChoices</default>
     </route>
-
-    <route id="my_route_id" path="/my/route/name">
-        <default key="_controller">Diaporamas\Full\Class\Name\Of\YourOtherController::methodName</default>
-    </route>
-
-    ...add as many routes as required.
-
-    <route>
-    ...
-    </route>
-    -->
-  <!--<route id="diaporamas.diaporama.list" path="/admin/module/Diaporamas/diaporama" methods="get">-->
-  <!--<default key="_controller">Diaporamas:Diaporama:default</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama.create" path="/admin/module/Diaporamas/diaporama" methods="post">-->
-  <!--<default key="_controller">Diaporamas:Diaporama:create</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama.view" path="/admin/module/Diaporamas/diaporama/edit" methods="get">-->
-  <!--<default key="_controller">Diaporamas:Diaporama:update</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama.edit" path="/admin/module/Diaporamas/diaporama/edit" methods="post">-->
-  <!--<default key="_controller">Diaporamas:Diaporama:processUpdate</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama.delete" path="/admin/module/Diaporamas/diaporama/delete" methods="post">-->
-  <!--<default key="_controller">Diaporamas:Diaporama:delete</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama_image.list" path="/admin/module/Diaporamas/diaporama_image" methods="get">-->
-  <!--<default key="_controller">Diaporamas:DiaporamaImage:default</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama_image.create" path="/admin/module/Diaporamas/diaporama_image" methods="post">-->
-  <!--<default key="_controller">Diaporamas:DiaporamaImage:create</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama_image.view" path="/admin/module/Diaporamas/diaporama_image/edit" methods="get">-->
-  <!--<default key="_controller">Diaporamas:DiaporamaImage:update</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama_image.edit" path="/admin/module/Diaporamas/diaporama_image/edit" methods="post">-->
-  <!--<default key="_controller">Diaporamas:DiaporamaImage:processUpdate</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama_image.delete" path="/admin/module/Diaporamas/diaporama_image/delete" methods="post">-->
-  <!--<default key="_controller">Diaporamas:DiaporamaImage:delete</default>-->
-  <!--</route>-->
-  <!--<route id="diaporamas.diaporama_image.update_position" path="/admin/module/Diaporamas/diaporama_image/updatePosition" methods="get">-->
-  <!--<default key="_controller">Diaporamas:DiaporamaImage:updatePosition</default>-->
-  <!--</route>-->
-  <route id="diaporamas.diaporama.list" path="/admin/module/Diaporamas/diaporama" methods="get">
-    <default key="_controller">Diaporamas:Diaporama:default</default>
-  </route>
-  <route id="diaporamas.diaporama.create" path="/admin/module/Diaporamas/diaporama" methods="post">
-    <default key="_controller">Diaporamas:Diaporama:create</default>
-  </route>
-  <route id="diaporamas.diaporama.view" path="/admin/module/Diaporamas/diaporama/edit" methods="get">
-    <default key="_controller">Diaporamas:Diaporama:update</default>
-  </route>
-  <route id="diaporamas.diaporama.edit" path="/admin/module/Diaporamas/diaporama/edit" methods="post">
-    <default key="_controller">Diaporamas:Diaporama:processUpdate</default>
-  </route>
-  <route id="diaporamas.diaporama.delete" path="/admin/module/Diaporamas/diaporama/delete" methods="post">
-    <default key="_controller">Diaporamas:Diaporama:delete</default>
-  </route>
-  <route id="diaporamas.diaporama_type.list" path="/admin/module/Diaporamas/diaporama_type" methods="get">
-    <default key="_controller">Diaporamas:DiaporamaType:default</default>
-  </route>
-  <route id="diaporamas.diaporama_type.create" path="/admin/module/Diaporamas/diaporama_type" methods="post">
-    <default key="_controller">Diaporamas:DiaporamaType:create</default>
-  </route>
-  <route id="diaporamas.diaporama_type.view" path="/admin/module/Diaporamas/diaporama_type/edit" methods="get">
-    <default key="_controller">Diaporamas:DiaporamaType:update</default>
-  </route>
-  <route id="diaporamas.diaporama_type.edit" path="/admin/module/Diaporamas/diaporama_type/edit" methods="post">
-    <default key="_controller">Diaporamas:DiaporamaType:processUpdate</default>
-  </route>
-  <route id="diaporamas.diaporama_type.delete" path="/admin/module/Diaporamas/diaporama_type/delete" methods="post">
-    <default key="_controller">Diaporamas:DiaporamaType:delete</default>
-  </route>
-  <route id="diaporamas.diaporama_image.list" path="/admin/module/Diaporamas/diaporama_image" methods="get">
-    <default key="_controller">Diaporamas:DiaporamaImage:default</default>
-  </route>
-  <route id="diaporamas.diaporama_image.create" path="/admin/module/Diaporamas/diaporama_image" methods="post">
-    <default key="_controller">Diaporamas:DiaporamaImage:create</default>
-  </route>
-  <route id="diaporamas.diaporama_image.view" path="/admin/module/Diaporamas/diaporama_image/edit" methods="get">
-    <default key="_controller">Diaporamas:DiaporamaImage:update</default>
-  </route>
-  <route id="diaporamas.diaporama_image.edit" path="/admin/module/Diaporamas/diaporama_image/edit" methods="post">
-    <default key="_controller">Diaporamas:DiaporamaImage:processUpdate</default>
-  </route>
-  <route id="diaporamas.diaporama_image.delete" path="/admin/module/Diaporamas/diaporama_image/delete" methods="post">
-    <default key="_controller">Diaporamas:DiaporamaImage:delete</default>
-  </route>
-  <route id="diaporamas.diaporama_image.update_position" path="/admin/module/Diaporamas/diaporama_image/updatePosition" methods="get">
-    <default key="_controller">Diaporamas:DiaporamaImage:updatePosition</default>
-  </route>
 </routes>
