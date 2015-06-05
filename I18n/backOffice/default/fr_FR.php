@@ -22,6 +22,11 @@ return array(
             'delete' => 'Supprimer le diaporama',
             'no_diaporama' => 'Il n\'y a aucun diaporama.'
         ),
+        'delete' => array(
+            'content' => 'Voulez-vous vraiment supprimer ce diaporama ?',
+            'title' => 'Supprimer un diaporama',
+            'invalid_diaporama %diaporama_id' => 'Il n\'existe pas de diaporama dont l\'identifiant est %diaporama_id.',
+        ),
     ),
 
     // Diaporama types

@@ -2,6 +2,7 @@
 <config xmlns="http://thelia.net/schema/dic/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
   <forms>
     <form name="diaporama.create" class="Diaporamas\Form\DiaporamaCreateForm"/>
+    <form name="diaporama.delete" class="Diaporamas\Form\DiaporamaDeleteForm"/>
     <form name="diaporama.update" class="Diaporamas\Form\DiaporamaUpdateForm"/>
     <form name="diaporama_type.create" class="Diaporamas\Form\DiaporamaTypeCreateForm"/>
     <form name="diaporama_type.update" class="Diaporamas\Form\DiaporamaTypeUpdateForm"/>

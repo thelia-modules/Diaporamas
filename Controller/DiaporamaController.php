@@ -7,8 +7,11 @@
 namespace Diaporamas\Controller;
 
 use Diaporamas\Controller\Base\DiaporamaController as BaseDiaporamaController;
+use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Model\DiaporamaTypeQuery;
 use Thelia\Core\HttpFoundation\JsonResponse;
+use Thelia\Core\Security\AccessManager;
+use Thelia\Form\Exception\FormValidationException;
 
 /**
  * Class DiaporamaController
@@ -38,5 +41,27 @@ class DiaporamaController extends BaseDiaporamaController
         }
 
         return new JsonResponse($response);
+    }
+
+    public function deleteAction()
+    {
+        // Check current user authorization
+        if (null !== $response = $this->checkAuth($this->resourceCode, $this->getModuleCode(), AccessManager::DELETE)) {
+            return $response;
+        }
+
+        try {
+            $form = $this->createForm('diaporama.delete');
+            $valform = $this->validateForm($form);
+            $event = new DiaporamaEvent();
+            $event->setId($valform->getData()['diaporama_id']);
+            $this->dispatch($this->deleteEventIdentifier, $event);
+            $this->performAdditionalDeleteAction($event);
+            return $this->generateSuccessRedirect($form);
+        } catch (FormValidationException $e) {
+            return $this->renderAfterDeleteError($e);
+        } catch (\Exception $e) {
+            return $this->renderAfterDeleteError($e);
+        }
     }
 }

@@ -127,7 +127,7 @@
                     {/loop}
                     {elseloop rel="diaporama-list"}
                         <tr>
-                            <td colspan="1000">
+                            <td colspan="7">
                                 <div class="alert alert-info">
                                     {intl l="diaporama.read.no_diaporama" d="diaporamas.bo.default"}
                                 </div>
@@ -159,38 +159,17 @@
 
 
     {* CREATE Modal *}
-    {include "Form/create-diaporama-form.html"}
+    {include 'Form/create-diaporama-form.html'}
 
     {* DELETE modal *}
-
-    {capture "diaporama_delete"}
-        {intl l="Do you really want to delete this Diaporama entry ?" d="diaporamas.bo.default"}
-        <input type="hidden" name="diaporama_id" id="diaporama_delete_id" value="" />
-    {/capture}
-
-    {include file="includes/generic-confirm-dialog.html"
-
-        dialog_id       = "diaporama-delete"
-        dialog_title    = {intl l="Delete an entry of Diaporama" d="diaporamas.bo.default"}
-        dialog_message  = {$smarty.capture.diaporama_delete nofilter}
-
-        dialog_ok_label     = {intl l="Delete"}
-        dialog_cancel_label = {intl l="Cancel"}
-
-        form_action         = {token_url path='/admin/module/Diaporamas/diaporama/delete'}
-    }
+    {include 'Form/delete-diaporama-form.html'}
 {/block}
 
 {block name="javascript-initialization"}
-    <script>
-        $(function() {
-            $('a.diaporama-delete').click(function(ev) {
-                $('#diaporama_delete_id').val($(this).data('id'));
-            });
-        });
-    </script>
     {* Create form JS *}
     <script>{include 'assets/js/create-diaporama-form.js'}</script>
-    {* Create form JS *}
+    {* Display list JS *}
     <script>{include 'assets/js/diaporama-list.js'}</script>
+    {* Delete diaporama JS *}
+    <script>{include 'assets/js/delete-diaporama.js'}</script>
 {/block}
