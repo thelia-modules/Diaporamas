@@ -13,6 +13,7 @@ use Thelia\Tools\URL;
 use Diaporamas\Event\DiaporamaImageEvent;
 use Diaporamas\Event\DiaporamaImageEvents;
 use Diaporamas\Model\DiaporamaImageQuery;
+use Thelia\Core\Event\ToggleVisibilityEvent;
 use Thelia\Core\Event\UpdatePositionEvent;
 
 /**
@@ -32,7 +33,7 @@ class DiaporamaImageController extends AbstractCrudController
             DiaporamaImageEvents::CREATE,
             DiaporamaImageEvents::UPDATE,
             DiaporamaImageEvents::DELETE,
-            null,
+            DiaporamaImageEvents::TOGGLE_VISIBILITY,
             DiaporamaImageEvents::UPDATE_POSITION,
             "Diaporamas"
         );
@@ -68,9 +69,13 @@ class DiaporamaImageController extends AbstractCrudController
         $data = array(
             "id" => $object->getId(),
             "diaporama_id" => $object->getDiaporamaId(),
-            "diaporama_type_id" => $object->getDiaporamaTypeId(),
-            "entity_id" => $object->getEntityId(),
+            "file" => $object->getFile(),
+            "visible" => (bool) $object->getVisible(),
             "position" => $object->getPosition(),
+            "title" => $object->getTitle(),
+            "description" => $object->getDescription(),
+            "chapo" => $object->getChapo(),
+            "postscriptum" => $object->getPostscriptum(),
         );
 
         return $this->getUpdateForm($data);
@@ -87,8 +92,12 @@ class DiaporamaImageController extends AbstractCrudController
         $event = new DiaporamaImageEvent();
 
         $event->setDiaporamaId($formData["diaporama_id"]);
-        $event->setDiaporamaTypeId($formData["diaporama_type_id"]);
-        $event->setEntityId($formData["entity_id"]);
+        $event->setFile($formData["file"]);
+        $event->setVisible($formData["visible"]);
+        $event->setTitle($formData["title"]);
+        $event->setDescription($formData["description"]);
+        $event->setChapo($formData["chapo"]);
+        $event->setPostscriptum($formData["postscriptum"]);
 
         return $event;
     }
@@ -105,8 +114,12 @@ class DiaporamaImageController extends AbstractCrudController
 
         $event->setId($formData["id"]);
         $event->setDiaporamaId($formData["diaporama_id"]);
-        $event->setDiaporamaTypeId($formData["diaporama_type_id"]);
-        $event->setEntityId($formData["entity_id"]);
+        $event->setFile($formData["file"]);
+        $event->setVisible($formData["visible"]);
+        $event->setTitle($formData["title"]);
+        $event->setDescription($formData["description"]);
+        $event->setChapo($formData["chapo"]);
+        $event->setPostscriptum($formData["postscriptum"]);
 
         return $event;
     }
@@ -160,7 +173,7 @@ class DiaporamaImageController extends AbstractCrudController
      */
     protected function getObjectLabel($object)
     {
-        return '';
+        return $object->getTitle();
     }
 
     /**
@@ -229,6 +242,11 @@ class DiaporamaImageController extends AbstractCrudController
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl("/admin/module/Diaporamas/diaporama_image")
         );
+    }
+
+    protected function createToggleVisibilityEvent()
+    {
+        return new ToggleVisibilityEvent($this->getRequest()->query->get("diaporama_image_id"));
     }
 
     protected function createUpdatePositionEvent($positionChangeMode, $positionValue)

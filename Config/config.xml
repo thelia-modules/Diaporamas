@@ -4,14 +4,11 @@
     <form name="diaporama.create" class="Diaporamas\Form\DiaporamaCreateForm"/>
     <form name="diaporama.delete" class="Diaporamas\Form\DiaporamaDeleteForm"/>
     <form name="diaporama.update" class="Diaporamas\Form\DiaporamaUpdateForm"/>
-    <form name="diaporama_type.create" class="Diaporamas\Form\DiaporamaTypeCreateForm"/>
-    <form name="diaporama_type.update" class="Diaporamas\Form\DiaporamaTypeUpdateForm"/>
     <form name="diaporama_image.create" class="Diaporamas\Form\DiaporamaImageCreateForm"/>
     <form name="diaporama_image.update" class="Diaporamas\Form\DiaporamaImageUpdateForm"/>
   </forms>
   <loops>
     <loop name="diaporama" class="Diaporamas\Loop\Diaporama"/>
-    <loop name="diaporama-type" class="Diaporamas\Loop\DiaporamaType"/>
     <loop name="diaporama-image" class="Diaporamas\Loop\DiaporamaImage"/>
   </loops>
   <services>
@@ -19,13 +16,6 @@
       <tag name="kernel.event_subscriber"/>
     </service>
     <service id="diaporamas.form.type.diaporama_id" class="Diaporamas\Form\Type\DiaporamaIdType">
-      <argument id="thelia.translator" type="service"/>
-      <tag name="thelia.form.type"/>
-    </service>
-    <service id="action.diaporamas.diaporama_type_table" class="Diaporamas\Action\DiaporamaTypeAction">
-      <tag name="kernel.event_subscriber"/>
-    </service>
-    <service id="diaporamas.form.type.diaporama_type_id" class="Diaporamas\Form\Type\DiaporamaTypeIdType">
       <argument id="thelia.translator" type="service"/>
       <tag name="thelia.form.type"/>
     </service>

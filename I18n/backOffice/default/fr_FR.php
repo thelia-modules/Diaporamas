@@ -22,6 +22,16 @@ return array(
             'delete' => 'Supprimer le diaporama',
             'no_diaporama' => 'Il n\'y a aucun diaporama.'
         ),
+        'update' => array(
+            'title' => 'Modification de diaporama',
+            'general' => array(
+                'title' => 'Général',
+                'timestamp %created_at %updated_at' => 'Diaporama créé le %created_at. Dernière modification : %updated_at',
+            ),
+            'images' => array(
+                'title' => 'Images',
+            ),
+        ),
         'delete' => array(
             'content' => 'Voulez-vous vraiment supprimer ce diaporama ?',
             'title' => 'Supprimer un diaporama',

@@ -68,8 +68,6 @@ class DiaporamaController extends AbstractCrudController
             "id" => $object->getId(),
             "title" => $object->getTitle(),
             "shortcode" => $object->getShortcode(),
-            "diaporama_type_id" => $object->getDiaporamaTypeId(),
-            "entity_id" => $object->getEntityId(),
         );
 
         return $this->getUpdateForm($data);
@@ -87,8 +85,6 @@ class DiaporamaController extends AbstractCrudController
 
         $event->setTitle($formData["title"]);
         $event->setShortcode($formData["shortcode"]);
-        $event->setDiaporamaTypeId($formData["diaporama_type_id"]);
-        $event->setEntityId($formData["entity_id"]);
 
         return $event;
     }
@@ -106,8 +102,6 @@ class DiaporamaController extends AbstractCrudController
         $event->setId($formData["id"]);
         $event->setTitle($formData["title"]);
         $event->setShortcode($formData["shortcode"]);
-        $event->setDiaporamaTypeId($formData["diaporama_type_id"]);
-        $event->setEntityId($formData["entity_id"]);
 
         return $event;
     }

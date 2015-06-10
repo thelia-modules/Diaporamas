@@ -6,6 +6,8 @@
 
 namespace Diaporamas;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Thelia\Model\ConfigQuery;
 use Thelia\Module\BaseModule;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Thelia\Install\Database;
@@ -23,7 +25,30 @@ class Diaporamas extends BaseModule
     public function postActivation(ConnectionInterface $con = null)
     {
         $database = new Database($con);
-
         $database->insertSql(null, [__DIR__ . "/Config/create.sql", __DIR__ . "/Config/insert.sql"]);
+
+        $fs = new Filesystem();
+        $diaporamaImagesFolder = Diaporamas::getDiaporamaImagesFolder();
+        !$fs->exists($diaporamaImagesFolder) and $fs->mkdir($diaporamaImagesFolder);
+    }
+
+    public static function getDiaporamaImagesFolder()
+    {
+        return sprintf(
+            "%s%s/diaporama",
+            THELIA_ROOT,
+            ConfigQuery::read('images_library_path', 'local'.DS.'media'.DS.'images')
+        );
+    }
+
+    public function destroy(ConnectionInterface $con = null, $deleteModuleData = false)
+    {
+        if ($deleteModuleData) {
+            $fs = new Filesystem();
+            $diaporamaImagesFolder = Diaporamas::getDiaporamaImagesFolder();
+            $fs->exists($diaporamaImagesFolder) and $fs->remove($diaporamaImagesFolder);
+        }
+
+        return parent::destroy($con, $deleteModuleData);
     }
 }

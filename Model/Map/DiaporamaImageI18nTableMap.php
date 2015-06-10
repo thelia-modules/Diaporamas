@@ -2,8 +2,8 @@
 
 namespace Diaporamas\Model\Map;
 
-use Diaporamas\Model\Diaporama;
-use Diaporamas\Model\DiaporamaQuery;
+use Diaporamas\Model\DiaporamaImageI18n;
+use Diaporamas\Model\DiaporamaImageI18nQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'diaporama' table.
+ * This class defines the structure of the 'diaporama_image_i18n' table.
  *
  *
  *
@@ -26,14 +26,14 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class DiaporamaTableMap extends TableMap
+class DiaporamaImageI18nTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'Diaporamas.Model.Map.DiaporamaTableMap';
+    const CLASS_NAME = 'Diaporamas.Model.Map.DiaporamaImageI18nTableMap';
 
     /**
      * The default database name for this class
@@ -43,22 +43,22 @@ class DiaporamaTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'diaporama';
+    const TABLE_NAME = 'diaporama_image_i18n';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Diaporamas\\Model\\Diaporama';
+    const OM_CLASS = '\\Diaporamas\\Model\\DiaporamaImageI18n';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Diaporamas.Model.Diaporama';
+    const CLASS_DEFAULT = 'Diaporamas.Model.DiaporamaImageI18n';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -68,56 +68,42 @@ class DiaporamaTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the ID field
      */
-    const ID = 'diaporama.ID';
+    const ID = 'diaporama_image_i18n.ID';
 
     /**
-     * the column name for the SHORTCODE field
+     * the column name for the LOCALE field
      */
-    const SHORTCODE = 'diaporama.SHORTCODE';
+    const LOCALE = 'diaporama_image_i18n.LOCALE';
 
     /**
-     * the column name for the CREATED_AT field
+     * the column name for the TITLE field
      */
-    const CREATED_AT = 'diaporama.CREATED_AT';
+    const TITLE = 'diaporama_image_i18n.TITLE';
 
     /**
-     * the column name for the UPDATED_AT field
+     * the column name for the DESCRIPTION field
      */
-    const UPDATED_AT = 'diaporama.UPDATED_AT';
+    const DESCRIPTION = 'diaporama_image_i18n.DESCRIPTION';
 
     /**
-     * the column name for the VERSION field
+     * the column name for the CHAPO field
      */
-    const VERSION = 'diaporama.VERSION';
+    const CHAPO = 'diaporama_image_i18n.CHAPO';
 
     /**
-     * the column name for the VERSION_CREATED_AT field
+     * the column name for the POSTSCRIPTUM field
      */
-    const VERSION_CREATED_AT = 'diaporama.VERSION_CREATED_AT';
-
-    /**
-     * the column name for the VERSION_CREATED_BY field
-     */
-    const VERSION_CREATED_BY = 'diaporama.VERSION_CREATED_BY';
+    const POSTSCRIPTUM = 'diaporama_image_i18n.POSTSCRIPTUM';
 
     /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
-
-    // i18n behavior
-
-    /**
-     * The default locale to use for translations.
-     *
-     * @var string
-     */
-    const DEFAULT_LOCALE = 'en_US';
 
     /**
      * holds an array of fieldnames
@@ -126,12 +112,12 @@ class DiaporamaTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Shortcode', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'shortcode', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', ),
-        self::TYPE_COLNAME       => array(DiaporamaTableMap::ID, DiaporamaTableMap::SHORTCODE, DiaporamaTableMap::CREATED_AT, DiaporamaTableMap::UPDATED_AT, DiaporamaTableMap::VERSION, DiaporamaTableMap::VERSION_CREATED_AT, DiaporamaTableMap::VERSION_CREATED_BY, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'SHORTCODE', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', ),
-        self::TYPE_FIELDNAME     => array('id', 'shortcode', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'Locale', 'Title', 'Description', 'Chapo', 'Postscriptum', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'locale', 'title', 'description', 'chapo', 'postscriptum', ),
+        self::TYPE_COLNAME       => array(DiaporamaImageI18nTableMap::ID, DiaporamaImageI18nTableMap::LOCALE, DiaporamaImageI18nTableMap::TITLE, DiaporamaImageI18nTableMap::DESCRIPTION, DiaporamaImageI18nTableMap::CHAPO, DiaporamaImageI18nTableMap::POSTSCRIPTUM, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'LOCALE', 'TITLE', 'DESCRIPTION', 'CHAPO', 'POSTSCRIPTUM', ),
+        self::TYPE_FIELDNAME     => array('id', 'locale', 'title', 'description', 'chapo', 'postscriptum', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -141,12 +127,12 @@ class DiaporamaTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Shortcode' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'shortcode' => 1, 'createdAt' => 2, 'updatedAt' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, ),
-        self::TYPE_COLNAME       => array(DiaporamaTableMap::ID => 0, DiaporamaTableMap::SHORTCODE => 1, DiaporamaTableMap::CREATED_AT => 2, DiaporamaTableMap::UPDATED_AT => 3, DiaporamaTableMap::VERSION => 4, DiaporamaTableMap::VERSION_CREATED_AT => 5, DiaporamaTableMap::VERSION_CREATED_BY => 6, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'SHORTCODE' => 1, 'CREATED_AT' => 2, 'UPDATED_AT' => 3, 'VERSION' => 4, 'VERSION_CREATED_AT' => 5, 'VERSION_CREATED_BY' => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'shortcode' => 1, 'created_at' => 2, 'updated_at' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Locale' => 1, 'Title' => 2, 'Description' => 3, 'Chapo' => 4, 'Postscriptum' => 5, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'locale' => 1, 'title' => 2, 'description' => 3, 'chapo' => 4, 'postscriptum' => 5, ),
+        self::TYPE_COLNAME       => array(DiaporamaImageI18nTableMap::ID => 0, DiaporamaImageI18nTableMap::LOCALE => 1, DiaporamaImageI18nTableMap::TITLE => 2, DiaporamaImageI18nTableMap::DESCRIPTION => 3, DiaporamaImageI18nTableMap::CHAPO => 4, DiaporamaImageI18nTableMap::POSTSCRIPTUM => 5, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'LOCALE' => 1, 'TITLE' => 2, 'DESCRIPTION' => 3, 'CHAPO' => 4, 'POSTSCRIPTUM' => 5, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'locale' => 1, 'title' => 2, 'description' => 3, 'chapo' => 4, 'postscriptum' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -159,19 +145,18 @@ class DiaporamaTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('diaporama');
-        $this->setPhpName('Diaporama');
-        $this->setClassName('\\Diaporamas\\Model\\Diaporama');
+        $this->setName('diaporama_image_i18n');
+        $this->setPhpName('DiaporamaImageI18n');
+        $this->setClassName('\\Diaporamas\\Model\\DiaporamaImageI18n');
         $this->setPackage('Diaporamas.Model');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('SHORTCODE', 'Shortcode', 'VARCHAR', true, 32, null);
-        $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION', 'Version', 'INTEGER', false, null, 0);
-        $this->addColumn('VERSION_CREATED_AT', 'VersionCreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('VERSION_CREATED_BY', 'VersionCreatedBy', 'VARCHAR', false, 100, null);
+        $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'diaporama_image', 'ID', true, null, null);
+        $this->addPrimaryKey('LOCALE', 'Locale', 'VARCHAR', true, 5, 'en_US');
+        $this->addColumn('TITLE', 'Title', 'VARCHAR', false, 255, null);
+        $this->addColumn('DESCRIPTION', 'Description', 'CLOB', false, null, null);
+        $this->addColumn('CHAPO', 'Chapo', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('POSTSCRIPTUM', 'Postscriptum', 'LONGVARCHAR', false, null, null);
     } // initialize()
 
     /**
@@ -179,35 +164,61 @@ class DiaporamaTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('DiaporamaImage', '\\Diaporamas\\Model\\DiaporamaImage', RelationMap::ONE_TO_MANY, array('id' => 'diaporama_id', ), null, null, 'DiaporamaImages');
-        $this->addRelation('DiaporamaI18n', '\\Diaporamas\\Model\\DiaporamaI18n', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'DiaporamaI18ns');
-        $this->addRelation('DiaporamaVersion', '\\Diaporamas\\Model\\DiaporamaVersion', RelationMap::ONE_TO_MANY, array('id' => 'id', ), 'CASCADE', null, 'DiaporamaVersions');
+        $this->addRelation('DiaporamaImage', '\\Diaporamas\\Model\\DiaporamaImage', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
+     * Adds an object to the instance pool.
      *
-     * Gets the list of behaviors registered for this table
+     * Propel keeps cached copies of objects in an instance pool when they are retrieved
+     * from the database. In some cases you may need to explicitly add objects
+     * to the cache in order to ensure that the same objects are always returned by find*()
+     * and findPk*() calls.
      *
-     * @return array Associative array (name => parameters) of behaviors
+     * @param \Diaporamas\Model\DiaporamaImageI18n $obj A \Diaporamas\Model\DiaporamaImageI18n object.
+     * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
-    public function getBehaviors()
+    public static function addInstanceToPool($obj, $key = null)
     {
-        return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', ),
-            'i18n' => array('i18n_table' => '%TABLE%_i18n', 'i18n_phpname' => '%PHPNAME%I18n', 'i18n_columns' => 'title', 'locale_column' => 'locale', 'locale_length' => '5', 'default_locale' => '', 'locale_alias' => '', ),
-            'versionable' => array('version_column' => 'version', 'version_table' => '', 'log_created_at' => 'true', 'log_created_by' => 'true', 'log_comment' => 'false', 'version_created_at_column' => 'version_created_at', 'version_created_by_column' => 'version_created_by', 'version_comment_column' => 'version_comment', ),
-        );
-    } // getBehaviors()
+        if (Propel::isInstancePoolingEnabled()) {
+            if (null === $key) {
+                $key = serialize(array((string) $obj->getId(), (string) $obj->getLocale()));
+            } // if key === null
+            self::$instances[$key] = $obj;
+        }
+    }
+
     /**
-     * Method to invalidate the instance pool of all tables related to diaporama     * by a foreign key with ON DELETE CASCADE
+     * Removes an object from the instance pool.
+     *
+     * Propel keeps cached copies of objects in an instance pool when they are retrieved
+     * from the database.  In some cases -- especially when you override doDelete
+     * methods in your stub classes -- you may need to explicitly remove objects
+     * from the cache in order to prevent returning objects that no longer exist.
+     *
+     * @param mixed $value A \Diaporamas\Model\DiaporamaImageI18n object or a primary key value.
      */
-    public static function clearRelatedInstancePool()
+    public static function removeInstanceFromPool($value)
     {
-        // Invalidate objects in ".$this->getClassNameFromBuilder($joinedTableTableMapBuilder)." instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-                DiaporamaI18nTableMap::clearInstancePool();
-                DiaporamaVersionTableMap::clearInstancePool();
+        if (Propel::isInstancePoolingEnabled() && null !== $value) {
+            if (is_object($value) && $value instanceof \Diaporamas\Model\DiaporamaImageI18n) {
+                $key = serialize(array((string) $value->getId(), (string) $value->getLocale()));
+
+            } elseif (is_array($value) && count($value) === 2) {
+                // assume we've been passed a primary key";
+                $key = serialize(array((string) $value[0], (string) $value[1]));
+            } elseif ($value instanceof Criteria) {
+                self::$instances = [];
+
+                return;
+            } else {
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \Diaporamas\Model\DiaporamaImageI18n object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
+                throw $e;
             }
+
+            unset(self::$instances[$key]);
+        }
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -223,11 +234,11 @@ class DiaporamaTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Locale', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Locale', TableMap::TYPE_PHPNAME, $indexType)]));
     }
 
     /**
@@ -245,11 +256,7 @@ class DiaporamaTableMap extends TableMap
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
 
-            return (int) $row[
-                            $indexType == TableMap::TYPE_NUM
-                            ? 0 + $offset
-                            : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
-                        ];
+            return $pks;
     }
 
     /**
@@ -265,7 +272,7 @@ class DiaporamaTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? DiaporamaTableMap::CLASS_DEFAULT : DiaporamaTableMap::OM_CLASS;
+        return $withPrefix ? DiaporamaImageI18nTableMap::CLASS_DEFAULT : DiaporamaImageI18nTableMap::OM_CLASS;
     }
 
     /**
@@ -279,21 +286,21 @@ class DiaporamaTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
-     * @return array (Diaporama object, last column rank)
+     * @return array (DiaporamaImageI18n object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = DiaporamaTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = DiaporamaTableMap::getInstanceFromPool($key))) {
+        $key = DiaporamaImageI18nTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = DiaporamaImageI18nTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + DiaporamaTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + DiaporamaImageI18nTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = DiaporamaTableMap::OM_CLASS;
+            $cls = DiaporamaImageI18nTableMap::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            DiaporamaTableMap::addInstanceToPool($obj, $key);
+            DiaporamaImageI18nTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -316,8 +323,8 @@ class DiaporamaTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = DiaporamaTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = DiaporamaTableMap::getInstanceFromPool($key))) {
+            $key = DiaporamaImageI18nTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = DiaporamaImageI18nTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -326,7 +333,7 @@ class DiaporamaTableMap extends TableMap
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                DiaporamaTableMap::addInstanceToPool($obj, $key);
+                DiaporamaImageI18nTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -347,21 +354,19 @@ class DiaporamaTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(DiaporamaTableMap::ID);
-            $criteria->addSelectColumn(DiaporamaTableMap::SHORTCODE);
-            $criteria->addSelectColumn(DiaporamaTableMap::CREATED_AT);
-            $criteria->addSelectColumn(DiaporamaTableMap::UPDATED_AT);
-            $criteria->addSelectColumn(DiaporamaTableMap::VERSION);
-            $criteria->addSelectColumn(DiaporamaTableMap::VERSION_CREATED_AT);
-            $criteria->addSelectColumn(DiaporamaTableMap::VERSION_CREATED_BY);
+            $criteria->addSelectColumn(DiaporamaImageI18nTableMap::ID);
+            $criteria->addSelectColumn(DiaporamaImageI18nTableMap::LOCALE);
+            $criteria->addSelectColumn(DiaporamaImageI18nTableMap::TITLE);
+            $criteria->addSelectColumn(DiaporamaImageI18nTableMap::DESCRIPTION);
+            $criteria->addSelectColumn(DiaporamaImageI18nTableMap::CHAPO);
+            $criteria->addSelectColumn(DiaporamaImageI18nTableMap::POSTSCRIPTUM);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.SHORTCODE');
-            $criteria->addSelectColumn($alias . '.CREATED_AT');
-            $criteria->addSelectColumn($alias . '.UPDATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_AT');
-            $criteria->addSelectColumn($alias . '.VERSION_CREATED_BY');
+            $criteria->addSelectColumn($alias . '.LOCALE');
+            $criteria->addSelectColumn($alias . '.TITLE');
+            $criteria->addSelectColumn($alias . '.DESCRIPTION');
+            $criteria->addSelectColumn($alias . '.CHAPO');
+            $criteria->addSelectColumn($alias . '.POSTSCRIPTUM');
         }
     }
 
@@ -374,7 +379,7 @@ class DiaporamaTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(DiaporamaTableMap::DATABASE_NAME)->getTable(DiaporamaTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(DiaporamaImageI18nTableMap::DATABASE_NAME)->getTable(DiaporamaImageI18nTableMap::TABLE_NAME);
     }
 
     /**
@@ -382,16 +387,16 @@ class DiaporamaTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getServiceContainer()->getDatabaseMap(DiaporamaTableMap::DATABASE_NAME);
-      if (!$dbMap->hasTable(DiaporamaTableMap::TABLE_NAME)) {
-        $dbMap->addTableObject(new DiaporamaTableMap());
+      $dbMap = Propel::getServiceContainer()->getDatabaseMap(DiaporamaImageI18nTableMap::DATABASE_NAME);
+      if (!$dbMap->hasTable(DiaporamaImageI18nTableMap::TABLE_NAME)) {
+        $dbMap->addTableObject(new DiaporamaImageI18nTableMap());
       }
     }
 
     /**
-     * Performs a DELETE on the database, given a Diaporama or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a DiaporamaImageI18n or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Diaporama object or primary key or array of primary keys
+     * @param mixed               $values Criteria or DiaporamaImageI18n object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -402,25 +407,35 @@ class DiaporamaTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(DiaporamaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(DiaporamaImageI18nTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Diaporamas\Model\Diaporama) { // it's a model object
+        } elseif ($values instanceof \Diaporamas\Model\DiaporamaImageI18n) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(DiaporamaTableMap::DATABASE_NAME);
-            $criteria->add(DiaporamaTableMap::ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(DiaporamaImageI18nTableMap::DATABASE_NAME);
+            // primary key is composite; we therefore, expect
+            // the primary key passed to be an array of pkey values
+            if (count($values) == count($values, COUNT_RECURSIVE)) {
+                // array is not multi-dimensional
+                $values = array($values);
+            }
+            foreach ($values as $value) {
+                $criterion = $criteria->getNewCriterion(DiaporamaImageI18nTableMap::ID, $value[0]);
+                $criterion->addAnd($criteria->getNewCriterion(DiaporamaImageI18nTableMap::LOCALE, $value[1]));
+                $criteria->addOr($criterion);
+            }
         }
 
-        $query = DiaporamaQuery::create()->mergeWith($criteria);
+        $query = DiaporamaImageI18nQuery::create()->mergeWith($criteria);
 
-        if ($values instanceof Criteria) { DiaporamaTableMap::clearInstancePool();
+        if ($values instanceof Criteria) { DiaporamaImageI18nTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
-            foreach ((array) $values as $singleval) { DiaporamaTableMap::removeInstanceFromPool($singleval);
+            foreach ((array) $values as $singleval) { DiaporamaImageI18nTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -428,20 +443,20 @@ class DiaporamaTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the diaporama table.
+     * Deletes all rows from the diaporama_image_i18n table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return DiaporamaQuery::create()->doDeleteAll($con);
+        return DiaporamaImageI18nQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Diaporama or Criteria object.
+     * Performs an INSERT on the database, given a DiaporamaImageI18n or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Diaporama object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or DiaporamaImageI18n object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -450,22 +465,18 @@ class DiaporamaTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(DiaporamaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(DiaporamaImageI18nTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Diaporama object
-        }
-
-        if ($criteria->containsKey(DiaporamaTableMap::ID) && $criteria->keyContainsValue(DiaporamaTableMap::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.DiaporamaTableMap::ID.')');
+            $criteria = $criteria->buildCriteria(); // build Criteria from DiaporamaImageI18n object
         }
 
 
         // Set the correct dbName
-        $query = DiaporamaQuery::create()->mergeWith($criteria);
+        $query = DiaporamaImageI18nQuery::create()->mergeWith($criteria);
 
         try {
             // use transaction because $criteria could contain info
@@ -481,7 +492,7 @@ class DiaporamaTableMap extends TableMap
         return $pk;
     }
 
-} // DiaporamaTableMap
+} // DiaporamaImageI18nTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-DiaporamaTableMap::buildTableMap();
+DiaporamaImageI18nTableMap::buildTableMap();

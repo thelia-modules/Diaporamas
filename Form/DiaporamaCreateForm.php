@@ -28,8 +28,6 @@ class DiaporamaCreateForm extends BaseForm
 
         $this->addTitleField($translationKeys, $fieldsIdKeys);
         $this->addShortcodeField($translationKeys, $fieldsIdKeys);
-        $this->addDiaporamaTypeIdField($translationKeys, $fieldsIdKeys);
-        $this->addEntityIdField($translationKeys, $fieldsIdKeys);
         $this->addLocaleField();
     }
 
@@ -55,6 +53,7 @@ class DiaporamaCreateForm extends BaseForm
                 new NotBlank(),
             ),
             "attr" => array(
+                'placeholder' => $this->trans('diaporama.create.title.placeholder'),
             )
         ));
     }
@@ -69,97 +68,9 @@ class DiaporamaCreateForm extends BaseForm
                 new NotBlank(),
             ),
             "attr" => array(
+                'placeholder' => $this->trans('diaporama.create.shortcode.placeholder'),
             )
         ));
-    }
-
-    protected function addDiaporamaTypeIdField(array $translationKeys, array $fieldsIdKeys)
-    {
-        $this->formBuilder->add('diaporama_type_id', 'choice', array(
-            'expanded' => false,
-            'multiple' => false,
-            "label" => $this->trans($this->readKey("diaporama_type_id", $translationKeys)),
-            "label_attr" => ["for" => $this->readKey("diaporama_type_id", $fieldsIdKeys)],
-            "required" => true,
-            "constraints" => array(
-                new NotBlank(),
-            ),
-            'choices' => $this->getDiaporamaTypeChoices(),
-        ));
-    }
-
-    protected function addEntityIdField(array $translationKeys, array $fieldsIdKeys)
-    {
-        $this->formBuilder->add("entity_id", 'choice', array(
-            'expanded' => false,
-            'multiple' => false,
-            "label" => $this->trans($this->readKey("entity_id", $translationKeys)),
-            "label_attr" => ["for" => $this->readKey("entity_id", $fieldsIdKeys)],
-            "required" => true,
-            "constraints" => array(
-                new NotBlank(),
-                new Callback(array(
-                    'methods' => array(
-                        array($this, 'checkEntity')
-                    )
-                )),
-            ),
-            'choices' => $this->getEntityChoices(),
-        ));
-    }
-
-    public function checkEntity($value, ExecutionContextInterface $context)
-    {
-        $diaporama_type_id = $this->getRequest()->request->get(self::FORM_NAME)['diaporama_type_id'];
-        $entity_id = $this->getRequest()->request->get(self::FORM_NAME)['entity_id'];
-
-        $diaporama_type_code = ucfirst(
-            DiaporamaTypeQuery::create()
-                ->filterById($diaporama_type_id)
-                ->select('DiaporamaType.Code')
-                ->find()
-                ->toArray()[0]
-        );
-
-        $queryClass = '\\Thelia\\Model\\'.$diaporama_type_code.'Query';
-
-        if ($queryClass::create()->filterById($entity_id)->count() < 1) {
-            $context->addViolation($this->trans(
-                'diaporama_type.create.invalid_entity',
-                array('entity' => $diaporama_type_code)
-            ));
-        }
-    }
-
-    public function getEntityChoices()
-    {
-        $diaporama_type_codes = DiaporamaTypeQuery::create()
-            ->select('DiaporamaType.Code')
-            ->find()
-            ->toArray()
-        ;
-
-        $res = array();
-
-        foreach ($diaporama_type_codes as $diaporama_code) {
-            $diaporama_code = ucfirst($diaporama_code);
-            $queryClass = '\\Thelia\\Model\\'.$diaporama_code.'Query';
-            $typeTable = $diaporama_code;
-            $typeTableI18n = $diaporama_code.'I18n';
-            $id_field = "$typeTable.Id";
-            $title_field = "$typeTableI18n.Title";
-            $entities = $queryClass::create()
-                ->join("$typeTable.$typeTableI18n")
-                ->where("$typeTableI18n.Locale = ?", $this->translator->getLocale())
-                ->select(array($id_field, $title_field))
-                ->find()
-                ->toKeyValue($id_field, $title_field)
-            ;
-
-            $res = array_merge($res, $entities);
-        }
-
-        return $res;
     }
 
     public function getName()
@@ -190,17 +101,6 @@ class DiaporamaCreateForm extends BaseForm
             'diaporama_type_id' => 'diaporama.create.diaporama_type',
             'entity_id' => 'diaporama.create.entity_id',
         );
-    }
-
-    public function getDiaporamaTypeChoices()
-    {
-        $choices = array();
-
-        foreach (DiaporamaTypeQuery::create()->orderBy('id')->find()->toKeyValue('id', 'code') as $id => $code) {
-            $choices[$id] = ucfirst($this->trans("diaporama_type.$code"));
-        }
-
-        return $choices;
     }
 
     public function trans($code, array $parameters = array(), $domain = Diaporamas::BO_MESSAGE_DOMAIN)

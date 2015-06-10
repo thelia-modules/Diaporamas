@@ -18,8 +18,12 @@ class DiaporamaImageCreateForm extends BaseDiaporamaImageCreateForm
     {
         return array(
             "diaporama_id" => "Diaporama id",
-            "diaporama_type_id" => "Diaporama type id",
-            "entity_id" => "Entity id",
+            "file" => "File",
+            "visible" => "Visible",
+            "title" => "Title",
+            "description" => "Description",
+            "chapo" => "Chapo",
+            "postscriptum" => "Postscriptum",
         );
     }
 }

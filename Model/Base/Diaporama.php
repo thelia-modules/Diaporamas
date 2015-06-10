@@ -11,8 +11,6 @@ use Diaporamas\Model\DiaporamaI18nQuery as ChildDiaporamaI18nQuery;
 use Diaporamas\Model\DiaporamaImage as ChildDiaporamaImage;
 use Diaporamas\Model\DiaporamaImageQuery as ChildDiaporamaImageQuery;
 use Diaporamas\Model\DiaporamaQuery as ChildDiaporamaQuery;
-use Diaporamas\Model\DiaporamaType as ChildDiaporamaType;
-use Diaporamas\Model\DiaporamaTypeQuery as ChildDiaporamaTypeQuery;
 use Diaporamas\Model\DiaporamaVersion as ChildDiaporamaVersion;
 use Diaporamas\Model\DiaporamaVersionQuery as ChildDiaporamaVersionQuery;
 use Diaporamas\Model\Map\DiaporamaTableMap;
@@ -77,18 +75,6 @@ abstract class Diaporama implements ActiveRecordInterface
     protected $shortcode;
 
     /**
-     * The value for the diaporama_type_id field.
-     * @var        int
-     */
-    protected $diaporama_type_id;
-
-    /**
-     * The value for the entity_id field.
-     * @var        int
-     */
-    protected $entity_id;
-
-    /**
      * The value for the created_at field.
      * @var        string
      */
@@ -118,11 +104,6 @@ abstract class Diaporama implements ActiveRecordInterface
      * @var        string
      */
     protected $version_created_by;
-
-    /**
-     * @var        DiaporamaType
-     */
-    protected $aDiaporamaType;
 
     /**
      * @var        ObjectCollection|ChildDiaporamaImage[] Collection to store aggregation of ChildDiaporamaImage objects.
@@ -484,28 +465,6 @@ abstract class Diaporama implements ActiveRecordInterface
     }
 
     /**
-     * Get the [diaporama_type_id] column value.
-     *
-     * @return   int
-     */
-    public function getDiaporamaTypeId()
-    {
-
-        return $this->diaporama_type_id;
-    }
-
-    /**
-     * Get the [entity_id] column value.
-     *
-     * @return   int
-     */
-    public function getEntityId()
-    {
-
-        return $this->entity_id;
-    }
-
-    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -628,52 +587,6 @@ abstract class Diaporama implements ActiveRecordInterface
 
         return $this;
     } // setShortcode()
-
-    /**
-     * Set the value of [diaporama_type_id] column.
-     *
-     * @param      int $v new value
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function setDiaporamaTypeId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->diaporama_type_id !== $v) {
-            $this->diaporama_type_id = $v;
-            $this->modifiedColumns[DiaporamaTableMap::DIAPORAMA_TYPE_ID] = true;
-        }
-
-        if ($this->aDiaporamaType !== null && $this->aDiaporamaType->getId() !== $v) {
-            $this->aDiaporamaType = null;
-        }
-
-
-        return $this;
-    } // setDiaporamaTypeId()
-
-    /**
-     * Set the value of [entity_id] column.
-     *
-     * @param      int $v new value
-     * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     */
-    public function setEntityId($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->entity_id !== $v) {
-            $this->entity_id = $v;
-            $this->modifiedColumns[DiaporamaTableMap::ENTITY_ID] = true;
-        }
-
-
-        return $this;
-    } // setEntityId()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
@@ -827,34 +740,28 @@ abstract class Diaporama implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : DiaporamaTableMap::translateFieldName('Shortcode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->shortcode = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaTableMap::translateFieldName('DiaporamaTypeId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->diaporama_type_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : DiaporamaTableMap::translateFieldName('EntityId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->entity_id = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : DiaporamaTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DiaporamaTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : DiaporamaTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : DiaporamaTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : DiaporamaTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : DiaporamaTableMap::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : DiaporamaTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : DiaporamaTableMap::translateFieldName('VersionCreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->version_created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : DiaporamaTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : DiaporamaTableMap::translateFieldName('VersionCreatedBy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->version_created_by = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -864,7 +771,7 @@ abstract class Diaporama implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 9; // 9 = DiaporamaTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = DiaporamaTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \Diaporamas\Model\Diaporama object", 0, $e);
@@ -886,9 +793,6 @@ abstract class Diaporama implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aDiaporamaType !== null && $this->diaporama_type_id !== $this->aDiaporamaType->getId()) {
-            $this->aDiaporamaType = null;
-        }
     } // ensureConsistency
 
     /**
@@ -928,7 +832,6 @@ abstract class Diaporama implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aDiaporamaType = null;
             $this->collDiaporamaImages = null;
 
             $this->collDiaporamaI18ns = null;
@@ -1069,18 +972,6 @@ abstract class Diaporama implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aDiaporamaType !== null) {
-                if ($this->aDiaporamaType->isModified() || $this->aDiaporamaType->isNew()) {
-                    $affectedRows += $this->aDiaporamaType->save($con);
-                }
-                $this->setDiaporamaType($this->aDiaporamaType);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1175,12 +1066,6 @@ abstract class Diaporama implements ActiveRecordInterface
         if ($this->isColumnModified(DiaporamaTableMap::SHORTCODE)) {
             $modifiedColumns[':p' . $index++]  = 'SHORTCODE';
         }
-        if ($this->isColumnModified(DiaporamaTableMap::DIAPORAMA_TYPE_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'DIAPORAMA_TYPE_ID';
-        }
-        if ($this->isColumnModified(DiaporamaTableMap::ENTITY_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'ENTITY_ID';
-        }
         if ($this->isColumnModified(DiaporamaTableMap::CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
@@ -1212,12 +1097,6 @@ abstract class Diaporama implements ActiveRecordInterface
                         break;
                     case 'SHORTCODE':
                         $stmt->bindValue($identifier, $this->shortcode, PDO::PARAM_STR);
-                        break;
-                    case 'DIAPORAMA_TYPE_ID':
-                        $stmt->bindValue($identifier, $this->diaporama_type_id, PDO::PARAM_INT);
-                        break;
-                    case 'ENTITY_ID':
-                        $stmt->bindValue($identifier, $this->entity_id, PDO::PARAM_INT);
                         break;
                     case 'CREATED_AT':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1303,24 +1182,18 @@ abstract class Diaporama implements ActiveRecordInterface
                 return $this->getShortcode();
                 break;
             case 2:
-                return $this->getDiaporamaTypeId();
-                break;
-            case 3:
-                return $this->getEntityId();
-                break;
-            case 4:
                 return $this->getCreatedAt();
                 break;
-            case 5:
+            case 3:
                 return $this->getUpdatedAt();
                 break;
-            case 6:
+            case 4:
                 return $this->getVersion();
                 break;
-            case 7:
+            case 5:
                 return $this->getVersionCreatedAt();
                 break;
-            case 8:
+            case 6:
                 return $this->getVersionCreatedBy();
                 break;
             default:
@@ -1354,13 +1227,11 @@ abstract class Diaporama implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getShortcode(),
-            $keys[2] => $this->getDiaporamaTypeId(),
-            $keys[3] => $this->getEntityId(),
-            $keys[4] => $this->getCreatedAt(),
-            $keys[5] => $this->getUpdatedAt(),
-            $keys[6] => $this->getVersion(),
-            $keys[7] => $this->getVersionCreatedAt(),
-            $keys[8] => $this->getVersionCreatedBy(),
+            $keys[2] => $this->getCreatedAt(),
+            $keys[3] => $this->getUpdatedAt(),
+            $keys[4] => $this->getVersion(),
+            $keys[5] => $this->getVersionCreatedAt(),
+            $keys[6] => $this->getVersionCreatedBy(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1368,9 +1239,6 @@ abstract class Diaporama implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aDiaporamaType) {
-                $result['DiaporamaType'] = $this->aDiaporamaType->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
             if (null !== $this->collDiaporamaImages) {
                 $result['DiaporamaImages'] = $this->collDiaporamaImages->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1421,24 +1289,18 @@ abstract class Diaporama implements ActiveRecordInterface
                 $this->setShortcode($value);
                 break;
             case 2:
-                $this->setDiaporamaTypeId($value);
-                break;
-            case 3:
-                $this->setEntityId($value);
-                break;
-            case 4:
                 $this->setCreatedAt($value);
                 break;
-            case 5:
+            case 3:
                 $this->setUpdatedAt($value);
                 break;
-            case 6:
+            case 4:
                 $this->setVersion($value);
                 break;
-            case 7:
+            case 5:
                 $this->setVersionCreatedAt($value);
                 break;
-            case 8:
+            case 6:
                 $this->setVersionCreatedBy($value);
                 break;
         } // switch()
@@ -1467,13 +1329,11 @@ abstract class Diaporama implements ActiveRecordInterface
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setShortcode($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDiaporamaTypeId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setEntityId($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setUpdatedAt($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setVersion($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setVersionCreatedAt($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setVersionCreatedBy($arr[$keys[8]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCreatedAt($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setUpdatedAt($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setVersion($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setVersionCreatedAt($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setVersionCreatedBy($arr[$keys[6]]);
     }
 
     /**
@@ -1487,8 +1347,6 @@ abstract class Diaporama implements ActiveRecordInterface
 
         if ($this->isColumnModified(DiaporamaTableMap::ID)) $criteria->add(DiaporamaTableMap::ID, $this->id);
         if ($this->isColumnModified(DiaporamaTableMap::SHORTCODE)) $criteria->add(DiaporamaTableMap::SHORTCODE, $this->shortcode);
-        if ($this->isColumnModified(DiaporamaTableMap::DIAPORAMA_TYPE_ID)) $criteria->add(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $this->diaporama_type_id);
-        if ($this->isColumnModified(DiaporamaTableMap::ENTITY_ID)) $criteria->add(DiaporamaTableMap::ENTITY_ID, $this->entity_id);
         if ($this->isColumnModified(DiaporamaTableMap::CREATED_AT)) $criteria->add(DiaporamaTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(DiaporamaTableMap::UPDATED_AT)) $criteria->add(DiaporamaTableMap::UPDATED_AT, $this->updated_at);
         if ($this->isColumnModified(DiaporamaTableMap::VERSION)) $criteria->add(DiaporamaTableMap::VERSION, $this->version);
@@ -1558,8 +1416,6 @@ abstract class Diaporama implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setShortcode($this->getShortcode());
-        $copyObj->setDiaporamaTypeId($this->getDiaporamaTypeId());
-        $copyObj->setEntityId($this->getEntityId());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setVersion($this->getVersion());
@@ -1617,57 +1473,6 @@ abstract class Diaporama implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildDiaporamaType object.
-     *
-     * @param                  ChildDiaporamaType $v
-     * @return                 \Diaporamas\Model\Diaporama The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setDiaporamaType(ChildDiaporamaType $v = null)
-    {
-        if ($v === null) {
-            $this->setDiaporamaTypeId(NULL);
-        } else {
-            $this->setDiaporamaTypeId($v->getId());
-        }
-
-        $this->aDiaporamaType = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildDiaporamaType object, it will not be re-added.
-        if ($v !== null) {
-            $v->addDiaporama($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildDiaporamaType object
-     *
-     * @param      ConnectionInterface $con Optional Connection object.
-     * @return                 ChildDiaporamaType The associated ChildDiaporamaType object.
-     * @throws PropelException
-     */
-    public function getDiaporamaType(ConnectionInterface $con = null)
-    {
-        if ($this->aDiaporamaType === null && ($this->diaporama_type_id !== null)) {
-            $this->aDiaporamaType = ChildDiaporamaTypeQuery::create()->findPk($this->diaporama_type_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aDiaporamaType->addDiaporamas($this);
-             */
-        }
-
-        return $this->aDiaporamaType;
     }
 
 
@@ -1862,13 +1667,13 @@ abstract class Diaporama implements ActiveRecordInterface
     }
 
     /**
-     * Method called to associate a \Diaporamas\Model\Base\DiaporamaImage object to this object
-     * through the \Diaporamas\Model\Base\DiaporamaImage foreign key attribute.
+     * Method called to associate a ChildDiaporamaImage object to this object
+     * through the ChildDiaporamaImage foreign key attribute.
      *
-     * @param    \Diaporamas\Model\Base\DiaporamaImage $l \Diaporamas\Model\Base\DiaporamaImage
+     * @param    ChildDiaporamaImage $l ChildDiaporamaImage
      * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
      */
-    public function addDiaporamaImage(\Diaporamas\Model\Base\DiaporamaImage $l)
+    public function addDiaporamaImage(ChildDiaporamaImage $l)
     {
         if ($this->collDiaporamaImages === null) {
             $this->initDiaporamaImages();
@@ -1908,31 +1713,6 @@ abstract class Diaporama implements ActiveRecordInterface
         }
 
         return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Diaporama is new, it will return
-     * an empty collection; or if this Diaporama has previously
-     * been saved, it will retrieve related DiaporamaImages from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Diaporama.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return Collection|ChildDiaporamaImage[] List of ChildDiaporamaImage objects
-     */
-    public function getDiaporamaImagesJoinDiaporamaType($criteria = null, $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildDiaporamaImageQuery::create(null, $criteria);
-        $query->joinWith('DiaporamaType', $joinBehavior);
-
-        return $this->getDiaporamaImages($query, $con);
     }
 
     /**
@@ -2333,13 +2113,13 @@ abstract class Diaporama implements ActiveRecordInterface
     }
 
     /**
-     * Method called to associate a \Diaporamas\Model\Base\DiaporamaVersion object to this object
-     * through the \Diaporamas\Model\Base\DiaporamaVersion foreign key attribute.
+     * Method called to associate a ChildDiaporamaVersion object to this object
+     * through the ChildDiaporamaVersion foreign key attribute.
      *
-     * @param    \Diaporamas\Model\Base\DiaporamaVersion $l \Diaporamas\Model\Base\DiaporamaVersion
+     * @param    ChildDiaporamaVersion $l ChildDiaporamaVersion
      * @return   \Diaporamas\Model\Diaporama The current object (for fluent API support)
      */
-    public function addDiaporamaVersion(\Diaporamas\Model\Base\DiaporamaVersion $l)
+    public function addDiaporamaVersion(ChildDiaporamaVersion $l)
     {
         if ($this->collDiaporamaVersions === null) {
             $this->initDiaporamaVersions();
@@ -2388,8 +2168,6 @@ abstract class Diaporama implements ActiveRecordInterface
     {
         $this->id = null;
         $this->shortcode = null;
-        $this->diaporama_type_id = null;
-        $this->entity_id = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->version = null;
@@ -2439,7 +2217,6 @@ abstract class Diaporama implements ActiveRecordInterface
         $this->collDiaporamaImages = null;
         $this->collDiaporamaI18ns = null;
         $this->collDiaporamaVersions = null;
-        $this->aDiaporamaType = null;
     }
 
     /**
@@ -2639,8 +2416,6 @@ abstract class Diaporama implements ActiveRecordInterface
         $version = new ChildDiaporamaVersion();
         $version->setId($this->getId());
         $version->setShortcode($this->getShortcode());
-        $version->setDiaporamaTypeId($this->getDiaporamaTypeId());
-        $version->setEntityId($this->getEntityId());
         $version->setCreatedAt($this->getCreatedAt());
         $version->setUpdatedAt($this->getUpdatedAt());
         $version->setVersion($this->getVersion());
@@ -2685,8 +2460,6 @@ abstract class Diaporama implements ActiveRecordInterface
         $loadedObjects['ChildDiaporama'][$version->getId()][$version->getVersion()] = $this;
         $this->setId($version->getId());
         $this->setShortcode($version->getShortcode());
-        $this->setDiaporamaTypeId($version->getDiaporamaTypeId());
-        $this->setEntityId($version->getEntityId());
         $this->setCreatedAt($version->getCreatedAt());
         $this->setUpdatedAt($version->getUpdatedAt());
         $this->setVersion($version->getVersion());

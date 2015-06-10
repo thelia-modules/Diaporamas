@@ -63,14 +63,6 @@ class DiaporamaAction extends BaseAction implements EventSubscriberInterface
                 $model->setShortcode($shortcode);
             }
 
-            if (null !== $diaporamaTypeId = $event->getDiaporamaTypeId()) {
-                $model->setDiaporamaTypeId($diaporamaTypeId);
-            }
-
-            if (null !== $entityId = $event->getEntityId()) {
-                $model->setEntityId($entityId);
-            }
-
             $model->save($con);
 
             $con->commit();

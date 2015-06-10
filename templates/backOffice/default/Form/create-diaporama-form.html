@@ -19,38 +19,14 @@
                 {form_error form=$form field="title"}{$message}{/form_error}
 
                 <div class="input-group">
-                    <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$TITLE}" placeholder="{intl l='diaporama.create.title.placeholder' d='diaporamas.bo.default'}" />
+                    <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$TITLE}" {$attr nofilter} />
                     {loop type="lang" name="default-lang" default_only="1"}
                         <span class="input-group-addon"><img src="{image file="assets/img/flags/{$CODE}.png"}" alt="{$TITLE}" /></span>
                     {/loop}
                 </div>
             </div>
         {/form_field}
-        {form_field form=$form field="shortcode"}
-        <div class="form-group">
-            <label class="control-label" for="{$label_attr.for}">
-                {$label}
-                {if $required}<span class="required">*</span>{/if}
-            </label>
-
-            {form_error form=$form field="shortcode"}{$message}{/form_error}
-
-            <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SHORTCODE}" placeholder="{intl l='diaporama.create.shortcode.placeholder' d='diaporamas.bo.default'}" />
-        </div>
-        {/form_field}
-        {render_form_field form=$form field='diaporama_type_id'}
-        {form_field form=$form field='entity_id'}
-        <div class="form-group">
-            <label class="control-label" for="{$label_attr.for}">
-                <span id="entity_label">{$label}</span>
-                {if $required}<span class="required">*</span>{/if}
-            </label>
-
-            {form_error form=$form field='entity_id'}{$message}{/form_error}
-
-            <select name="{$name}" id="{$label_attr.for}" class="form-control" {if $required} required aria-required="true" {/if}></select>
-        </div>
-        {/form_field}
+        {render_form_field form=$form field="shortcode"}
     {/capture}
 
     {include

@@ -22,6 +22,16 @@ return array(
             'delete' => 'Delete the diaporama',
             'no_diaporama' => 'There is no diaporama.'
         ),
+        'update' => array(
+            'title' => 'Diaporama edit',
+            'general' => array(
+                'title' => 'General',
+                'timestamp %created_at %updated_at' => 'Diaporama created on %created_at. Last modification: %updated_at',
+            ),
+            'images' => array(
+                'title' => 'Images',
+            ),
+        ),
         'delete' => array(
             'content' => 'Do you really want to delete this diaporama?',
             'title' => 'Delete a diaporama',

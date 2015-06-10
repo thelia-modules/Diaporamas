@@ -1,0 +1,38 @@
+{*
+
+A generic image upload form
+
+Parameters:
+    diaporama_id = Parent diaporama ID
+
+*}
+
+{ifloop rel="image"}
+    <ul id="js-sort-image" class="row list-unstyled">
+        {assign var='width' value=200 }
+        {assign var='height' value=100 }
+        {loop type="diaporama-image" name="image" backend_context="on" order="manual" source_id=$diaporama_id width=$width height=$height resize_mode="borders" visible="*"}
+            <li class="col-sm-6 col-md-3 ui-state-default" data-sort-id="{$ID}">
+                <a href="{url path="/admin/module/Diaporamas/diaporama_image/$ID/update"}" title="{intl l='Update this image'}" class="thumbnail">
+                    <img src="{if $PROCESSING_ERROR}http://placehold.it/{$width}x{$height}&text={intl l='Image+file+not+found'}{else}{$IMAGE_URL nofilter}{/if}" alt="{$TITLE}">
+                </a>
+
+                <div class="btn-group" >
+                    <a class="image-update-btn btn btn-default btn-xs disabled js-sorted-position" href="#">{$POSITION}</a>
+                    <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="/admin/module/Diaporamas/diaporama_image/$ID/toggle"}" data-error-message="{intl l='Please retry'}">
+                        <span class="glyphicon glyphicon-eye-open"></span><span class="glyphicon glyphicon-eye-close"></span>
+                    </a>
+                    <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/module/Diaporamas/diaporama_image/$ID/update"}" data-error-message="{intl l='Please retry'}">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <a class="image-delete-btn btn btn-default btn-xs" id="image-{$ID}" href="{url path="/admin/module/Diaporamas/diaporama_image/delete/$ID"}" data-error-message="{intl l='Please retry'}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </div>
+            </li>
+        {/loop}
+    </ul>
+{/ifloop}
+{elseloop rel="image"}
+<div class="alert alert-info">{intl l='There is no images attached to this diaporama.'}</div>
+{/elseloop}

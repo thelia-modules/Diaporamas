@@ -1,0 +1,42 @@
+<div class="form-container">
+    <form method="POST" action="{$current_url}" {form_enctype form=$form} class="clearfix" >
+
+        {include "includes/inner-form-toolbar.html"
+            close_url = {url path="/admin/module/Diaporamas/diaporama"}
+        }
+
+        {form_field form=$form field="id"}
+        {assign "diaporama_id" $value}
+        <input type="hidden" name="{$name}" value="{$value}"/>
+        {/form_field}
+        {form_field form=$form field="locale"}
+        <input type="hidden" name="{$name}" value="{$edit_language_locale}"/>
+        {/form_field}
+        {form_field form=$form field="success_url"}
+        <input type="hidden" name="{$name}" value="{url path='/admin/module/Diaporamas/diaporama'}"/>
+        {/form_field}
+        {form_hidden_fields form=$form}
+
+        {loop name="diaporama_update" type="diaporama" backend_context="yes" id=$diaporama_id lang=$edit_language_id}
+        <div class="row">
+            <div class="col-md-12">
+                {render_form_field form=$form field="title" value="{$TITLE}"}
+                {render_form_field form=$form field="shortcode" value="{$SHORTCODE}"}
+
+                {include "includes/inner-form-toolbar.html"
+                    hide_flags = true
+                    close_url = {url path="/admin/module/Diaporamas/diaporama"}
+                }
+
+                <small>
+                    {intl l='diaporama.update.general.timestamp %created_at %updated_at'
+                        created_at={format_date date=$CREATE_DATE}
+                        updated_at={format_date date=$UPDATE_DATE}
+                        d="diaporamas.bo.default"
+                    }
+                </small>
+            </div>
+        </div>
+        {/loop}
+    </form>
+</div>

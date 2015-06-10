@@ -20,8 +20,6 @@ class DiaporamaUpdateForm extends BaseDiaporamaUpdateForm
             "id" => "id",
             "title" => "title",
             "shortcode" => "shortcode",
-            "diaporama_type_id" => "diaporama_type_id",
-            "entity_id" => "entity_id",
         );
     }
 }

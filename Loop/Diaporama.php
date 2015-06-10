@@ -7,7 +7,6 @@
 namespace Diaporamas\Loop;
 
 use Diaporamas\Loop\Base\Diaporama as BaseDiaporamaLoop;
-use Thelia\Core\Template\Element\LoopResultRow;
 
 /**
  * Class Diaporama
@@ -18,14 +17,4 @@ class Diaporama extends BaseDiaporamaLoop
     /**
      * You may now add your own logic
      */
-
-    protected function addMoreResults(LoopResultRow $row, \Diaporamas\Model\Diaporama $entryObject)
-    {
-
-        $row
-            ->set("DIAPORAMA_TYPE_TITLE", ucfirst($entryObject->getDiaporamaType()->getTitle()))
-            ->set("ENTITY_TITLE", $entryObject->getEntityTitle())
-            ->set("ENTITY_PATH", $entryObject->getDiaporamaType()->getPath())
-        ;
-    }
 }

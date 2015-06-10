@@ -19,9 +19,13 @@ class DiaporamaImageUpdateForm extends BaseDiaporamaImageUpdateForm
         return array(
             "id" => "id",
             "diaporama_id" => "diaporama_id",
-            "diaporama_type_id" => "diaporama_type_id",
-            "entity_id" => "entity_id",
+            "file" => "file",
+            "visible" => "visible",
             "position" => "position",
+            "title" => "title",
+            "description" => "description",
+            "chapo" => "chapo",
+            "postscriptum" => "postscriptum",
         );
     }
 }

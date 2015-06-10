@@ -18,10 +18,27 @@ class DiaporamaImageEvent extends ActionEvent
 {
     protected $id;
     protected $diaporamaId;
-    protected $diaporamaTypeId;
-    protected $entityId;
+    protected $file;
+    protected $visible;
     protected $position;
+    protected $title;
+    protected $description;
+    protected $chapo;
+    protected $postscriptum;
     protected $diaporamaImage;
+    protected $locale;
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function setLocale($v)
+    {
+        $this->locale = $v;
+
+        return $this;
+    }
 
     public function getId()
     {
@@ -47,26 +64,26 @@ class DiaporamaImageEvent extends ActionEvent
         return $this;
     }
 
-    public function getDiaporamaTypeId()
+    public function getFile()
     {
-        return $this->diaporamaTypeId;
+        return $this->file;
     }
 
-    public function setDiaporamaTypeId($diaporamaTypeId)
+    public function setFile($file)
     {
-        $this->diaporamaTypeId = $diaporamaTypeId;
+        $this->file = $file;
 
         return $this;
     }
 
-    public function getEntityId()
+    public function getVisible()
     {
-        return $this->entityId;
+        return $this->visible;
     }
 
-    public function setEntityId($entityId)
+    public function setVisible($visible)
     {
-        $this->entityId = $entityId;
+        $this->visible = $visible;
 
         return $this;
     }
@@ -79,6 +96,54 @@ class DiaporamaImageEvent extends ActionEvent
     public function setPosition($position)
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getChapo()
+    {
+        return $this->chapo;
+    }
+
+    public function setChapo($chapo)
+    {
+        $this->chapo = $chapo;
+
+        return $this;
+    }
+
+    public function getPostscriptum()
+    {
+        return $this->postscriptum;
+    }
+
+    public function setPostscriptum($postscriptum)
+    {
+        $this->postscriptum = $postscriptum;
 
         return $this;
     }

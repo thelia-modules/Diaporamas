@@ -6,7 +6,14 @@
 
 namespace Diaporamas\Model;
 
+use Diaporamas\Diaporamas;
+use Diaporamas\Form\DiaporamaImageUpdateForm;
 use Diaporamas\Model\Base\DiaporamaImage as BaseDiaporamaImage;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Thelia\Core\HttpFoundation\Request;
+use Thelia\Files\FileModelInterface;
+use Thelia\Files\FileModelParentInterface;
+use Thelia\Form\BaseForm;
 use Thelia\Model\Tools\ModelEventDispatcherTrait;
 use Thelia\Model\Tools\PositionManagementTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
@@ -15,7 +22,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
  * Class DiaporamaImage
  * @package Diaporamas\Model
  */
-class DiaporamaImage extends BaseDiaporamaImage
+class DiaporamaImage extends BaseDiaporamaImage implements FileModelInterface
 {
     use ModelEventDispatcherTrait;
     use PositionManagementTrait;
@@ -25,5 +32,85 @@ class DiaporamaImage extends BaseDiaporamaImage
         $this->setPosition($this->getNextPosition());
 
         return true;
+    }
+
+    /**
+     * Set file parent id
+     *
+     * @param int $parentId parent id
+     *
+     * @return $this
+     */
+    public function setParentId($parentId)
+    {
+        return $this->setDiaporamaId($parentId);
+    }
+
+    /**
+     * Get file parent id
+     *
+     * @return int parent id
+     */
+    public function getParentId()
+    {
+        return $this->getDiaporamaId();
+    }
+
+    /**
+     * @return FileModelParentInterface the parent file model
+     */
+    public function getParentFileModel()
+    {
+        return new Diaporama();
+    }
+
+    /**
+     * Get the ID of the form used to change this object information
+     *
+     * @return BaseForm the form
+     */
+    public function getUpdateFormId()
+    {
+        return 'diaporama_image.update';
+    }
+
+    /**
+     * Get the form instance used to change this object information
+     *
+     * @param Request $request the current request
+     *
+     * @return BaseForm the form
+     */
+    public function getUpdateFormInstance(Request $request)
+    {
+        return new DiaporamaImageUpdateForm($request);
+    }
+
+    /**
+     * @return string the path to the upload directory where files are stored, without final slash
+     */
+    public function getUploadDir()
+    {
+        return Diaporamas::getDiaporamaImagesFolder();
+    }
+
+    /**
+     * @param int $objectId the object ID
+     *
+     * @return string the URL to redirect to after update from the back-office
+     */
+    public function getRedirectionUrl()
+    {
+        return "/admin/module/Diaporamas/diaporama/edit?diaporama_id={$this->getDiaporamaId()}";
+    }
+
+    /**
+     * Get the Query instance for this object
+     *
+     * @return ModelCriteria
+     */
+    public function getQueryInstance()
+    {
+        return DiaporamaImageQuery::create();
     }
 }

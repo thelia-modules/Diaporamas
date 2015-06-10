@@ -19,4 +19,5 @@ class DiaporamaImageEvents
     const UPDATE = ChildDiaporamasEvents::DIAPORAMA_IMAGE_UPDATE;
     const DELETE = ChildDiaporamasEvents::DIAPORAMA_IMAGE_DELETE;
     const UPDATE_POSITION = ChildDiaporamasEvents::DIAPORAMA_IMAGE_UPDATE_POSITION;
+    const TOGGLE_VISIBILITY = ChildDiaporamasEvents::DIAPORAMA_IMAGE_TOGGLE_VISIBILITY;
 }

@@ -24,8 +24,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildDiaporamaQuery orderByShortcode($order = Criteria::ASC) Order by the shortcode column
- * @method     ChildDiaporamaQuery orderByDiaporamaTypeId($order = Criteria::ASC) Order by the diaporama_type_id column
- * @method     ChildDiaporamaQuery orderByEntityId($order = Criteria::ASC) Order by the entity_id column
  * @method     ChildDiaporamaQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildDiaporamaQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildDiaporamaQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -34,8 +32,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaQuery groupById() Group by the id column
  * @method     ChildDiaporamaQuery groupByShortcode() Group by the shortcode column
- * @method     ChildDiaporamaQuery groupByDiaporamaTypeId() Group by the diaporama_type_id column
- * @method     ChildDiaporamaQuery groupByEntityId() Group by the entity_id column
  * @method     ChildDiaporamaQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildDiaporamaQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildDiaporamaQuery groupByVersion() Group by the version column
@@ -45,10 +41,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDiaporamaQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildDiaporamaQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildDiaporamaQuery innerJoin($relation) Adds a INNER JOIN clause to the query
- *
- * @method     ChildDiaporamaQuery leftJoinDiaporamaType($relationAlias = null) Adds a LEFT JOIN clause to the query using the DiaporamaType relation
- * @method     ChildDiaporamaQuery rightJoinDiaporamaType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DiaporamaType relation
- * @method     ChildDiaporamaQuery innerJoinDiaporamaType($relationAlias = null) Adds a INNER JOIN clause to the query using the DiaporamaType relation
  *
  * @method     ChildDiaporamaQuery leftJoinDiaporamaImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the DiaporamaImage relation
  * @method     ChildDiaporamaQuery rightJoinDiaporamaImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DiaporamaImage relation
@@ -67,8 +59,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporama findOneById(int $id) Return the first ChildDiaporama filtered by the id column
  * @method     ChildDiaporama findOneByShortcode(string $shortcode) Return the first ChildDiaporama filtered by the shortcode column
- * @method     ChildDiaporama findOneByDiaporamaTypeId(int $diaporama_type_id) Return the first ChildDiaporama filtered by the diaporama_type_id column
- * @method     ChildDiaporama findOneByEntityId(int $entity_id) Return the first ChildDiaporama filtered by the entity_id column
  * @method     ChildDiaporama findOneByCreatedAt(string $created_at) Return the first ChildDiaporama filtered by the created_at column
  * @method     ChildDiaporama findOneByUpdatedAt(string $updated_at) Return the first ChildDiaporama filtered by the updated_at column
  * @method     ChildDiaporama findOneByVersion(int $version) Return the first ChildDiaporama filtered by the version column
@@ -77,8 +67,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     array findById(int $id) Return ChildDiaporama objects filtered by the id column
  * @method     array findByShortcode(string $shortcode) Return ChildDiaporama objects filtered by the shortcode column
- * @method     array findByDiaporamaTypeId(int $diaporama_type_id) Return ChildDiaporama objects filtered by the diaporama_type_id column
- * @method     array findByEntityId(int $entity_id) Return ChildDiaporama objects filtered by the entity_id column
  * @method     array findByCreatedAt(string $created_at) Return ChildDiaporama objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildDiaporama objects filtered by the updated_at column
  * @method     array findByVersion(int $version) Return ChildDiaporama objects filtered by the version column
@@ -179,7 +167,7 @@ abstract class DiaporamaQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, SHORTCODE, DIAPORAMA_TYPE_ID, ENTITY_ID, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM diaporama WHERE ID = :p0';
+        $sql = 'SELECT ID, SHORTCODE, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM diaporama WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -190,8 +178,7 @@ abstract class DiaporamaQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            $cls = DiaporamaTableMap::getOMClass($row, 0, false);
-            $obj = new $cls();
+            $obj = new ChildDiaporama();
             $obj->hydrate($row);
             DiaporamaTableMap::addInstanceToPool($obj, (string) $key);
         }
@@ -337,90 +324,6 @@ abstract class DiaporamaQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DiaporamaTableMap::SHORTCODE, $shortcode, $comparison);
-    }
-
-    /**
-     * Filter the query on the diaporama_type_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDiaporamaTypeId(1234); // WHERE diaporama_type_id = 1234
-     * $query->filterByDiaporamaTypeId(array(12, 34)); // WHERE diaporama_type_id IN (12, 34)
-     * $query->filterByDiaporamaTypeId(array('min' => 12)); // WHERE diaporama_type_id > 12
-     * </code>
-     *
-     * @see       filterByDiaporamaType()
-     *
-     * @param     mixed $diaporamaTypeId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaQuery The current query, for fluid interface
-     */
-    public function filterByDiaporamaTypeId($diaporamaTypeId = null, $comparison = null)
-    {
-        if (is_array($diaporamaTypeId)) {
-            $useMinMax = false;
-            if (isset($diaporamaTypeId['min'])) {
-                $this->addUsingAlias(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($diaporamaTypeId['max'])) {
-                $this->addUsingAlias(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId, $comparison);
-    }
-
-    /**
-     * Filter the query on the entity_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByEntityId(1234); // WHERE entity_id = 1234
-     * $query->filterByEntityId(array(12, 34)); // WHERE entity_id IN (12, 34)
-     * $query->filterByEntityId(array('min' => 12)); // WHERE entity_id > 12
-     * </code>
-     *
-     * @param     mixed $entityId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaQuery The current query, for fluid interface
-     */
-    public function filterByEntityId($entityId = null, $comparison = null)
-    {
-        if (is_array($entityId)) {
-            $useMinMax = false;
-            if (isset($entityId['min'])) {
-                $this->addUsingAlias(DiaporamaTableMap::ENTITY_ID, $entityId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($entityId['max'])) {
-                $this->addUsingAlias(DiaporamaTableMap::ENTITY_ID, $entityId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(DiaporamaTableMap::ENTITY_ID, $entityId, $comparison);
     }
 
     /**
@@ -620,81 +523,6 @@ abstract class DiaporamaQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DiaporamaTableMap::VERSION_CREATED_BY, $versionCreatedBy, $comparison);
-    }
-
-    /**
-     * Filter the query by a related \Diaporamas\Model\DiaporamaType object
-     *
-     * @param \Diaporamas\Model\DiaporamaType|ObjectCollection $diaporamaType The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaQuery The current query, for fluid interface
-     */
-    public function filterByDiaporamaType($diaporamaType, $comparison = null)
-    {
-        if ($diaporamaType instanceof \Diaporamas\Model\DiaporamaType) {
-            return $this
-                ->addUsingAlias(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $diaporamaType->getId(), $comparison);
-        } elseif ($diaporamaType instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(DiaporamaTableMap::DIAPORAMA_TYPE_ID, $diaporamaType->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByDiaporamaType() only accepts arguments of type \Diaporamas\Model\DiaporamaType or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the DiaporamaType relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return ChildDiaporamaQuery The current query, for fluid interface
-     */
-    public function joinDiaporamaType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DiaporamaType');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'DiaporamaType');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the DiaporamaType relation DiaporamaType object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Diaporamas\Model\DiaporamaTypeQuery A secondary query class using the current class as primary query
-     */
-    public function useDiaporamaTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinDiaporamaType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DiaporamaType', '\Diaporamas\Model\DiaporamaTypeQuery');
     }
 
     /**

@@ -23,8 +23,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaVersionQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildDiaporamaVersionQuery orderByShortcode($order = Criteria::ASC) Order by the shortcode column
- * @method     ChildDiaporamaVersionQuery orderByDiaporamaTypeId($order = Criteria::ASC) Order by the diaporama_type_id column
- * @method     ChildDiaporamaVersionQuery orderByEntityId($order = Criteria::ASC) Order by the entity_id column
  * @method     ChildDiaporamaVersionQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildDiaporamaVersionQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method     ChildDiaporamaVersionQuery orderByVersion($order = Criteria::ASC) Order by the version column
@@ -33,8 +31,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaVersionQuery groupById() Group by the id column
  * @method     ChildDiaporamaVersionQuery groupByShortcode() Group by the shortcode column
- * @method     ChildDiaporamaVersionQuery groupByDiaporamaTypeId() Group by the diaporama_type_id column
- * @method     ChildDiaporamaVersionQuery groupByEntityId() Group by the entity_id column
  * @method     ChildDiaporamaVersionQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildDiaporamaVersionQuery groupByUpdatedAt() Group by the updated_at column
  * @method     ChildDiaporamaVersionQuery groupByVersion() Group by the version column
@@ -54,8 +50,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaVersion findOneById(int $id) Return the first ChildDiaporamaVersion filtered by the id column
  * @method     ChildDiaporamaVersion findOneByShortcode(string $shortcode) Return the first ChildDiaporamaVersion filtered by the shortcode column
- * @method     ChildDiaporamaVersion findOneByDiaporamaTypeId(int $diaporama_type_id) Return the first ChildDiaporamaVersion filtered by the diaporama_type_id column
- * @method     ChildDiaporamaVersion findOneByEntityId(int $entity_id) Return the first ChildDiaporamaVersion filtered by the entity_id column
  * @method     ChildDiaporamaVersion findOneByCreatedAt(string $created_at) Return the first ChildDiaporamaVersion filtered by the created_at column
  * @method     ChildDiaporamaVersion findOneByUpdatedAt(string $updated_at) Return the first ChildDiaporamaVersion filtered by the updated_at column
  * @method     ChildDiaporamaVersion findOneByVersion(int $version) Return the first ChildDiaporamaVersion filtered by the version column
@@ -64,8 +58,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     array findById(int $id) Return ChildDiaporamaVersion objects filtered by the id column
  * @method     array findByShortcode(string $shortcode) Return ChildDiaporamaVersion objects filtered by the shortcode column
- * @method     array findByDiaporamaTypeId(int $diaporama_type_id) Return ChildDiaporamaVersion objects filtered by the diaporama_type_id column
- * @method     array findByEntityId(int $entity_id) Return ChildDiaporamaVersion objects filtered by the entity_id column
  * @method     array findByCreatedAt(string $created_at) Return ChildDiaporamaVersion objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildDiaporamaVersion objects filtered by the updated_at column
  * @method     array findByVersion(int $version) Return ChildDiaporamaVersion objects filtered by the version column
@@ -159,7 +151,7 @@ abstract class DiaporamaVersionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, SHORTCODE, DIAPORAMA_TYPE_ID, ENTITY_ID, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM diaporama_version WHERE ID = :p0 AND VERSION = :p1';
+        $sql = 'SELECT ID, SHORTCODE, CREATED_AT, UPDATED_AT, VERSION, VERSION_CREATED_AT, VERSION_CREATED_BY FROM diaporama_version WHERE ID = :p0 AND VERSION = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -171,8 +163,7 @@ abstract class DiaporamaVersionQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            $cls = DiaporamaVersionTableMap::getOMClass($row, 0, false);
-            $obj = new $cls();
+            $obj = new ChildDiaporamaVersion();
             $obj->hydrate($row);
             DiaporamaVersionTableMap::addInstanceToPool($obj, serialize(array((string) $key[0], (string) $key[1])));
         }
@@ -331,88 +322,6 @@ abstract class DiaporamaVersionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DiaporamaVersionTableMap::SHORTCODE, $shortcode, $comparison);
-    }
-
-    /**
-     * Filter the query on the diaporama_type_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDiaporamaTypeId(1234); // WHERE diaporama_type_id = 1234
-     * $query->filterByDiaporamaTypeId(array(12, 34)); // WHERE diaporama_type_id IN (12, 34)
-     * $query->filterByDiaporamaTypeId(array('min' => 12)); // WHERE diaporama_type_id > 12
-     * </code>
-     *
-     * @param     mixed $diaporamaTypeId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaVersionQuery The current query, for fluid interface
-     */
-    public function filterByDiaporamaTypeId($diaporamaTypeId = null, $comparison = null)
-    {
-        if (is_array($diaporamaTypeId)) {
-            $useMinMax = false;
-            if (isset($diaporamaTypeId['min'])) {
-                $this->addUsingAlias(DiaporamaVersionTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($diaporamaTypeId['max'])) {
-                $this->addUsingAlias(DiaporamaVersionTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(DiaporamaVersionTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId, $comparison);
-    }
-
-    /**
-     * Filter the query on the entity_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByEntityId(1234); // WHERE entity_id = 1234
-     * $query->filterByEntityId(array(12, 34)); // WHERE entity_id IN (12, 34)
-     * $query->filterByEntityId(array('min' => 12)); // WHERE entity_id > 12
-     * </code>
-     *
-     * @param     mixed $entityId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildDiaporamaVersionQuery The current query, for fluid interface
-     */
-    public function filterByEntityId($entityId = null, $comparison = null)
-    {
-        if (is_array($entityId)) {
-            $useMinMax = false;
-            if (isset($entityId['min'])) {
-                $this->addUsingAlias(DiaporamaVersionTableMap::ENTITY_ID, $entityId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($entityId['max'])) {
-                $this->addUsingAlias(DiaporamaVersionTableMap::ENTITY_ID, $entityId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(DiaporamaVersionTableMap::ENTITY_ID, $entityId, $comparison);
     }
 
     /**

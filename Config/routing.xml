@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes xmlns="http://symfony.com/schema/routing" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
-    <!-- TheliaStudio routes -->
     <route id="diaporamas.diaporama.list" path="/admin/module/Diaporamas/diaporama" methods="get">
         <default key="_controller">Diaporamas:Diaporama:default</default>
     </route>
@@ -15,21 +14,6 @@
     </route>
     <route id="diaporamas.diaporama.delete" path="/admin/module/Diaporamas/diaporama/delete" methods="post">
         <default key="_controller">Diaporamas:Diaporama:delete</default>
-    </route>
-    <route id="diaporamas.diaporama_type.list" path="/admin/module/Diaporamas/diaporama_type" methods="get">
-        <default key="_controller">Diaporamas:DiaporamaType:default</default>
-    </route>
-    <route id="diaporamas.diaporama_type.create" path="/admin/module/Diaporamas/diaporama_type" methods="post">
-        <default key="_controller">Diaporamas:DiaporamaType:create</default>
-    </route>
-    <route id="diaporamas.diaporama_type.view" path="/admin/module/Diaporamas/diaporama_type/edit" methods="get">
-        <default key="_controller">Diaporamas:DiaporamaType:update</default>
-    </route>
-    <route id="diaporamas.diaporama_type.edit" path="/admin/module/Diaporamas/diaporama_type/edit" methods="post">
-        <default key="_controller">Diaporamas:DiaporamaType:processUpdate</default>
-    </route>
-    <route id="diaporamas.diaporama_type.delete" path="/admin/module/Diaporamas/diaporama_type/delete" methods="post">
-        <default key="_controller">Diaporamas:DiaporamaType:delete</default>
     </route>
     <route id="diaporamas.diaporama_image.list" path="/admin/module/Diaporamas/diaporama_image" methods="get">
         <default key="_controller">Diaporamas:DiaporamaImage:default</default>
@@ -49,9 +33,33 @@
     <route id="diaporamas.diaporama_image.update_position" path="/admin/module/Diaporamas/diaporama_image/updatePosition" methods="get">
         <default key="_controller">Diaporamas:DiaporamaImage:updatePosition</default>
     </route>
+    <route id="diaporamas.diaporama_image.toggle_visibility" path="/admin/module/Diaporamas/diaporama_image/toggleVisibility" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaImage:setToggleVisibility</default>
+    </route>
 
-    <!-- Route for loading entities choices -->
-    <route id="diaporamas.diaporama.entity_choices" path="/admin/module/Diaporamas/diaporama/entity_choices/{diaporama_type_id}" methods="get">
-        <default key="_controller">Diaporamas:Diaporama:retrieveEntityChoices</default>
+    <!-- Routes for AJAX images -->
+    <route id="diporamas.image.save-ajax" path="/admin/module/Diaporamas/diaporama_image/{parentId}/save-ajax">
+        <default key="_controller">Diaporamas:DiaporamaImageFile:saveImageAjax</default>
+        <requirement key="parentId">\d+</requirement>
+        <!-- There is a default value because of the "admin.image.save-ajax" route which needs it. -->
+        <default key="parentType">diaporama</default>
+    </route>
+    <route id="diporamas.image.list-ajax" path="/admin/module/Diaporamas/diaporama_image/{parentId}/list-ajax">
+        <default key="_controller">Diaporamas:DiaporamaImageFile:getImageListAjax</default>
+        <requirement key="parentId">\d+</requirement>
+        <!-- There is a default value because of the "admin.image.list-ajax" route which needs it. -->
+        <default key="parentType">diaporama</default>
+    </route>
+    <route id="diporamas.image.update-position" path="/admin/module/Diaporamas/diaporama_image/{parentId}/update-position">
+        <default key="_controller">Diaporamas:DiaporamaImageFile:updateImagePosition</default>
+        <requirement key="parentId">\d+</requirement>
+        <!-- There is a default value because of the "admin.image.update-position" route which needs it. -->
+        <default key="parentType">diaporama</default>
+    </route>
+    <route id="diporamas.image.toggle.process" path="/admin/module/Diaporamas/diaporama_image/{documentId}/toggle">
+        <default key="_controller">Diaporamas:DiaporamaImageFile:toggleVisibilityImage</default>
+        <requirement key="documentId">\d+</requirement>
+        <!-- There is a default value because of the "admin.image.toggle.process" route which needs it. -->
+        <default key="parentType">diaporama</default>
     </route>
 </routes>

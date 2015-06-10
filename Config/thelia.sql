@@ -13,34 +13,13 @@ CREATE TABLE `diaporama`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `shortcode` VARCHAR(32) NOT NULL,
-    `diaporama_type_id` INTEGER NOT NULL,
-    `entity_id` INTEGER NOT NULL,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `version` INTEGER DEFAULT 0,
     `version_created_at` DATETIME,
     `version_created_by` VARCHAR(100),
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `un_shortcode` (`shortcode`),
-    INDEX `diaporama_FI_1` (`diaporama_type_id`),
-    CONSTRAINT `diaporama_FK_1`
-        FOREIGN KEY (`diaporama_type_id`)
-        REFERENCES `diaporama_type` (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- diaporama_type
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `diaporama_type`;
-
-CREATE TABLE `diaporama_type`
-(
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `code` VARCHAR(16) NOT NULL,
-    `path` VARCHAR(64) DEFAULT '',
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `un_code` (`code`)
+    UNIQUE INDEX `un_shortcode` (`shortcode`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -53,18 +32,17 @@ CREATE TABLE `diaporama_image`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `diaporama_id` INTEGER NOT NULL,
-    `diaporama_type_id` INTEGER NOT NULL,
-    `entity_id` INTEGER NOT NULL,
+    `file` VARCHAR(255) NOT NULL,
+    `visible` TINYINT DEFAULT 1 NOT NULL,
     `position` INTEGER NOT NULL,
+    `created_at` DATETIME,
+    `updated_at` DATETIME,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `un_image` (`diaporama_id`, `diaporama_type_id`, `position`),
-    INDEX `diaporama_image_FI_2` (`diaporama_type_id`),
+    INDEX `idx_diaporama_image_diaporama_id` (`diaporama_id`),
+    INDEX `idx_diaporama_image_diaporama_id_position` (`diaporama_id`, `position`),
     CONSTRAINT `diaporama_image_FK_1`
         FOREIGN KEY (`diaporama_id`)
-        REFERENCES `diaporama` (`id`),
-    CONSTRAINT `diaporama_image_FK_2`
-        FOREIGN KEY (`diaporama_type_id`)
-        REFERENCES `diaporama_type` (`id`)
+        REFERENCES `diaporama` (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -86,20 +64,23 @@ CREATE TABLE `diaporama_i18n`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- diaporama_type_i18n
+-- diaporama_image_i18n
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `diaporama_type_i18n`;
+DROP TABLE IF EXISTS `diaporama_image_i18n`;
 
-CREATE TABLE `diaporama_type_i18n`
+CREATE TABLE `diaporama_image_i18n`
 (
     `id` INTEGER NOT NULL,
     `locale` VARCHAR(5) DEFAULT 'en_US' NOT NULL,
-    `title` VARCHAR(16) NOT NULL,
+    `title` VARCHAR(255),
+    `description` LONGTEXT,
+    `chapo` TEXT,
+    `postscriptum` TEXT,
     PRIMARY KEY (`id`,`locale`),
-    CONSTRAINT `diaporama_type_i18n_FK_1`
+    CONSTRAINT `diaporama_image_i18n_FK_1`
         FOREIGN KEY (`id`)
-        REFERENCES `diaporama_type` (`id`)
+        REFERENCES `diaporama_image` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -113,8 +94,6 @@ CREATE TABLE `diaporama_version`
 (
     `id` INTEGER NOT NULL,
     `shortcode` VARCHAR(32) NOT NULL,
-    `diaporama_type_id` INTEGER NOT NULL,
-    `entity_id` INTEGER NOT NULL,
     `created_at` DATETIME,
     `updated_at` DATETIME,
     `version` INTEGER DEFAULT 0 NOT NULL,

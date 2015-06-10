@@ -49,6 +49,8 @@ class DiaporamaImageAction extends BaseAction implements EventSubscriberInterfac
         $con->beginTransaction();
 
         try {
+            $model->setLocale($event->getLocale());
+
             if (null !== $id = $event->getId()) {
                 $model->setId($id);
             }
@@ -57,16 +59,32 @@ class DiaporamaImageAction extends BaseAction implements EventSubscriberInterfac
                 $model->setDiaporamaId($diaporamaId);
             }
 
-            if (null !== $diaporamaTypeId = $event->getDiaporamaTypeId()) {
-                $model->setDiaporamaTypeId($diaporamaTypeId);
+            if (null !== $file = $event->getFile()) {
+                $model->setFile($file);
             }
 
-            if (null !== $entityId = $event->getEntityId()) {
-                $model->setEntityId($entityId);
+            if (null !== $visible = $event->getVisible()) {
+                $model->setVisible($visible);
             }
 
             if (null !== $position = $event->getPosition()) {
                 $model->setPosition($position);
+            }
+
+            if (null !== $title = $event->getTitle()) {
+                $model->setTitle($title);
+            }
+
+            if (null !== $description = $event->getDescription()) {
+                $model->setDescription($description);
+            }
+
+            if (null !== $chapo = $event->getChapo()) {
+                $model->setChapo($chapo);
+            }
+
+            if (null !== $postscriptum = $event->getPostscriptum()) {
+                $model->setPostscriptum($postscriptum);
             }
 
             $model->save($con);
@@ -98,6 +116,11 @@ class DiaporamaImageAction extends BaseAction implements EventSubscriberInterfac
     public function updatePosition(UpdatePositionEvent $event)
     {
         $this->genericUpdatePosition(new DiaporamaImageQuery(), $event);
+    }
+
+    public function toggleVisibility(ToggleVisibilityEvent $event)
+    {
+        $this->genericToggleVisibility(new DiaporamaImageQuery(), $event);
     }
 
     public function beforeCreateFormBuild(TheliaFormEvent $event)
@@ -143,6 +166,7 @@ class DiaporamaImageAction extends BaseAction implements EventSubscriberInterfac
             DiaporamaImageEvents::UPDATE => array("update", 128),
             DiaporamaImageEvents::DELETE => array("delete", 128),
             DiaporamaImageEvents::UPDATE_POSITION => array("updatePosition", 128),
+            DiaporamaImageEvents::TOGGLE_VISIBILITY => array("toggleVisibility", 128),
             TheliaEvents::FORM_BEFORE_BUILD . ".diaporama_image_create" => array("beforeCreateFormBuild", 128),
             TheliaEvents::FORM_BEFORE_BUILD . ".diaporama_image_update" => array("beforeUpdateFormBuild", 128),
             TheliaEvents::FORM_AFTER_BUILD . ".diaporama_image_create" => array("afterCreateFormBuild", 128),

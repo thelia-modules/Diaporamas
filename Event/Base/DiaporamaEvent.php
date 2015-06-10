@@ -19,8 +19,6 @@ class DiaporamaEvent extends ActionEvent
     protected $id;
     protected $title;
     protected $shortcode;
-    protected $diaporamaTypeId;
-    protected $entityId;
     protected $diaporama;
     protected $locale;
 
@@ -68,30 +66,6 @@ class DiaporamaEvent extends ActionEvent
     public function setShortcode($shortcode)
     {
         $this->shortcode = $shortcode;
-
-        return $this;
-    }
-
-    public function getDiaporamaTypeId()
-    {
-        return $this->diaporamaTypeId;
-    }
-
-    public function setDiaporamaTypeId($diaporamaTypeId)
-    {
-        $this->diaporamaTypeId = $diaporamaTypeId;
-
-        return $this;
-    }
-
-    public function getEntityId()
-    {
-        return $this->entityId;
-    }
-
-    public function setEntityId($entityId)
-    {
-        $this->entityId = $entityId;
 
         return $this;
     }

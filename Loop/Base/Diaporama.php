@@ -41,8 +41,6 @@ class Diaporama extends BaseI18nLoop implements PropelSearchLoopInterface
                 ->set("ID", $entry->getId())
                 ->set("TITLE", $entry->getVirtualColumn("i18n_TITLE"))
                 ->set("SHORTCODE", $entry->getShortcode())
-                ->set("DIAPORAMA_TYPE_ID", $entry->getDiaporamaTypeId())
-                ->set("ENTITY_ID", $entry->getEntityId())
             ;
 
             $this->addMoreResults($row, $entry);
@@ -83,8 +81,6 @@ class Diaporama extends BaseI18nLoop implements PropelSearchLoopInterface
             Argument::createIntListTypeArgument("id"),
             Argument::createAnyTypeArgument("title"),
             Argument::createAnyTypeArgument("shortcode"),
-            Argument::createIntListTypeArgument("diaporama_type_id"),
-            Argument::createIntListTypeArgument("entity_id"),
             Argument::createEnumListTypeArgument(
                 "order",
                 [
@@ -94,10 +90,6 @@ class Diaporama extends BaseI18nLoop implements PropelSearchLoopInterface
                     "title-reverse",
                     "shortcode",
                     "shortcode-reverse",
-                    "diaporama_type_id",
-                    "diaporama_type_id-reverse",
-                    "entity_id",
-                    "entity_id-reverse",
                 ],
                 "id"
             )
@@ -128,14 +120,6 @@ class Diaporama extends BaseI18nLoop implements PropelSearchLoopInterface
             $query->filterByShortcode($shortcode);
         }
 
-        if (null !== $diaporama_type_id = $this->getDiaporamaTypeId()) {
-            $query->filterByDiaporamaTypeId($diaporama_type_id);
-        }
-
-        if (null !== $entity_id = $this->getEntityId()) {
-            $query->filterByEntityId($entity_id);
-        }
-
         foreach ($this->getOrder() as $order) {
             switch ($order) {
                 case "id":
@@ -156,25 +140,13 @@ class Diaporama extends BaseI18nLoop implements PropelSearchLoopInterface
                 case "shortcode-reverse":
                     $query->orderByShortcode(Criteria::DESC);
                     break;
-                case "diaporama_type_id":
-                    $query->orderByDiaporamaTypeId();
-                    break;
-                case "diaporama_type_id-reverse":
-                    $query->orderByDiaporamaTypeId(Criteria::DESC);
-                    break;
-                case "entity_id":
-                    $query->orderByEntityId();
-                    break;
-                case "entity_id-reverse":
-                    $query->orderByEntityId(Criteria::DESC);
-                    break;
             }
         }
 
         return $query;
     }
 
-    protected function addMoreResults(LoopResultRow $row, \Diaporamas\Model\Diaporama $entryObject)
+    protected function addMoreResults(LoopResultRow $row, $entryObject)
     {
     }
 }

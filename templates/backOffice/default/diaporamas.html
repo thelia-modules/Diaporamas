@@ -66,24 +66,6 @@
                             }
                         </th>
                         <th>
-                            {admin_sortable_header
-                                current_order=$order
-                                order='diaporama_type_id'
-                                reverse_order='diaporama_type_id-reverse'
-                                path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='diaporama.read.diaporama_type' d='diaporamas.bo.default'}"
-                            }
-                        </th>
-                        <th>
-                            {admin_sortable_header
-                                current_order=$order
-                                order='entity_id'
-                                reverse_order='entity_id-reverse'
-                                path={url path='/admin/module/Diaporamas/diaporama' target='diaporama-table'}
-                                label="{intl l='diaporama.read.entity' d='diaporamas.bo.default'}"
-                            }
-                        </th>
-                        <th>
                             {intl l="Actions"}
                         </th>
                     </tr>
@@ -100,12 +82,6 @@
                             </td>
                             <td>
                                 {$SHORTCODE}
-                            </td>
-                            <td>
-                                {$DIAPORAMA_TYPE_TITLE}
-                            </td>
-                            <td>
-                                <a href="{url path={$ENTITY_PATH} id={$ENTITY_ID}}">{$ENTITY_TITLE}</a>
                             </td>
                             {* Actions *}
                             <td>
@@ -166,8 +142,6 @@
 {/block}
 
 {block name="javascript-initialization"}
-    {* Create form JS *}
-    <script>{include 'assets/js/create-diaporama-form.js'}</script>
     {* Display list JS *}
     <script>{include 'assets/js/diaporama-list.js'}</script>
     {* Delete diaporama JS *}

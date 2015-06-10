@@ -58,7 +58,7 @@ class DiaporamaVersionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class DiaporamaVersionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the ID field
@@ -79,16 +79,6 @@ class DiaporamaVersionTableMap extends TableMap
      * the column name for the SHORTCODE field
      */
     const SHORTCODE = 'diaporama_version.SHORTCODE';
-
-    /**
-     * the column name for the DIAPORAMA_TYPE_ID field
-     */
-    const DIAPORAMA_TYPE_ID = 'diaporama_version.DIAPORAMA_TYPE_ID';
-
-    /**
-     * the column name for the ENTITY_ID field
-     */
-    const ENTITY_ID = 'diaporama_version.ENTITY_ID';
 
     /**
      * the column name for the CREATED_AT field
@@ -127,12 +117,12 @@ class DiaporamaVersionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Shortcode', 'DiaporamaTypeId', 'EntityId', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'shortcode', 'diaporamaTypeId', 'entityId', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', ),
-        self::TYPE_COLNAME       => array(DiaporamaVersionTableMap::ID, DiaporamaVersionTableMap::SHORTCODE, DiaporamaVersionTableMap::DIAPORAMA_TYPE_ID, DiaporamaVersionTableMap::ENTITY_ID, DiaporamaVersionTableMap::CREATED_AT, DiaporamaVersionTableMap::UPDATED_AT, DiaporamaVersionTableMap::VERSION, DiaporamaVersionTableMap::VERSION_CREATED_AT, DiaporamaVersionTableMap::VERSION_CREATED_BY, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'SHORTCODE', 'DIAPORAMA_TYPE_ID', 'ENTITY_ID', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', ),
-        self::TYPE_FIELDNAME     => array('id', 'shortcode', 'diaporama_type_id', 'entity_id', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id', 'Shortcode', 'CreatedAt', 'UpdatedAt', 'Version', 'VersionCreatedAt', 'VersionCreatedBy', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'shortcode', 'createdAt', 'updatedAt', 'version', 'versionCreatedAt', 'versionCreatedBy', ),
+        self::TYPE_COLNAME       => array(DiaporamaVersionTableMap::ID, DiaporamaVersionTableMap::SHORTCODE, DiaporamaVersionTableMap::CREATED_AT, DiaporamaVersionTableMap::UPDATED_AT, DiaporamaVersionTableMap::VERSION, DiaporamaVersionTableMap::VERSION_CREATED_AT, DiaporamaVersionTableMap::VERSION_CREATED_BY, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'SHORTCODE', 'CREATED_AT', 'UPDATED_AT', 'VERSION', 'VERSION_CREATED_AT', 'VERSION_CREATED_BY', ),
+        self::TYPE_FIELDNAME     => array('id', 'shortcode', 'created_at', 'updated_at', 'version', 'version_created_at', 'version_created_by', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -142,12 +132,12 @@ class DiaporamaVersionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Shortcode' => 1, 'DiaporamaTypeId' => 2, 'EntityId' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, 'Version' => 6, 'VersionCreatedAt' => 7, 'VersionCreatedBy' => 8, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'shortcode' => 1, 'diaporamaTypeId' => 2, 'entityId' => 3, 'createdAt' => 4, 'updatedAt' => 5, 'version' => 6, 'versionCreatedAt' => 7, 'versionCreatedBy' => 8, ),
-        self::TYPE_COLNAME       => array(DiaporamaVersionTableMap::ID => 0, DiaporamaVersionTableMap::SHORTCODE => 1, DiaporamaVersionTableMap::DIAPORAMA_TYPE_ID => 2, DiaporamaVersionTableMap::ENTITY_ID => 3, DiaporamaVersionTableMap::CREATED_AT => 4, DiaporamaVersionTableMap::UPDATED_AT => 5, DiaporamaVersionTableMap::VERSION => 6, DiaporamaVersionTableMap::VERSION_CREATED_AT => 7, DiaporamaVersionTableMap::VERSION_CREATED_BY => 8, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'SHORTCODE' => 1, 'DIAPORAMA_TYPE_ID' => 2, 'ENTITY_ID' => 3, 'CREATED_AT' => 4, 'UPDATED_AT' => 5, 'VERSION' => 6, 'VERSION_CREATED_AT' => 7, 'VERSION_CREATED_BY' => 8, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'shortcode' => 1, 'diaporama_type_id' => 2, 'entity_id' => 3, 'created_at' => 4, 'updated_at' => 5, 'version' => 6, 'version_created_at' => 7, 'version_created_by' => 8, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Shortcode' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, 'Version' => 4, 'VersionCreatedAt' => 5, 'VersionCreatedBy' => 6, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'shortcode' => 1, 'createdAt' => 2, 'updatedAt' => 3, 'version' => 4, 'versionCreatedAt' => 5, 'versionCreatedBy' => 6, ),
+        self::TYPE_COLNAME       => array(DiaporamaVersionTableMap::ID => 0, DiaporamaVersionTableMap::SHORTCODE => 1, DiaporamaVersionTableMap::CREATED_AT => 2, DiaporamaVersionTableMap::UPDATED_AT => 3, DiaporamaVersionTableMap::VERSION => 4, DiaporamaVersionTableMap::VERSION_CREATED_AT => 5, DiaporamaVersionTableMap::VERSION_CREATED_BY => 6, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'SHORTCODE' => 1, 'CREATED_AT' => 2, 'UPDATED_AT' => 3, 'VERSION' => 4, 'VERSION_CREATED_AT' => 5, 'VERSION_CREATED_BY' => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'shortcode' => 1, 'created_at' => 2, 'updated_at' => 3, 'version' => 4, 'version_created_at' => 5, 'version_created_by' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -165,12 +155,9 @@ class DiaporamaVersionTableMap extends TableMap
         $this->setClassName('\\Diaporamas\\Model\\DiaporamaVersion');
         $this->setPackage('Diaporamas.Model');
         $this->setUseIdGenerator(false);
-        $this->setSingleTableInheritance(true);
         // columns
         $this->addForeignPrimaryKey('ID', 'Id', 'INTEGER' , 'diaporama', 'ID', true, null, null);
         $this->addColumn('SHORTCODE', 'Shortcode', 'VARCHAR', true, 32, null);
-        $this->addColumn('DIAPORAMA_TYPE_ID', 'DiaporamaTypeId', 'INTEGER', true, null, null);
-        $this->addColumn('ENTITY_ID', 'EntityId', 'INTEGER', true, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         $this->addPrimaryKey('VERSION', 'Version', 'INTEGER', true, null, 0);
@@ -253,11 +240,11 @@ class DiaporamaVersionTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]));
+        return serialize(array((string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Version', TableMap::TYPE_PHPNAME, $indexType)]));
     }
 
     /**
@@ -279,37 +266,19 @@ class DiaporamaVersionTableMap extends TableMap
     }
 
     /**
-     * The returned Class will contain objects of the default type or
-     * objects that inherit from the default.
+     * The class that the tableMap will make instances of.
      *
-     * @param array   $row ConnectionInterface result row.
-     * @param int     $colnum Column to examine for OM class information (first is 0).
+     * If $withPrefix is true, the returned path
+     * uses a dot-path notation which is translated into a path
+     * relative to a location on the PHP include_path.
+     * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
+     *
      * @param boolean $withPrefix Whether or not to return the path with the class name
-     * @throws PropelException Any exceptions caught during processing will be
-     *         rethrown wrapped into a PropelException.
+     * @return string path.to.ClassName
      */
-    public static function getOMClass($row, $colnum, $withPrefix = true)
+    public static function getOMClass($withPrefix = true)
     {
-        try {
-
-            $omClass = null;
-            $classKey = $row[$colnum + 2];
-
-            switch ($classKey) {
-
-                default:
-                    $omClass = DiaporamaVersionTableMap::CLASS_DEFAULT;
-
-            } // switch
-            if (!$withPrefix) {
-                $omClass = preg_replace('#\.#', '\\', $omClass);
-            }
-
-        } catch (\Exception $e) {
-            throw new PropelException('Unable to get OM class.', $e);
-        }
-
-        return $omClass;
+        return $withPrefix ? DiaporamaVersionTableMap::CLASS_DEFAULT : DiaporamaVersionTableMap::OM_CLASS;
     }
 
     /**
@@ -334,7 +303,7 @@ class DiaporamaVersionTableMap extends TableMap
             // $obj->hydrate($row, $offset, true); // rehydrate
             $col = $offset + DiaporamaVersionTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = static::getOMClass($row, $offset, false);
+            $cls = DiaporamaVersionTableMap::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
             DiaporamaVersionTableMap::addInstanceToPool($obj, $key);
@@ -356,6 +325,8 @@ class DiaporamaVersionTableMap extends TableMap
     {
         $results = array();
 
+        // set the class once to avoid overhead in the loop
+        $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
             $key = DiaporamaVersionTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
@@ -365,9 +336,6 @@ class DiaporamaVersionTableMap extends TableMap
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                // class must be set each time from the record row
-                $cls = static::getOMClass($row, 0);
-                $cls = preg_replace('#\.#', '\\', $cls);
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
@@ -394,8 +362,6 @@ class DiaporamaVersionTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(DiaporamaVersionTableMap::ID);
             $criteria->addSelectColumn(DiaporamaVersionTableMap::SHORTCODE);
-            $criteria->addSelectColumn(DiaporamaVersionTableMap::DIAPORAMA_TYPE_ID);
-            $criteria->addSelectColumn(DiaporamaVersionTableMap::ENTITY_ID);
             $criteria->addSelectColumn(DiaporamaVersionTableMap::CREATED_AT);
             $criteria->addSelectColumn(DiaporamaVersionTableMap::UPDATED_AT);
             $criteria->addSelectColumn(DiaporamaVersionTableMap::VERSION);
@@ -404,8 +370,6 @@ class DiaporamaVersionTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.SHORTCODE');
-            $criteria->addSelectColumn($alias . '.DIAPORAMA_TYPE_ID');
-            $criteria->addSelectColumn($alias . '.ENTITY_ID');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
             $criteria->addSelectColumn($alias . '.VERSION');

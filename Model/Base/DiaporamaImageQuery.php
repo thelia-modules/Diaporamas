@@ -5,6 +5,7 @@ namespace Diaporamas\Model\Base;
 use \Exception;
 use \PDO;
 use Diaporamas\Model\DiaporamaImage as ChildDiaporamaImage;
+use Diaporamas\Model\DiaporamaImageI18nQuery as ChildDiaporamaImageI18nQuery;
 use Diaporamas\Model\DiaporamaImageQuery as ChildDiaporamaImageQuery;
 use Diaporamas\Model\Map\DiaporamaImageTableMap;
 use Propel\Runtime\Propel;
@@ -23,15 +24,19 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDiaporamaImageQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildDiaporamaImageQuery orderByDiaporamaId($order = Criteria::ASC) Order by the diaporama_id column
- * @method     ChildDiaporamaImageQuery orderByDiaporamaTypeId($order = Criteria::ASC) Order by the diaporama_type_id column
- * @method     ChildDiaporamaImageQuery orderByEntityId($order = Criteria::ASC) Order by the entity_id column
+ * @method     ChildDiaporamaImageQuery orderByFile($order = Criteria::ASC) Order by the file column
+ * @method     ChildDiaporamaImageQuery orderByVisible($order = Criteria::ASC) Order by the visible column
  * @method     ChildDiaporamaImageQuery orderByPosition($order = Criteria::ASC) Order by the position column
+ * @method     ChildDiaporamaImageQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method     ChildDiaporamaImageQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildDiaporamaImageQuery groupById() Group by the id column
  * @method     ChildDiaporamaImageQuery groupByDiaporamaId() Group by the diaporama_id column
- * @method     ChildDiaporamaImageQuery groupByDiaporamaTypeId() Group by the diaporama_type_id column
- * @method     ChildDiaporamaImageQuery groupByEntityId() Group by the entity_id column
+ * @method     ChildDiaporamaImageQuery groupByFile() Group by the file column
+ * @method     ChildDiaporamaImageQuery groupByVisible() Group by the visible column
  * @method     ChildDiaporamaImageQuery groupByPosition() Group by the position column
+ * @method     ChildDiaporamaImageQuery groupByCreatedAt() Group by the created_at column
+ * @method     ChildDiaporamaImageQuery groupByUpdatedAt() Group by the updated_at column
  *
  * @method     ChildDiaporamaImageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildDiaporamaImageQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -41,24 +46,28 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDiaporamaImageQuery rightJoinDiaporama($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Diaporama relation
  * @method     ChildDiaporamaImageQuery innerJoinDiaporama($relationAlias = null) Adds a INNER JOIN clause to the query using the Diaporama relation
  *
- * @method     ChildDiaporamaImageQuery leftJoinDiaporamaType($relationAlias = null) Adds a LEFT JOIN clause to the query using the DiaporamaType relation
- * @method     ChildDiaporamaImageQuery rightJoinDiaporamaType($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DiaporamaType relation
- * @method     ChildDiaporamaImageQuery innerJoinDiaporamaType($relationAlias = null) Adds a INNER JOIN clause to the query using the DiaporamaType relation
+ * @method     ChildDiaporamaImageQuery leftJoinDiaporamaImageI18n($relationAlias = null) Adds a LEFT JOIN clause to the query using the DiaporamaImageI18n relation
+ * @method     ChildDiaporamaImageQuery rightJoinDiaporamaImageI18n($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DiaporamaImageI18n relation
+ * @method     ChildDiaporamaImageQuery innerJoinDiaporamaImageI18n($relationAlias = null) Adds a INNER JOIN clause to the query using the DiaporamaImageI18n relation
  *
  * @method     ChildDiaporamaImage findOne(ConnectionInterface $con = null) Return the first ChildDiaporamaImage matching the query
  * @method     ChildDiaporamaImage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildDiaporamaImage matching the query, or a new ChildDiaporamaImage object populated from the query conditions when no match is found
  *
  * @method     ChildDiaporamaImage findOneById(int $id) Return the first ChildDiaporamaImage filtered by the id column
  * @method     ChildDiaporamaImage findOneByDiaporamaId(int $diaporama_id) Return the first ChildDiaporamaImage filtered by the diaporama_id column
- * @method     ChildDiaporamaImage findOneByDiaporamaTypeId(int $diaporama_type_id) Return the first ChildDiaporamaImage filtered by the diaporama_type_id column
- * @method     ChildDiaporamaImage findOneByEntityId(int $entity_id) Return the first ChildDiaporamaImage filtered by the entity_id column
+ * @method     ChildDiaporamaImage findOneByFile(string $file) Return the first ChildDiaporamaImage filtered by the file column
+ * @method     ChildDiaporamaImage findOneByVisible(int $visible) Return the first ChildDiaporamaImage filtered by the visible column
  * @method     ChildDiaporamaImage findOneByPosition(int $position) Return the first ChildDiaporamaImage filtered by the position column
+ * @method     ChildDiaporamaImage findOneByCreatedAt(string $created_at) Return the first ChildDiaporamaImage filtered by the created_at column
+ * @method     ChildDiaporamaImage findOneByUpdatedAt(string $updated_at) Return the first ChildDiaporamaImage filtered by the updated_at column
  *
  * @method     array findById(int $id) Return ChildDiaporamaImage objects filtered by the id column
  * @method     array findByDiaporamaId(int $diaporama_id) Return ChildDiaporamaImage objects filtered by the diaporama_id column
- * @method     array findByDiaporamaTypeId(int $diaporama_type_id) Return ChildDiaporamaImage objects filtered by the diaporama_type_id column
- * @method     array findByEntityId(int $entity_id) Return ChildDiaporamaImage objects filtered by the entity_id column
+ * @method     array findByFile(string $file) Return ChildDiaporamaImage objects filtered by the file column
+ * @method     array findByVisible(int $visible) Return ChildDiaporamaImage objects filtered by the visible column
  * @method     array findByPosition(int $position) Return ChildDiaporamaImage objects filtered by the position column
+ * @method     array findByCreatedAt(string $created_at) Return ChildDiaporamaImage objects filtered by the created_at column
+ * @method     array findByUpdatedAt(string $updated_at) Return ChildDiaporamaImage objects filtered by the updated_at column
  *
  */
 abstract class DiaporamaImageQuery extends ModelCriteria
@@ -147,7 +156,7 @@ abstract class DiaporamaImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, DIAPORAMA_ID, DIAPORAMA_TYPE_ID, ENTITY_ID, POSITION FROM diaporama_image WHERE ID = :p0';
+        $sql = 'SELECT ID, DIAPORAMA_ID, FILE, VISIBLE, POSITION, CREATED_AT, UPDATED_AT FROM diaporama_image WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -158,8 +167,7 @@ abstract class DiaporamaImageQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            $cls = DiaporamaImageTableMap::getOMClass($row, 0, false);
-            $obj = new $cls();
+            $obj = new ChildDiaporamaImage();
             $obj->hydrate($row);
             DiaporamaImageTableMap::addInstanceToPool($obj, (string) $key);
         }
@@ -322,59 +330,45 @@ abstract class DiaporamaImageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the diaporama_type_id column
+     * Filter the query on the file column
      *
      * Example usage:
      * <code>
-     * $query->filterByDiaporamaTypeId(1234); // WHERE diaporama_type_id = 1234
-     * $query->filterByDiaporamaTypeId(array(12, 34)); // WHERE diaporama_type_id IN (12, 34)
-     * $query->filterByDiaporamaTypeId(array('min' => 12)); // WHERE diaporama_type_id > 12
+     * $query->filterByFile('fooValue');   // WHERE file = 'fooValue'
+     * $query->filterByFile('%fooValue%'); // WHERE file LIKE '%fooValue%'
      * </code>
      *
-     * @see       filterByDiaporamaType()
-     *
-     * @param     mixed $diaporamaTypeId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $file The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildDiaporamaImageQuery The current query, for fluid interface
      */
-    public function filterByDiaporamaTypeId($diaporamaTypeId = null, $comparison = null)
+    public function filterByFile($file = null, $comparison = null)
     {
-        if (is_array($diaporamaTypeId)) {
-            $useMinMax = false;
-            if (isset($diaporamaTypeId['min'])) {
-                $this->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($diaporamaTypeId['max'])) {
-                $this->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($file)) {
                 $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $file)) {
+                $file = str_replace('*', '%', $file);
+                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaTypeId, $comparison);
+        return $this->addUsingAlias(DiaporamaImageTableMap::FILE, $file, $comparison);
     }
 
     /**
-     * Filter the query on the entity_id column
+     * Filter the query on the visible column
      *
      * Example usage:
      * <code>
-     * $query->filterByEntityId(1234); // WHERE entity_id = 1234
-     * $query->filterByEntityId(array(12, 34)); // WHERE entity_id IN (12, 34)
-     * $query->filterByEntityId(array('min' => 12)); // WHERE entity_id > 12
+     * $query->filterByVisible(1234); // WHERE visible = 1234
+     * $query->filterByVisible(array(12, 34)); // WHERE visible IN (12, 34)
+     * $query->filterByVisible(array('min' => 12)); // WHERE visible > 12
      * </code>
      *
-     * @param     mixed $entityId The value to use as filter.
+     * @param     mixed $visible The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -382,16 +376,16 @@ abstract class DiaporamaImageQuery extends ModelCriteria
      *
      * @return ChildDiaporamaImageQuery The current query, for fluid interface
      */
-    public function filterByEntityId($entityId = null, $comparison = null)
+    public function filterByVisible($visible = null, $comparison = null)
     {
-        if (is_array($entityId)) {
+        if (is_array($visible)) {
             $useMinMax = false;
-            if (isset($entityId['min'])) {
-                $this->addUsingAlias(DiaporamaImageTableMap::ENTITY_ID, $entityId['min'], Criteria::GREATER_EQUAL);
+            if (isset($visible['min'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::VISIBLE, $visible['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($entityId['max'])) {
-                $this->addUsingAlias(DiaporamaImageTableMap::ENTITY_ID, $entityId['max'], Criteria::LESS_EQUAL);
+            if (isset($visible['max'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::VISIBLE, $visible['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -402,7 +396,7 @@ abstract class DiaporamaImageQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DiaporamaImageTableMap::ENTITY_ID, $entityId, $comparison);
+        return $this->addUsingAlias(DiaporamaImageTableMap::VISIBLE, $visible, $comparison);
     }
 
     /**
@@ -444,6 +438,92 @@ abstract class DiaporamaImageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(DiaporamaImageTableMap::POSITION, $position, $comparison);
+    }
+
+    /**
+     * Filter the query on the created_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCreatedAt('2011-03-14'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt('now'); // WHERE created_at = '2011-03-14'
+     * $query->filterByCreatedAt(array('max' => 'yesterday')); // WHERE created_at > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $createdAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function filterByCreatedAt($createdAt = null, $comparison = null)
+    {
+        if (is_array($createdAt)) {
+            $useMinMax = false;
+            if (isset($createdAt['min'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($createdAt['max'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DiaporamaImageTableMap::CREATED_AT, $createdAt, $comparison);
+    }
+
+    /**
+     * Filter the query on the updated_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUpdatedAt('2011-03-14'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt('now'); // WHERE updated_at = '2011-03-14'
+     * $query->filterByUpdatedAt(array('max' => 'yesterday')); // WHERE updated_at > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $updatedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function filterByUpdatedAt($updatedAt = null, $comparison = null)
+    {
+        if (is_array($updatedAt)) {
+            $useMinMax = false;
+            if (isset($updatedAt['min'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($updatedAt['max'])) {
+                $this->addUsingAlias(DiaporamaImageTableMap::UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(DiaporamaImageTableMap::UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
@@ -522,42 +602,40 @@ abstract class DiaporamaImageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Diaporamas\Model\DiaporamaType object
+     * Filter the query by a related \Diaporamas\Model\DiaporamaImageI18n object
      *
-     * @param \Diaporamas\Model\DiaporamaType|ObjectCollection $diaporamaType The related object(s) to use as filter
+     * @param \Diaporamas\Model\DiaporamaImageI18n|ObjectCollection $diaporamaImageI18n  the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildDiaporamaImageQuery The current query, for fluid interface
      */
-    public function filterByDiaporamaType($diaporamaType, $comparison = null)
+    public function filterByDiaporamaImageI18n($diaporamaImageI18n, $comparison = null)
     {
-        if ($diaporamaType instanceof \Diaporamas\Model\DiaporamaType) {
+        if ($diaporamaImageI18n instanceof \Diaporamas\Model\DiaporamaImageI18n) {
             return $this
-                ->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaType->getId(), $comparison);
-        } elseif ($diaporamaType instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
+                ->addUsingAlias(DiaporamaImageTableMap::ID, $diaporamaImageI18n->getId(), $comparison);
+        } elseif ($diaporamaImageI18n instanceof ObjectCollection) {
             return $this
-                ->addUsingAlias(DiaporamaImageTableMap::DIAPORAMA_TYPE_ID, $diaporamaType->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->useDiaporamaImageI18nQuery()
+                ->filterByPrimaryKeys($diaporamaImageI18n->getPrimaryKeys())
+                ->endUse();
         } else {
-            throw new PropelException('filterByDiaporamaType() only accepts arguments of type \Diaporamas\Model\DiaporamaType or Collection');
+            throw new PropelException('filterByDiaporamaImageI18n() only accepts arguments of type \Diaporamas\Model\DiaporamaImageI18n or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the DiaporamaType relation
+     * Adds a JOIN clause to the query using the DiaporamaImageI18n relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return ChildDiaporamaImageQuery The current query, for fluid interface
      */
-    public function joinDiaporamaType($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinDiaporamaImageI18n($relationAlias = null, $joinType = 'LEFT JOIN')
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('DiaporamaType');
+        $relationMap = $tableMap->getRelation('DiaporamaImageI18n');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -572,14 +650,14 @@ abstract class DiaporamaImageQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'DiaporamaType');
+            $this->addJoinObject($join, 'DiaporamaImageI18n');
         }
 
         return $this;
     }
 
     /**
-     * Use the DiaporamaType relation DiaporamaType object
+     * Use the DiaporamaImageI18n relation DiaporamaImageI18n object
      *
      * @see useQuery()
      *
@@ -587,13 +665,13 @@ abstract class DiaporamaImageQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Diaporamas\Model\DiaporamaTypeQuery A secondary query class using the current class as primary query
+     * @return   \Diaporamas\Model\DiaporamaImageI18nQuery A secondary query class using the current class as primary query
      */
-    public function useDiaporamaTypeQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useDiaporamaImageI18nQuery($relationAlias = null, $joinType = 'LEFT JOIN')
     {
         return $this
-            ->joinDiaporamaType($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'DiaporamaType', '\Diaporamas\Model\DiaporamaTypeQuery');
+            ->joinDiaporamaImageI18n($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DiaporamaImageI18n', '\Diaporamas\Model\DiaporamaImageI18nQuery');
     }
 
     /**
@@ -685,6 +763,129 @@ abstract class DiaporamaImageQuery extends ModelCriteria
             $con->rollBack();
             throw $e;
         }
+    }
+
+    // timestampable behavior
+
+    /**
+     * Filter by the latest updated
+     *
+     * @param      int $nbDays Maximum age of the latest update in days
+     *
+     * @return     ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function recentlyUpdated($nbDays = 7)
+    {
+        return $this->addUsingAlias(DiaporamaImageTableMap::UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
+     * Filter by the latest created
+     *
+     * @param      int $nbDays Maximum age of in days
+     *
+     * @return     ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function recentlyCreated($nbDays = 7)
+    {
+        return $this->addUsingAlias(DiaporamaImageTableMap::CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+    }
+
+    /**
+     * Order by update date desc
+     *
+     * @return     ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function lastUpdatedFirst()
+    {
+        return $this->addDescendingOrderByColumn(DiaporamaImageTableMap::UPDATED_AT);
+    }
+
+    /**
+     * Order by update date asc
+     *
+     * @return     ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function firstUpdatedFirst()
+    {
+        return $this->addAscendingOrderByColumn(DiaporamaImageTableMap::UPDATED_AT);
+    }
+
+    /**
+     * Order by create date desc
+     *
+     * @return     ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function lastCreatedFirst()
+    {
+        return $this->addDescendingOrderByColumn(DiaporamaImageTableMap::CREATED_AT);
+    }
+
+    /**
+     * Order by create date asc
+     *
+     * @return     ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function firstCreatedFirst()
+    {
+        return $this->addAscendingOrderByColumn(DiaporamaImageTableMap::CREATED_AT);
+    }
+
+    // i18n behavior
+
+    /**
+     * Adds a JOIN clause to the query using the i18n relation
+     *
+     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
+     *
+     * @return    ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function joinI18n($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $relationName = $relationAlias ? $relationAlias : 'DiaporamaImageI18n';
+
+        return $this
+            ->joinDiaporamaImageI18n($relationAlias, $joinType)
+            ->addJoinCondition($relationName, $relationName . '.Locale = ?', $locale);
+    }
+
+    /**
+     * Adds a JOIN clause to the query and hydrates the related I18n object.
+     * Shortcut for $c->joinI18n($locale)->with()
+     *
+     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
+     *
+     * @return    ChildDiaporamaImageQuery The current query, for fluid interface
+     */
+    public function joinWithI18n($locale = 'en_US', $joinType = Criteria::LEFT_JOIN)
+    {
+        $this
+            ->joinI18n($locale, null, $joinType)
+            ->with('DiaporamaImageI18n');
+        $this->with['DiaporamaImageI18n']->setIsWithOneToMany(false);
+
+        return $this;
+    }
+
+    /**
+     * Use the I18n relation query object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $locale Locale to use for the join condition, e.g. 'fr_FR'
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'. Defaults to left join.
+     *
+     * @return    ChildDiaporamaImageI18nQuery A secondary query class using the current class as primary query
+     */
+    public function useI18nQuery($locale = 'en_US', $relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinI18n($locale, $relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DiaporamaImageI18n', '\Diaporamas\Model\DiaporamaImageI18nQuery');
     }
 
 } // DiaporamaImageQuery
