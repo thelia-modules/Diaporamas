@@ -194,7 +194,7 @@ class DiaporamaImageFileController extends FileController
         );
 
         $this->adminLogAppend(
-            AdminResources::retrieve($parentType),
+            AdminResources::MODULE,
             AccessManager::UPDATE,
             $this->getTranslator()->trans(
                 'Saving %obj% for %parentName% parent id %parentId%',
