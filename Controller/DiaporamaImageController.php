@@ -7,7 +7,16 @@
 namespace Diaporamas\Controller;
 
 use Diaporamas\Controller\Base\DiaporamaImageController as BaseDiaporamaImageController;
+use Diaporamas\Event\DiaporamaImageEvent;
+use Diaporamas\Model\DiaporamaImage;
+use Propel\Runtime\Exception\PropelException;
+use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
+use Thelia\Core\Event\TheliaEvents;
+use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Log\Tlog;
+use Thelia\Tools\URL;
 
 /**
  * Class DiaporamaImageController
@@ -27,18 +36,6 @@ class DiaporamaImageController extends BaseDiaporamaImageController
             return $response;
         }
 
-//        // Load object if exist
-//        if (null !== $object = $this->getExistingObject()) {
-//            // Hydrate the form abd pass it to the parser
-//            $changeForm = $this->hydrateObjectForm($object);
-//
-//            // Pass it to the parser
-//            $this->getParserContext()->addForm($changeForm);
-//        }
-//
-//        // Render the edition template.
-//        return $this->renderEditionTemplate();
-
         $image = $this->getExistingObject();
 
         if (is_null($image)) {
@@ -57,5 +54,78 @@ class DiaporamaImageController extends BaseDiaporamaImageController
                 $this->getCurrentEditionLocale()
             )
         ));
+    }
+
+    /**
+     * Put in this method post object update processing if required.
+     *
+     * @param  DiaporamaImageEvent  $updateEvent the update event
+     * @return Response a response, or null to continue normal processing
+     */
+    protected function performAdditionalUpdateAction($updateEvent)
+    {
+        $this->updateImageFile($updateEvent->getDiaporamaImage());
+        return null;
+    }
+
+    /**
+     * Updating the image. Inspired by FileController::updateFileAction().
+     *
+     * @param DiaporamaImage $file   Diaporama Image ID.
+     * @param string $eventName  the event type.
+     *
+     * @return DiaporamaImage
+     */
+    protected function updateImageFile(DiaporamaImage $file)
+    {
+        $fileUpdateForm = $this->createForm($file->getUpdateFormId());
+        try {
+            if (null === $file) {
+                throw new \InvalidArgumentException(sprintf('%d image id does not exist', $file->getId()));
+            }
+
+            $event = new FileCreateOrUpdateEvent(null);
+
+            $event->setModel($file);
+            $event->setOldModel($file);
+
+            $fileForm = $this->getRequest()->files->get($fileUpdateForm->getName());
+
+            if (isset($fileForm['file'])) {
+                $event->setUploadedFile($fileForm['file']);
+            }
+
+            $this->dispatch(TheliaEvents::IMAGE_SAVE, $event);
+
+            $fileUpdated = $event->getModel();
+
+            $this->adminLogAppend(
+                AdminResources::MODULE,
+                AccessManager::UPDATE,
+                sprintf('Image with Ref %s (ID %d) modified', $fileUpdated->getTitle(), $fileUpdated->getId())
+            );
+
+            if ($this->getRequest()->get('save_mode') == 'close') {
+                return $this->generateRedirect(
+                    URL::getInstance()->absoluteUrl($file->getRedirectionUrl(), ['current_tab' => 'images'])
+                );
+            } else {
+                return $this->generateSuccessRedirect($fileUpdateForm);
+            }
+        } catch (PropelException $e) {
+            $message = $e->getMessage();
+        } catch (\Exception $e) {
+            $message = sprintf('Sorry, an error occurred: %s', $e->getMessage().' '.$e->getFile());
+        }
+
+        if (isset($message)) {
+            Tlog::getInstance()->error(sprintf('Error during image editing : %s.', $message));
+
+            $fileUpdateForm->setErrorMessage($message);
+
+            $this->getParserContext()->addForm($fileUpdateForm)->setGeneralError($message);
+        }
+
+        return $file;
     }
 }

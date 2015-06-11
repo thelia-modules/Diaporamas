@@ -9,6 +9,7 @@ namespace Diaporamas\Loop;
 use Diaporamas\Model\DiaporamaImageQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Core\Template\Loop\Image;
 
@@ -103,5 +104,16 @@ class DiaporamaImage extends Image
         $object_id   = $source_id;
 
         return $search;
+    }
+
+    /**
+     * Use this method in order to add fields in sub-classes
+     * @param LoopResultRow $loopResultRow
+     * @param \Diaporamas\Model\DiaporamaImage $item
+     *
+     */
+    protected function addOutputFields(LoopResultRow $loopResultRow, $item)
+    {
+        $loopResultRow->set('OBJECT_ID', $item->getDiaporamaId());
     }
 }

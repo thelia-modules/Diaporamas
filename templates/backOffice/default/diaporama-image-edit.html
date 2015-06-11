@@ -52,6 +52,12 @@
 
                             {render_form_field form=$form field="success_url" value="$update_image_url"}
                             {render_form_field form=$form field="locale" value="$edit_language_locale"}
+                            {form_field form=$form field='id'}
+                                <input type="hidden" name="{$name}" value="{$ID}" />
+                            {/form_field}
+                            {form_field form=$form field='diaporama_id'}
+                                <input type="hidden" name="{$name}" value="{$OBJECT_ID}" />
+                            {/form_field}
 
                             {if $form_error}<div class="alert alert-danger">{$form_error_message}</div>{/if}
 
@@ -63,8 +69,7 @@
                                         <label class="control-label">{intl l="Preview"} : </label>
                                         <p>
                                             <a href="{$ORIGINAL_IMAGE_URL nofilter}" alt="{$TITLE}" target="_blank">
-                                                <img
-                                                    src="{if $PROCESSING_ERROR}http://placehold.it/{$width}x{$width}&text={intl l='Image+file+not+found'}{else}{$IMAGE_URL nofilter}{/if}"
+                                                <img src="{if $PROCESSING_ERROR}http://placehold.it/{$width}x{$width}&text={intl l='Image+file+not+found'}{else}{$IMAGE_URL nofilter}{/if}"
                                                     alt="{$TITLE}"
                                                     class="img-thumbnail"
                                                 />

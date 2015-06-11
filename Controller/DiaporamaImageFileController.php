@@ -8,6 +8,7 @@
 
 namespace Diaporamas\Controller;
 
+use Propel\Runtime\Exception\PropelException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Thelia\Controller\Admin\FileController;
 use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
@@ -19,8 +20,12 @@ use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Files\Exception\ProcessFileException;
 use Thelia\Files\FileManager;
+use Thelia\Files\FileModelInterface;
+use Thelia\Form\Exception\FormValidationException;
+use Thelia\Log\Tlog;
 use Thelia\Model\Lang;
 use Thelia\Tools\Rest\ResponseRest;
+use Thelia\Tools\URL;
 
 class DiaporamaImageFileController extends FileController
 {
@@ -276,8 +281,6 @@ class DiaporamaImageFileController extends FileController
     {
         $message = null;
 
-        //$position = $this->getRequest()->request->get('position');
-
         $this->checkAuth(AdminResources::MODULE, 'Diaporamas', AccessManager::UPDATE);
         $this->checkXmlHttpRequest();
 
@@ -314,5 +317,152 @@ class DiaporamaImageFileController extends FileController
         }
 
         return new Response($message);
+    }
+
+
+    /**
+     * Manage how an image is updated
+     *
+     * @param int    $imageId    Parent id owning images being saved
+     * @param string $parentType Parent Type owning images being saved
+     *
+     * @return Response
+     */
+    public function updateImageAction($imageId, $parentType)
+    {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, 'Diaporamas', AccessManager::UPDATE)) {
+            return $response;
+        }
+
+        $imageInstance = $this->updateFileAction($imageId, $parentType, 'image', TheliaEvents::IMAGE_UPDATE);
+
+        if ($imageInstance instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $imageInstance;
+        } else {
+            return $this->render('diaporama-image-edit', array(
+                'diaporama_image_id' => $imageId,
+                'redirectUrl' => $imageInstance->getRedirectionUrl(),
+                'breadcrumb' => $imageInstance->getBreadcrumb(
+                    $this->getRouter($this->getCurrentRouter()),
+                    $this->container,
+                    'images',
+                    $this->getCurrentEditionLocale()
+                )
+            ));
+        }
+    }
+
+
+
+    /**
+     * Manage how a file is updated
+     *
+     * @param int    $fileId     File identifier
+     * @param string $parentType Parent Type owning file being saved
+     * @param string $objectType the type of the file, image or document
+     * @param string $eventName  the event type.
+     *
+     * @return FileModelInterface
+     */
+    protected function updateFileAction($fileId, $parentType, $objectType, $eventName)
+    {
+        $message = false;
+
+        $fileManager = $this->getFileManager();
+
+        $fileModelInstance = $fileManager->getModelInstance($objectType, $parentType);
+
+        $fileUpdateForm = $fileModelInstance->getUpdateFormInstance($this->getRequest());
+
+        /** @var FileModelInterface $file */
+        $file = $fileModelInstance->getQueryInstance()->findPk($fileId);
+
+        try {
+            $oldFile = clone $file;
+
+            if (null === $file) {
+                throw new \InvalidArgumentException(sprintf('%d %s id does not exist', $fileId, $objectType));
+            }
+
+            $data = $this->validateForm($fileUpdateForm)->getData();
+
+            $event = new FileCreateOrUpdateEvent(null);
+
+            if (array_key_exists('visible', $data)) {
+                $file->setVisible($data['visible'] ? 1 : 0);
+            }
+
+            $file->setLocale($data['locale']);
+
+            if (array_key_exists('title', $data)) {
+                $file->setTitle($data['title']);
+            }
+            if (array_key_exists('chapo', $data)) {
+                $file->setChapo($data['chapo']);
+            }
+            if (array_key_exists('description', $data)) {
+                $file->setDescription($data['description']);
+            }
+            if (array_key_exists('postscriptum', $data)) {
+                $file->setPostscriptum($data['postscriptum']);
+            }
+
+            if (isset($data['file'])) {
+                $file->setFile($data['file']);
+            }
+
+            $event->setModel($file);
+            $event->setOldModel($oldFile);
+
+            $files = $this->getRequest()->files;
+
+            $fileForm = $files->get($fileUpdateForm->getName());
+
+            if (isset($fileForm['file'])) {
+                $event->setUploadedFile($fileForm['file']);
+            }
+
+            $this->dispatch($eventName, $event);
+
+            $fileUpdated = $event->getModel();
+
+            $this->adminLogAppend(
+                AdminResources::MODULE,
+                AccessManager::UPDATE,
+                sprintf('%s with Ref %s (ID %d) modified', ucfirst($objectType), $fileUpdated->getTitle(), $fileUpdated->getId())
+            );
+
+            if ($this->getRequest()->get('save_mode') == 'close') {
+                if ($objectType == 'document') {
+                    $tab = 'documents';
+                } else {
+                    $tab = 'images';
+                }
+
+                return $this->generateRedirect(
+                    URL::getInstance()->absoluteUrl($file->getRedirectionUrl(), ['current_tab' => $tab])
+                );
+            } else {
+                return $this->generateSuccessRedirect($fileUpdateForm);
+            }
+        } catch (FormValidationException $e) {
+            $message = sprintf('Please check your input: %s', $e->getMessage());
+        } catch (PropelException $e) {
+            $message = $e->getMessage();
+        } catch (\Exception $e) {
+            $message = sprintf('Sorry, an error occurred: %s', $e->getMessage().' '.$e->getFile());
+        }
+
+        if ($message !== false) {
+            Tlog::getInstance()->error(sprintf('Error during %s editing : %s.', $objectType, $message));
+
+            $fileUpdateForm->setErrorMessage($message);
+
+            $this->getParserContext()
+                ->addForm($fileUpdateForm)
+                ->setGeneralError($message);
+        }
+
+        return $file;
     }
 }

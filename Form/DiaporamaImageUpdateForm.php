@@ -6,6 +6,8 @@
 
 namespace Diaporamas\Form;
 
+use Diaporamas\Form\Type\DiaporamaIdType;
+use Diaporamas\Form\Type\DiaporamaImageIdType;
 use Thelia\Form\Image\ImageModification;
 
 /**
@@ -19,5 +21,14 @@ class DiaporamaImageUpdateForm extends ImageModification
     public function getName()
     {
         return static::FORM_NAME;
+    }
+
+    public function buildForm()
+    {
+        parent::buildForm();
+        $this->formBuilder
+            ->add("id", DiaporamaImageIdType::TYPE_NAME)
+            ->add("diaporama_id", DiaporamaIdType::TYPE_NAME)
+        ;
     }
 }
