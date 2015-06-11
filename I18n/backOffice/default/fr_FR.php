@@ -39,14 +39,14 @@ return array(
         ),
     ),
 
-    // Diaporama types
-    'diaporama_type' => array(
-        'product' => 'produit',
-        'category' => 'rubrique',
-        'brand' => 'marque',
-        'folder' => 'dossier',
-        'content' => 'contenu',
+    'diaporama_images' => array(
+        'create' => array(
+        ),
+        'read' => array(
+        ),
+        'update' => array(
+        ),
+        'delete' => array(
+        ),
     ),
-
-
 );

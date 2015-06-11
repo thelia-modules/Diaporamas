@@ -7,6 +7,7 @@
 namespace Diaporamas\Controller;
 
 use Diaporamas\Controller\Base\DiaporamaImageController as BaseDiaporamaImageController;
+use Thelia\Core\Security\AccessManager;
 
 /**
  * Class DiaporamaImageController
@@ -14,4 +15,47 @@ use Diaporamas\Controller\Base\DiaporamaImageController as BaseDiaporamaImageCon
  */
 class DiaporamaImageController extends BaseDiaporamaImageController
 {
+    /**
+     * Load a object for modification, and display the edit template.
+     *
+     * @return \Thelia\Core\HttpFoundation\Response the response
+     */
+    public function updateAction()
+    {
+        // Check current user authorization
+        if (null !== $response = $this->checkAuth($this->resourceCode, $this->getModuleCode(), AccessManager::UPDATE)) {
+            return $response;
+        }
+
+//        // Load object if exist
+//        if (null !== $object = $this->getExistingObject()) {
+//            // Hydrate the form abd pass it to the parser
+//            $changeForm = $this->hydrateObjectForm($object);
+//
+//            // Pass it to the parser
+//            $this->getParserContext()->addForm($changeForm);
+//        }
+//
+//        // Render the edition template.
+//        return $this->renderEditionTemplate();
+
+        $image = $this->getExistingObject();
+
+        if (is_null($image)) {
+            return $this->pageNotFound();
+        }
+
+        $redirectUrl = $image->getRedirectionUrl();
+
+        return $this->render('diaporama-image-edit', array(
+            'diaporama_image_id' => $image->getId(),
+            'redirectUrl' => $redirectUrl,
+            'breadcrumb' => $image->getBreadcrumb(
+                $this->getRouter($this->getCurrentRouter()),
+                $this->container,
+                'images',
+                $this->getCurrentEditionLocale()
+            )
+        ));
+    }
 }

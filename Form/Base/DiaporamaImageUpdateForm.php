@@ -22,9 +22,6 @@ class DiaporamaImageUpdateForm extends ChildDiaporamaImageCreateForm
     {
         parent::buildForm();
 
-        $this->formBuilder
-            ->add("id", DiaporamaImageIdType::TYPE_NAME)
-            ->remove("visible")
-        ;
+        $this->formBuilder->add("id", DiaporamaImageIdType::TYPE_NAME);
     }
 }

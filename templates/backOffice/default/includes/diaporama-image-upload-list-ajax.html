@@ -22,7 +22,7 @@ Parameters:
                     <a class="image-toggle-btn btn btn-default btn-xs {if $VISIBLE}visibility-visible{/if}" href="{url path="/admin/module/Diaporamas/diaporama_image/$ID/toggle"}" data-error-message="{intl l='Please retry'}">
                         <span class="glyphicon glyphicon-eye-open"></span><span class="glyphicon glyphicon-eye-close"></span>
                     </a>
-                    <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/module/Diaporamas/diaporama_image/$ID/update"}" data-error-message="{intl l='Please retry'}">
+                    <a class="image-update-btn btn btn-default btn-xs" href="{url path="/admin/module/Diaporamas/diaporama_image/edit?diaporama_image_id={$ID}"}" data-error-message="{intl l='Please retry'}">
                         <span class="glyphicon glyphicon-edit"></span>
                     </a>
                     <a class="image-delete-btn btn btn-default btn-xs" id="image-{$ID}" href="{url path="/admin/module/Diaporamas/diaporama_image/delete/$ID"}" data-error-message="{intl l='Please retry'}">

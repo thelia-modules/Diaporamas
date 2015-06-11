@@ -49,7 +49,7 @@ class DiaporamaImageCreateForm extends BaseForm
     protected function addDiaporamaIdField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder->add("diaporama_id", "integer", array(
-            "label" => $this->translator->trans($this->readKey("diaporama_id", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label" => $this->trans($this->readKey("diaporama_id", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("diaporama_id", $fieldsIdKeys)],
             "required" => true,
             "constraints" => array(
@@ -62,8 +62,8 @@ class DiaporamaImageCreateForm extends BaseForm
 
     protected function addFileField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("file", "text", array(
-            "label" => $this->translator->trans($this->readKey("file", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+        $this->formBuilder->add('file', 'file', array(
+            "label" => $this->trans($this->readKey("file", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("file", $fieldsIdKeys)],
             "required" => true,
             "constraints" => array(
@@ -77,7 +77,7 @@ class DiaporamaImageCreateForm extends BaseForm
     protected function addVisibleField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder->add("visible", "checkbox", array(
-            "label" => $this->translator->trans($this->readKey("visible", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label" => $this->trans($this->readKey("visible", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("visible", $fieldsIdKeys)],
             "required" => false,
             "constraints" => array(
@@ -90,7 +90,7 @@ class DiaporamaImageCreateForm extends BaseForm
     protected function addTitleField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder->add("title", "text", array(
-            "label" => $this->translator->trans($this->readKey("title", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label" => $this->trans($this->readKey("title", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("title", $fieldsIdKeys)],
             "required" => false,
             "constraints" => array(
@@ -103,7 +103,7 @@ class DiaporamaImageCreateForm extends BaseForm
     protected function addDescriptionField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder->add("description", "textarea", array(
-            "label" => $this->translator->trans($this->readKey("description", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label" => $this->trans($this->readKey("description", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("description", $fieldsIdKeys)],
             "required" => false,
             "constraints" => array(
@@ -116,7 +116,7 @@ class DiaporamaImageCreateForm extends BaseForm
     protected function addChapoField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder->add("chapo", "textarea", array(
-            "label" => $this->translator->trans($this->readKey("chapo", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label" => $this->trans($this->readKey("chapo", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("chapo", $fieldsIdKeys)],
             "required" => false,
             "constraints" => array(
@@ -129,7 +129,7 @@ class DiaporamaImageCreateForm extends BaseForm
     protected function addPostscriptumField(array $translationKeys, array $fieldsIdKeys)
     {
         $this->formBuilder->add("postscriptum", "textarea", array(
-            "label" => $this->translator->trans($this->readKey("postscriptum", $translationKeys), [], Diaporamas::MESSAGE_DOMAIN),
+            "label" => $this->trans($this->readKey("postscriptum", $translationKeys)),
             "label_attr" => ["for" => $this->readKey("postscriptum", $fieldsIdKeys)],
             "required" => false,
             "constraints" => array(
@@ -155,7 +155,16 @@ class DiaporamaImageCreateForm extends BaseForm
 
     public function getTranslationKeys()
     {
-        return array();
+        return array(
+            "diaporama_id" => "diaporama_image.create.diaporama_id",
+            "file" => "diaporama_image.create.file",
+            "visible" => "diaporama_image.create.visible",
+            "position" => "diaporama_image.create.position",
+            "title" => "diaporama_image.create.title",
+            "description" => "diaporama_image.create.description",
+            "chapo" => "diaporama_image.create.chapo",
+            "postscriptum" => "diaporama_image.create.postscriptum",
+        );
     }
 
     public function getFieldsIdKeys()
@@ -170,5 +179,10 @@ class DiaporamaImageCreateForm extends BaseForm
             "chapo" => "diaporama_image_chapo",
             "postscriptum" => "diaporama_image_postscriptum",
         );
+    }
+
+    public function trans($key, array $parameters = array(), $domain = Diaporamas::BO_MESSAGE_DOMAIN)
+    {
+        return $this->translator->trans($key, $parameters, $domain);
     }
 }

@@ -6,26 +6,18 @@
 
 namespace Diaporamas\Form;
 
-use Diaporamas\Form\Base\DiaporamaImageUpdateForm as BaseDiaporamaImageUpdateForm;
+use Thelia\Form\Image\ImageModification;
 
 /**
  * Class DiaporamaImageUpdateForm
  * @package Diaporamas\Form
  */
-class DiaporamaImageUpdateForm extends BaseDiaporamaImageUpdateForm
+class DiaporamaImageUpdateForm extends ImageModification
 {
-    public function getTranslationKeys()
+    const FORM_NAME = "diaporama_image_update";
+
+    public function getName()
     {
-        return array(
-            "id" => "id",
-            "diaporama_id" => "diaporama_id",
-            "file" => "file",
-            "visible" => "visible",
-            "position" => "position",
-            "title" => "title",
-            "description" => "description",
-            "chapo" => "chapo",
-            "postscriptum" => "postscriptum",
-        );
+        return static::FORM_NAME;
     }
 }

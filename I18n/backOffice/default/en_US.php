@@ -39,12 +39,17 @@ return array(
         ),
     ),
 
-    // Diaporama types
-    'diaporama_type' => array(
-        'product' => 'product',
-        'category' => 'category',
-        'brand' => 'brand',
-        'folder' => 'folder',
-        'content' => 'content',
+    'diaporama_images' => array(
+        'create' => array(
+            'dialog_title' => 'Create a diaporama image',
+            'title' => 'Title',
+            'title.placeholder' => 'The image Title',
+        ),
+        'read' => array(
+        ),
+        'update' => array(
+        ),
+        'delete' => array(
+        ),
     ),
 );

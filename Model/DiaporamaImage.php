@@ -10,19 +10,24 @@ use Diaporamas\Diaporamas;
 use Diaporamas\Form\DiaporamaImageUpdateForm;
 use Diaporamas\Model\Base\DiaporamaImage as BaseDiaporamaImage;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Router;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Core\Translation\Translator;
 use Thelia\Files\FileModelInterface;
 use Thelia\Files\FileModelParentInterface;
 use Thelia\Form\BaseForm;
+use Thelia\Model\Breadcrumb\BreadcrumbInterface;
 use Thelia\Model\Tools\ModelEventDispatcherTrait;
 use Thelia\Model\Tools\PositionManagementTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Thelia\Tools\URL;
 
 /**
  * Class DiaporamaImage
  * @package Diaporamas\Model
  */
-class DiaporamaImage extends BaseDiaporamaImage implements FileModelInterface
+class DiaporamaImage extends BaseDiaporamaImage implements FileModelInterface, BreadcrumbInterface
 {
     use ModelEventDispatcherTrait;
     use PositionManagementTrait;
@@ -112,5 +117,27 @@ class DiaporamaImage extends BaseDiaporamaImage implements FileModelInterface
     public function getQueryInstance()
     {
         return DiaporamaImageQuery::create();
+    }
+
+    /**
+     * Create a breadcrumb from the current object, that will be displayed to the file management UI
+     *
+     * @param Router $router the router where to find routes
+     * @param ContainerInterface $container the container
+     * @param string $tab the tab to return to (probably 'image' or 'document')
+     * @param string $locale the current locale
+     *
+     * @return array an array of (label => URL)
+     */
+    public function getBreadcrumb(Router $router, ContainerInterface $container, $tab, $locale)
+    {
+        $translator = Translator::getInstance();
+        $breadcrumb = [
+            $translator->trans('Home') => $router->generate('admin.home.view', [], Router::ABSOLUTE_URL),
+            $translator->trans('Diaporamas') => URL::getInstance()->absoluteUrl('/admin/module/Diaporamas/diaporama'),
+            $translator->trans('Diaporama') => $this->getRedirectionUrl(),
+        ];
+
+        return $breadcrumb;
     }
 }

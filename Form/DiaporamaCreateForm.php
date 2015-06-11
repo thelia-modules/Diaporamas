@@ -88,8 +88,6 @@ class DiaporamaCreateForm extends BaseForm
         return array(
             'title' => "diaporama_title",
             'shortcode' => "diaporama_shortcode",
-            'diaporama_type_id' => "diaporama_diaporama_type_id",
-            'entity_id' => "diaporama_entity_id",
         );
     }
 
@@ -98,8 +96,6 @@ class DiaporamaCreateForm extends BaseForm
         return array(
             'title' => 'diaporama.create.title',
             'shortcode' => 'diaporama.create.shortcode',
-            'diaporama_type_id' => 'diaporama.create.diaporama_type',
-            'entity_id' => 'diaporama.create.entity_id',
         );
     }
 

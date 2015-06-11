@@ -6,7 +6,6 @@
 
 namespace Diaporamas\Loop;
 
-use Diaporamas\Loop\Base\DiaporamaImage as BaseDiaporamaImageLoop;
 use Diaporamas\Model\DiaporamaImageQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;

@@ -6,20 +6,20 @@
 
 namespace Diaporamas\Form;
 
-use Diaporamas\Form\Base\DiaporamaUpdateForm as BaseDiaporamaUpdateForm;
+use Diaporamas\Form\DiaporamaCreateForm;
+use Diaporamas\Form\Type\DiaporamaIdType;
 
 /**
  * Class DiaporamaUpdateForm
  * @package Diaporamas\Form
  */
-class DiaporamaUpdateForm extends BaseDiaporamaUpdateForm
+class DiaporamaUpdateForm extends DiaporamaCreateForm
 {
-    public function getTranslationKeys()
+    const FORM_NAME = "diaporama_update";
+
+    public function buildForm()
     {
-        return array(
-            "id" => "id",
-            "title" => "title",
-            "shortcode" => "shortcode",
-        );
+        parent::buildForm();
+        $this->formBuilder->add("id", DiaporamaIdType::TYPE_NAME);
     }
 }
