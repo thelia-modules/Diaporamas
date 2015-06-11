@@ -27,8 +27,9 @@
     <route id="diaporamas.diaporama_image.edit" path="/admin/module/Diaporamas/diaporama_image/edit" methods="post">
         <default key="_controller">Diaporamas:DiaporamaImage:processUpdate</default>
     </route>
-    <route id="diaporamas.diaporama_image.delete" path="/admin/module/Diaporamas/diaporama_image/delete" methods="post">
-        <default key="_controller">Diaporamas:DiaporamaImage:delete</default>
+    <route id="diaporamas.diaporama_image.delete" path="/admin/module/Diaporamas/diaporama_image/delete/{imageId}" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaImage:deleteImage</default>
+        <requirement key="imageId">\d+</requirement>
     </route>
     <route id="diaporamas.diaporama_image.update_position" path="/admin/module/Diaporamas/diaporama_image/updatePosition" methods="get">
         <default key="_controller">Diaporamas:DiaporamaImage:updatePosition</default>

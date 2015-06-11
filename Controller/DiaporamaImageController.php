@@ -7,8 +7,10 @@
 namespace Diaporamas\Controller;
 
 use Diaporamas\Controller\Base\DiaporamaImageController as BaseDiaporamaImageController;
+use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Event\DiaporamaImageEvent;
 use Diaporamas\Model\DiaporamaImage;
+use Diaporamas\Model\DiaporamaImageQuery;
 use Propel\Runtime\Exception\PropelException;
 use Thelia\Core\Event\File\FileCreateOrUpdateEvent;
 use Thelia\Core\Event\TheliaEvents;
@@ -127,5 +129,24 @@ class DiaporamaImageController extends BaseDiaporamaImageController
         }
 
         return $file;
+    }
+
+    public function deleteImageAction($imageId)
+    {
+        // Check current user authorization
+        if (null !== $response = $this->checkAuth($this->resourceCode, $this->getModuleCode(), AccessManager::DELETE)) {
+            return $response;
+        }
+
+        try {
+            $diaporama_image = DiaporamaImageQuery::create()->findPk($imageId);
+            $event = new DiaporamaImageEvent($imageId);
+            $event->setId($imageId);
+            $this->dispatch($this->deleteEventIdentifier, $event);
+            $this->performAdditionalDeleteAction($event);
+            return $this->generateRedirect($diaporama_image->getRedirectionUrl());
+        } catch (\Exception $e) {
+            return $this->renderAfterDeleteError($e);
+        }
     }
 }
