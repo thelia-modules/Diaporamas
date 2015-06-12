@@ -14,4 +14,5 @@ use Diaporamas\Event\Base\DiaporamaEvents as BaseDiaporamaEvents;
  */
 class DiaporamaEvents extends BaseDiaporamaEvents
 {
+    const DIAPORAMA_HTML = 'diaporamas.diaporama.html';
 }

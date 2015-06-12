@@ -9,11 +9,14 @@ namespace Diaporamas\Controller;
 use Diaporamas\Controller\Base\DiaporamaController as BaseDiaporamaController;
 use Diaporamas\Diaporamas;
 use Diaporamas\Event\DiaporamaEvent;
+use Diaporamas\Event\DiaporamaEvents;
 use Diaporamas\Loop\DiaporamaImage as DiaporamaImageLoop;
 use Diaporamas\Model\Diaporama;
 use Diaporamas\Model\DiaporamaImage;
 use Diaporamas\Model\DiaporamaImageQuery;
 use Thelia\Core\HttpFoundation\JsonResponse;
+use Thelia\Core\HttpFoundation\Request;
+use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -51,6 +54,16 @@ class DiaporamaController extends BaseDiaporamaController
     {
         $width = $this->getRequest()->query->get('width');
         $height = $this->getRequest()->query->get('height');
+
+        $event = new DiaporamaEvent();
+        $event->__set('image_width', $width);
+        $event->__set('image_height', $height);
+        $this->dispatch(DiaporamaEvents::DIAPORAMA_HTML, $event);
+        return new Response($event->__get('diaporama_html'));
+    }
+
+    public function doGetDiaporamaHtmlAction($shortcode, $width, $height)
+    {
         return $this->render('diaporama-html', array(
             'shortcode' => $shortcode,
             'width' => intval($width),

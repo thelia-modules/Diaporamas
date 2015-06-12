@@ -12,8 +12,9 @@
         <loop name="diaporama-image" class="Diaporamas\Loop\DiaporamaImage"/>
     </loops>
     <services>
-        <service id="action.diaporamas.diaporama_table" class="Diaporamas\Action\DiaporamaAction">
+        <service id="action.diaporamas.diaporama_table" class="Diaporamas\Action\DiaporamaAction" scope="request">
             <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="thelia.parser" />
         </service>
         <service id="diaporamas.form.type.diaporama_id" class="Diaporamas\Form\Type\DiaporamaIdType">
             <argument id="thelia.translator" type="service"/>

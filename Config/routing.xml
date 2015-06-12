@@ -65,7 +65,7 @@
     </route>
 
     <!-- Getting shortcode HTML -->
-    <route id="diporamas.diaporama.html" path="/admin/module/Diaporamas/diaporama/{shortcode}/html">
+    <route id="diporamas.diaporama.html" path="/admin/module/Diaporamas/diaporama/{shortcode}/html" methods="get">
         <default key="_controller">Diaporamas:Diaporama:getDiaporamaHtml</default>
         <requirement key="shortcode">[\w\-]{1,32}</requirement>
     </route>

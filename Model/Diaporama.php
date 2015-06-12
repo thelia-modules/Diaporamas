@@ -14,13 +14,15 @@ use Diaporamas\Model\Base\Diaporama as BaseDiaporama;
  */
 class Diaporama extends BaseDiaporama
 {
-    const SHORTCODE_OPENING_TAG = '[£';
+    const SHORTCODE_OPENING_TAG = '[£ ';
 
-    const SHORTCODE_CLOSING_TAG = '£]';
+    const SHORTCODE_CLOSING_TAG = ' £]';
 
     const SHORTCODE_REGEX = '/^[\w\-]{1,32}$/';
 
-    const SHORTCODETAG_REGEX = '/\[£[\w\-]{1,32}£\]/';
+    const SHORTCODETAG_REGEX = '/\[£\s[\w\-]{1,32}\s£\]/';
+
+    const SHORTCODETAG_HTMLENTITIES_REGEX = '/\[&pound;\s[\w\-]{1,32}\s&pound;\]/';
 
     /**
      * Retrieving a diaporama with its shortcode

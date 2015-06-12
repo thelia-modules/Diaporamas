@@ -7,16 +7,25 @@
 namespace Diaporamas\Action;
 
 use Diaporamas\Action\Base\DiaporamaAction as  BaseDiaporamaAction;
+use Diaporamas\Controller\DiaporamaController;
 use Diaporamas\Controller\DiaporamaImageFileController;
+use Diaporamas\Event\DiaporamaEvent;
+use Diaporamas\Event\DiaporamaEvents;
 use Diaporamas\Event\DiaporamaImageEvent;
 use Diaporamas\Event\DiaporamaImageEvents;
 use Diaporamas\Model\Diaporama;
+use Symfony\Component\DependencyInjection\Container;
 use Thelia\Core\Event\Brand\BrandEvent;
 use Thelia\Core\Event\Category\CategoryEvent;
 use Thelia\Core\Event\Content\ContentEvent;
 use Thelia\Core\Event\Folder\FolderEvent;
 use Thelia\Core\Event\Product\ProductEvent;
 use Thelia\Core\Event\TheliaEvents;
+use Thelia\Core\HttpFoundation\Request;
+use Thelia\Core\HttpFoundation\Response;
+use Thelia\Core\Template\ParserInterface;
+use Thelia\Core\Template\TemplateHelper;
+use Thelia\Tools\URL;
 
 /**
  * Class DiaporamaAction
@@ -24,6 +33,12 @@ use Thelia\Core\Event\TheliaEvents;
  */
 class DiaporamaAction extends BaseDiaporamaAction
 {
+    protected $parser;
+
+    public function __construct(ParserInterface $parser)
+    {
+        $this->parser = $parser;
+    }
 
     /**
      * Returns an array of event names this subscriber wants to listen to.
@@ -50,25 +65,38 @@ class DiaporamaAction extends BaseDiaporamaAction
         $subscribedEvents = parent::getSubscribedEvents();
 
         $newSubscriptions = array(
-            TheliaEvents::BEFORE_CREATEPRODUCT => array('updateProductDescription', 128),
-            TheliaEvents::BEFORE_UPDATEPRODUCT => array('updateProductDescription', 128),
-            TheliaEvents::BEFORE_CREATECATEGORY => array('updateCategoryDescription', 128),
-            TheliaEvents::BEFORE_UPDATECATEGORY => array('updateCategoryDescription', 128),
-            TheliaEvents::BEFORE_CREATEFOLDER => array('updateFolderDescription', 128),
-            TheliaEvents::BEFORE_UPDATEFOLDER => array('updateFolderDescription', 128),
-            TheliaEvents::BEFORE_CREATECONTENT => array('updateContentDescription', 128),
-            TheliaEvents::BEFORE_UPDATECONTENT => array('updateContentDescription', 128),
-            TheliaEvents::BEFORE_CREATEBRAND => array('updateBrandDescription', 128),
-            TheliaEvents::BEFORE_UPDATEBRAND => array('updateBrandDescription', 128),
+            TheliaEvents::PRODUCT_CREATE => array('updateProductDescription', 150),
+            TheliaEvents::PRODUCT_UPDATE => array('updateProductDescription', 150),
+            TheliaEvents::CATEGORY_CREATE => array('updateCategoryDescription', 150),
+            TheliaEvents::CATEGORY_UPDATE => array('updateCategoryDescription', 150),
+            TheliaEvents::FOLDER_CREATE => array('updateFolderDescription', 150),
+            TheliaEvents::FOLDER_UPDATE => array('updateFolderDescription', 150),
+            TheliaEvents::CONTENT_CREATE => array('updateContentDescription', 150),
+            TheliaEvents::CONTENT_UPDATE => array('updateContentDescription', 150),
+            TheliaEvents::BRAND_CREATE => array('updateBrandDescription', 150),
+            TheliaEvents::BRAND_UPDATE => array('updateBrandDescription', 150),
 //            TheliaEvents::BEFORE_CREATE_COUPON => array('updateCouponDescription', 128),
 //            TheliaEvents::BEFORE_UPDATE_COUPON => array('updateCouponDescription', 128),
 //            TheliaEvents::BEFORE_CREATESALE => array('updateSaleDescription', 128),
 //            TheliaEvents::BEFORE_UPDATESALE => array('updateSaleDescription', 128),
-            DiaporamaImageEvents::CREATE => array('updateDiaporamaImageDescription', 255),
-            DiaporamaImageEvents::UPDATE => array('updateDiaporamaImageDescription', 255),
+//            DiaporamaImageEvents::CREATE => array('updateDiaporamaImageDescription', 150),
+//            DiaporamaImageEvents::UPDATE => array('updateDiaporamaImageDescription', 150),
+            DiaporamaEvents::DIAPORAMA_HTML => array('getDiaporamaDescription', 128)
         );
 
         return array_merge($subscribedEvents, $newSubscriptions);
+    }
+
+    public function getDiaporamaDescription(DiaporamaEvent $event)
+    {
+        $event->__set(
+            'diaporama_html',
+            $this->getShortcodeHTML(
+                $event->getShortcode(),
+                $event->__get('image_width'),
+                $event->__get('image_height')
+            )
+        );
     }
 
     protected function updateDescription($description)
@@ -76,62 +104,70 @@ class DiaporamaAction extends BaseDiaporamaAction
         $shortcodeTags = array();
 
         if (preg_match_all(Diaporama::SHORTCODETAG_REGEX, $description, $shortcodeTags)) {
-            $shortcodeTags = array_unique($shortcodeTags);
-
-            $diaporamaHtmlCodes = array();
-
-            foreach ($shortcodeTags as $shortcodeTag) {
-                sscanf($shortcodeTag, "[£%s£]", $shortcode);
-                $diaporamaHtmlCodes[$shortcode] = $this->getShortcodeHTML($shortcode);
-            }
-
-            return str_replace(array_keys($diaporamaHtmlCodes), array_values($diaporamaHtmlCodes), $description);
+            $tagFormat = "[£ %s £]";
+        } elseif (preg_match_all(Diaporama::SHORTCODETAG_HTMLENTITIES_REGEX, $description, $shortcodeTags)) {
+            $tagFormat = "[&pound; %s &pound;]";
         } else {
             return $description;
         }
+
+        $shortcodeTags = array_unique($shortcodeTags[0]);
+
+        $diaporamaHtmlCodes = array();
+
+        foreach ($shortcodeTags as $shortcodeTag) {
+            sscanf($shortcodeTag, $tagFormat, $shortcode);
+            $diaporamaHtmlCodes[$shortcodeTag] = $this->getShortcodeHTML($shortcode, 200, 100);
+        }
+
+        return str_replace(array_keys($diaporamaHtmlCodes), array_values($diaporamaHtmlCodes), $description);
     }
 
-    protected function getShortcodeHTML($shortcode)
+    protected function getShortcodeHTML($shortcode, $width, $height)
     {
-        $c = new DiaporamaImageFileController();
-        $response = $c;
+        $this->parser->setTemplateDefinition(
+            TemplateHelper::getInstance()->getActiveAdminTemplate()
+        );
+        return $this->parser->render(
+            'diaporama-html.html',
+            array(
+                'shortcode' => $shortcode,
+                'width' => $width,
+                'height' => $height
+            )
+        );
     }
 
     public function updateProductDescription(ProductEvent $event)
     {
-        $product = $event->getProduct();
-        $product->setDescription($this->updateDescription($product->getDescription()));
+        $event->setDescription($this->updateDescription($event->getDescription()));
     }
 
     public function updateCategoryDescription(CategoryEvent $event)
     {
-        $category = $event->getCategory();
-        $category->setDescription($this->updateDescription($category->getDescription()));
+        $event->setDescription($this->updateDescription($event->getDescription()));
     }
 
     public function updateFolderDescription(FolderEvent $event)
     {
-        $folder = $event->getFolder();
-        $folder->setDescription($this->updateDescription($folder->getDescription()));
+        $event->setDescription($this->updateDescription($event->getDescription()));
     }
 
     public function updateContentDescription(ContentEvent $event)
     {
-        $content = $event->getContent();
-        $content->setDescription($this->updateDescription($content->getDescription()));
+        $event->setDescription($this->updateDescription($event->getDescription()));
     }
 
     public function updateBrandDescription(BrandEvent $event)
     {
-        $brand = $event->getBrand();
-        $brand->setDescription($this->updateDescription($brand->getDescription()));
+        $event->setDescription($this->updateDescription($event->getDescription()));
     }
 
-    public function updateDiaporamaImageDescription(DiaporamaImageEvent $event)
-    {
-        $diaporamaImage = $event->getDiaporamaImage();
-        $diaporamaImage->setDescription($this->updateDescription($diaporamaImage->getDescription()));
-    }
+//    public function updateDiaporamaImageDescription(DiaporamaImageEvent $event)
+//    {     // TODO : test
+//        $diaporamaImage = $event->getDiaporamaImage();
+//        $event->setDescription($this->updateDescription($event->getDescription()));
+//    }
 
 //    public function updateSaleDescription(SaleEvent $event)
 //    { // TODO
