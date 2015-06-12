@@ -19,6 +19,9 @@
             <parameter name="log_created_at" value="true" />
             <parameter name="log_created_by" value="true" />
         </behavior>
+        <behavior name="validate">
+            <parameter name="shortcodeRule" value="{column: shortcode, validator: Regex, options: {pattern: &quot;/^[\w\-]{1,32}$/&quot;}}" />
+        </behavior>
     </table>
 
     <!-- Diaporama images tables -->

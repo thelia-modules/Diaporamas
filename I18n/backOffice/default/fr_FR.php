@@ -7,6 +7,7 @@ return array(
             'title.placeholder' => 'Titre du diaporama',
             'shortcode' => 'Shortcode',
             'shortcode.placeholder' => 'Shortcode',
+            'shortcode.regex_fail' => 'Le shortcode doit contenir entre 1 et 32 lettres, chiffres, tirets bas ("_") ou tirets ("-")',
             'diaporama_type' => 'Diaporama pour',
             'entity_id' => 'Entité',
             'invalid_entity' => '%entity non valide',
@@ -49,4 +50,6 @@ return array(
         'delete' => array(
         ),
     ),
+
+    'Or' => 'Ou',
 );

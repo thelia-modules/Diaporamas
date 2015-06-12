@@ -7,9 +7,11 @@
 namespace Diaporamas\Form;
 
 use Diaporamas\Diaporamas;
+use Diaporamas\Model\Diaporama;
 use Diaporamas\Model\DiaporamaTypeQuery;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Thelia\Form\BaseForm;
 
@@ -66,6 +68,11 @@ class DiaporamaCreateForm extends BaseForm
             "required" => true,
             "constraints" => array(
                 new NotBlank(),
+                new Regex(array(
+                    'pattern' => Diaporama::SHORTCODE_REGEX,
+                    'match' => true,
+                    'message' => $this->trans('diaporama.create.shortcode.regex_fail'),
+                )),
             ),
             "attr" => array(
                 'placeholder' => $this->trans('diaporama.create.shortcode.placeholder'),

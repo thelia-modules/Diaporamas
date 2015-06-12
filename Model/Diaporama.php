@@ -14,4 +14,30 @@ use Diaporamas\Model\Base\Diaporama as BaseDiaporama;
  */
 class Diaporama extends BaseDiaporama
 {
+    const SHORTCODE_OPENING_TAG = '[£';
+
+    const SHORTCODE_CLOSING_TAG = '£]';
+
+    const SHORTCODE_REGEX = '/^[\w\-]{1,32}$/';
+
+    const SHORTCODETAG_REGEX = '/\[£[\w\-]{1,32}£\]/';
+
+    /**
+     * Retrieving a diaporama with its shortcode
+     * @param string $shortcode Diaporama shortcode
+     * @return Diaporama|null The corresponding diaporama with the [£$shortcode£] shortcode if it exists, null otherwise
+     */
+    public static function getByShortcode($shortcode)
+    {
+        return DiaporamaQuery::create()->findOneByShortcode($shortcode);
+    }
+
+    /**
+     * Building the shortcode tag
+     * @return string [£shortcode£]
+     */
+    public function getShortcodeTag()
+    {
+        return self::SHORTCODE_OPENING_TAG.$this->shortcode.self::SHORTCODE_CLOSING_TAG;
+    }
 }
