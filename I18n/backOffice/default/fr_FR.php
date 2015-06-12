@@ -21,7 +21,8 @@ return array(
             'see' => 'Voir le diaporama',
             'edit' => 'Modifier le diaporama',
             'delete' => 'Supprimer le diaporama',
-            'no_diaporama' => 'Il n\'y a aucun diaporama.'
+            'no_diaporama' => 'Il n\'y a aucun diaporama.',
+            'no_shortcode %shortcode' => 'Il n\'y a aucun diaporama avec le shortcode [£%shortcode£].',
         ),
         'update' => array(
             'title' => 'Modification de diaporama',
@@ -38,6 +39,7 @@ return array(
             'title' => 'Supprimer un diaporama',
             'invalid_diaporama %diaporama_id' => 'Il n\'existe pas de diaporama dont l\'identifiant est %diaporama_id.',
         ),
+        'menu_title' => 'Diaporamas',
     ),
 
     'diaporama_images' => array(

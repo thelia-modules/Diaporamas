@@ -21,7 +21,8 @@ return array(
             'see' => 'See the diaporama',
             'edit' => 'Edit the diaporama',
             'delete' => 'Delete the diaporama',
-            'no_diaporama' => 'There is no diaporama.'
+            'no_diaporama' => 'There is no diaporama.',
+            'no_shortcode %shortcode' => 'There is no diaporama with the shortcode [£%shortcode£].',
         ),
         'update' => array(
             'title' => 'Diaporama edit',
@@ -38,6 +39,7 @@ return array(
             'title' => 'Delete a diaporama',
             'invalid_diaporama %diaporama_id' => 'A diaporama whose ID is %diaporama_id does not exist.',
         ),
+        'menu_title' => 'Diaporamas',
     ),
 
     'diaporama_images' => array(

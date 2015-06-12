@@ -7,6 +7,7 @@
 namespace Diaporamas\Controller;
 
 use Diaporamas\Controller\Base\DiaporamaController as BaseDiaporamaController;
+use Diaporamas\Diaporamas;
 use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Loop\DiaporamaImage as DiaporamaImageLoop;
 use Diaporamas\Model\Diaporama;
@@ -62,7 +63,13 @@ class DiaporamaController extends BaseDiaporamaController
         $diaporama = Diaporama::getByShortcode($shortcode);
 
         if (is_null($diaporama)) {
-            $result = array('error' => 'TODO');
+            $result = array(
+                'error' => $this->translator->trans(
+                    'diaporama.read.no_shortcode %shortcode',
+                    array('shortcode' => $shortcode),
+                    Diaporamas::BO_MESSAGE_DOMAIN
+                )
+            );
         } else {
             $result = array(
                 'id' => $diaporama->getId(),
@@ -80,21 +87,21 @@ class DiaporamaController extends BaseDiaporamaController
                 'source_id' => $diaporama->getId(),
                 'order' => 'manual',
             ));
+            /** @var DiaporamaImageQuery $query */
             $query = $loop->buildModelCriteria();
             $res= $query->find();
-
             $diaporamaImagesRows = $loop->parseResults(new LoopResult($res));
 
             /** @var LoopResultRow $row */
             foreach ($diaporamaImagesRows as $row) {
-                $result[] = array(
+                $result['images'][] = array(
                     'id' => $row->get('ID'),
                     'position' => $row->get('POSITION'),
                     'visible' => boolval($row->get('VISIBLE')),
-                    'title' => is_null($row->get('TITLE')) ? $row->get('TITLE') : '',
-                    'chapo' => is_null($row->get('CHAPO')) ? $row->get('CHAPO') : '',
-                    'description' => is_null($row->get('DESCRIPTION')) ? $row->get('DESCRIPTION') : '',
-                    'postscriptum' =>is_null($row->get('POSTSCRIPTUM')) ? $row->get('POSTSCRIPTUM') : '',
+                    'title' => is_null($row->get('TITLE')) ? '' : $row->get('TITLE'),
+                    'chapo' => is_null($row->get('CHAPO')) ? '' : $row->get('CHAPO'),
+                    'description' => is_null($row->get('DESCRIPTION')) ? '' : $row->get('DESCRIPTION'),
+                    'postscriptum' =>is_null($row->get('POSTSCRIPTUM')) ? '' : $row->get('POSTSCRIPTUM'),
                     'image_url' => $row->get('IMAGE_URL'),
                     'processing_error' => boolval($row->get('PROCESSING_ERROR')),
                 );
