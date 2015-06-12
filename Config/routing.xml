@@ -65,13 +65,13 @@
     </route>
 
     <!-- Getting shortcode HTML -->
-    <route id="diporamas.image.save-ajax" path="/admin/module/Diaporamas/diaporama/{shortcode}/html">
+    <route id="diporamas.diaporama.html" path="/admin/module/Diaporamas/diaporama/{shortcode}/html">
         <default key="_controller">Diaporamas:Diaporama:getDiaporamaHtml</default>
         <requirement key="shortcode">[\w\-]{1,32}</requirement>
     </route>
 
     <!-- Getting diaporama data per shortcode -->
-    <route id="diporamas.image.save-ajax" path="/admin/module/Diaporamas/diaporama/{shortcode}/data">
+    <route id="diporamas.diaporama.data" path="/admin/module/Diaporamas/diaporama/{shortcode}/data">
         <default key="_controller">Diaporamas:Diaporama:getDiaporamaData</default>
         <requirement key="shortcode">[\w\-]{1,32}</requirement>
     </route>
