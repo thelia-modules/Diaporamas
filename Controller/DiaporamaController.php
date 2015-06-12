@@ -8,9 +8,14 @@ namespace Diaporamas\Controller;
 
 use Diaporamas\Controller\Base\DiaporamaController as BaseDiaporamaController;
 use Diaporamas\Event\DiaporamaEvent;
-use Diaporamas\Model\DiaporamaTypeQuery;
+use Diaporamas\Loop\DiaporamaImage as DiaporamaImageLoop;
+use Diaporamas\Model\Diaporama;
+use Diaporamas\Model\DiaporamaImage;
+use Diaporamas\Model\DiaporamaImageQuery;
 use Thelia\Core\HttpFoundation\JsonResponse;
 use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Template\Element\LoopResult;
+use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Form\Exception\FormValidationException;
 
 /**
@@ -39,5 +44,63 @@ class DiaporamaController extends BaseDiaporamaController
         } catch (\Exception $e) {
             return $this->renderAfterDeleteError($e);
         }
+    }
+
+    public function getDiaporamaHtmlAction($shortcode)
+    {
+        $width = $this->getRequest()->query->get('width');
+        $height = $this->getRequest()->query->get('height');
+        return $this->render('diaporama-html', array(
+            'shortcode' => $shortcode,
+            'width' => intval($width),
+            'height' => intval($height),
+        ));
+    }
+
+    public function getDiaporamaDataAction($shortcode)
+    {
+        $diaporama = Diaporama::getByShortcode($shortcode);
+
+        if (is_null($diaporama)) {
+            $result = array('error' => 'TODO');
+        } else {
+            $result = array(
+                'id' => $diaporama->getId(),
+                'title' => $diaporama->getTitle(),
+                'shortcode' => $diaporama->getShortcode(),
+                'created_at' => $diaporama->getCreatedAt(),
+                'updated_at' => $diaporama->getUpdatedAt(),
+                'locale' => $diaporama->getLocale(),
+                'images' => array(),
+            );
+
+            // Data for images
+            $loop = new DiaporamaImageLoop($this->getContainer());
+            $loop->initializeArgs(array(
+                'source_id' => $diaporama->getId(),
+                'order' => 'manual',
+            ));
+            $query = $loop->buildModelCriteria();
+            $res= $query->find();
+
+            $diaporamaImagesRows = $loop->parseResults(new LoopResult($res));
+
+            /** @var LoopResultRow $row */
+            foreach ($diaporamaImagesRows as $row) {
+                $result[] = array(
+                    'id' => $row->get('ID'),
+                    'position' => $row->get('POSITION'),
+                    'visible' => boolval($row->get('VISIBLE')),
+                    'title' => is_null($row->get('TITLE')) ? $row->get('TITLE') : '',
+                    'chapo' => is_null($row->get('CHAPO')) ? $row->get('CHAPO') : '',
+                    'description' => is_null($row->get('DESCRIPTION')) ? $row->get('DESCRIPTION') : '',
+                    'postscriptum' =>is_null($row->get('POSTSCRIPTUM')) ? $row->get('POSTSCRIPTUM') : '',
+                    'image_url' => $row->get('IMAGE_URL'),
+                    'processing_error' => boolval($row->get('PROCESSING_ERROR')),
+                );
+            }
+        }
+
+        return new JsonResponse($result);
     }
 }

@@ -7,6 +7,16 @@
 namespace Diaporamas\Action;
 
 use Diaporamas\Action\Base\DiaporamaAction as  BaseDiaporamaAction;
+use Diaporamas\Controller\DiaporamaImageFileController;
+use Diaporamas\Event\DiaporamaImageEvent;
+use Diaporamas\Event\DiaporamaImageEvents;
+use Diaporamas\Model\Diaporama;
+use Thelia\Core\Event\Brand\BrandEvent;
+use Thelia\Core\Event\Category\CategoryEvent;
+use Thelia\Core\Event\Content\ContentEvent;
+use Thelia\Core\Event\Folder\FolderEvent;
+use Thelia\Core\Event\Product\ProductEvent;
+use Thelia\Core\Event\TheliaEvents;
 
 /**
  * Class DiaporamaAction
@@ -14,4 +24,124 @@ use Diaporamas\Action\Base\DiaporamaAction as  BaseDiaporamaAction;
  */
 class DiaporamaAction extends BaseDiaporamaAction
 {
+
+    /**
+     * Returns an array of event names this subscriber wants to listen to.
+     *
+     * The array keys are event names and the value can be:
+     *
+     *  * The method name to call (priority defaults to 0)
+     *  * An array composed of the method name to call and the priority
+     *  * An array of arrays composed of the method names to call and respective
+     *    priorities, or 0 if unset
+     *
+     * For instance:
+     *
+     *  * array('eventName' => 'methodName')
+     *  * array('eventName' => array('methodName', $priority))
+     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2'))
+     *
+     * @return array The event names to listen to
+     *
+     * @api
+     */
+    public static function getSubscribedEvents()
+    {
+        $subscribedEvents = parent::getSubscribedEvents();
+
+        $newSubscriptions = array(
+            TheliaEvents::BEFORE_CREATEPRODUCT => array('updateProductDescription', 128),
+            TheliaEvents::BEFORE_UPDATEPRODUCT => array('updateProductDescription', 128),
+            TheliaEvents::BEFORE_CREATECATEGORY => array('updateCategoryDescription', 128),
+            TheliaEvents::BEFORE_UPDATECATEGORY => array('updateCategoryDescription', 128),
+            TheliaEvents::BEFORE_CREATEFOLDER => array('updateFolderDescription', 128),
+            TheliaEvents::BEFORE_UPDATEFOLDER => array('updateFolderDescription', 128),
+            TheliaEvents::BEFORE_CREATECONTENT => array('updateContentDescription', 128),
+            TheliaEvents::BEFORE_UPDATECONTENT => array('updateContentDescription', 128),
+            TheliaEvents::BEFORE_CREATEBRAND => array('updateBrandDescription', 128),
+            TheliaEvents::BEFORE_UPDATEBRAND => array('updateBrandDescription', 128),
+//            TheliaEvents::BEFORE_CREATE_COUPON => array('updateCouponDescription', 128),
+//            TheliaEvents::BEFORE_UPDATE_COUPON => array('updateCouponDescription', 128),
+//            TheliaEvents::BEFORE_CREATESALE => array('updateSaleDescription', 128),
+//            TheliaEvents::BEFORE_UPDATESALE => array('updateSaleDescription', 128),
+            DiaporamaImageEvents::CREATE => array('updateDiaporamaImageDescription', 255),
+            DiaporamaImageEvents::UPDATE => array('updateDiaporamaImageDescription', 255),
+        );
+
+        return array_merge($subscribedEvents, $newSubscriptions);
+    }
+
+    protected function updateDescription($description)
+    {
+        $shortcodeTags = array();
+
+        if (preg_match_all(Diaporama::SHORTCODETAG_REGEX, $description, $shortcodeTags)) {
+            $shortcodeTags = array_unique($shortcodeTags);
+
+            $diaporamaHtmlCodes = array();
+
+            foreach ($shortcodeTags as $shortcodeTag) {
+                sscanf($shortcodeTag, "[£%s£]", $shortcode);
+                $diaporamaHtmlCodes[$shortcode] = $this->getShortcodeHTML($shortcode);
+            }
+
+            return str_replace(array_keys($diaporamaHtmlCodes), array_values($diaporamaHtmlCodes), $description);
+        } else {
+            return $description;
+        }
+    }
+
+    protected function getShortcodeHTML($shortcode)
+    {
+        $c = new DiaporamaImageFileController();
+        $response = $c;
+    }
+
+    public function updateProductDescription(ProductEvent $event)
+    {
+        $product = $event->getProduct();
+        $product->setDescription($this->updateDescription($product->getDescription()));
+    }
+
+    public function updateCategoryDescription(CategoryEvent $event)
+    {
+        $category = $event->getCategory();
+        $category->setDescription($this->updateDescription($category->getDescription()));
+    }
+
+    public function updateFolderDescription(FolderEvent $event)
+    {
+        $folder = $event->getFolder();
+        $folder->setDescription($this->updateDescription($folder->getDescription()));
+    }
+
+    public function updateContentDescription(ContentEvent $event)
+    {
+        $content = $event->getContent();
+        $content->setDescription($this->updateDescription($content->getDescription()));
+    }
+
+    public function updateBrandDescription(BrandEvent $event)
+    {
+        $brand = $event->getBrand();
+        $brand->setDescription($this->updateDescription($brand->getDescription()));
+    }
+
+    public function updateDiaporamaImageDescription(DiaporamaImageEvent $event)
+    {
+        $diaporamaImage = $event->getDiaporamaImage();
+        $diaporamaImage->setDescription($this->updateDescription($diaporamaImage->getDescription()));
+    }
+
+//    public function updateSaleDescription(SaleEvent $event)
+//    { // TODO
+//        $diaporamaImage = $event->getDiaporamaImage();
+//        $diaporamaImage->setDescription($this->updateDescription($diaporamaImage->getDescription()));
+//    }
+//
+//    public function updateCouponDescription(CouponCreateOrUpdateEvent $event)
+//    { // TODO
+//        $diaporamaImage = $event->get();
+//        $diaporamaImage->setDescription($this->updateDescription($diaporamaImage->getDescription()));
+//    }
 }
