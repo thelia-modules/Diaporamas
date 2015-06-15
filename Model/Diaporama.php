@@ -42,4 +42,13 @@ class Diaporama extends BaseDiaporama
     {
         return self::SHORTCODE_OPENING_TAG.$this->shortcode.self::SHORTCODE_CLOSING_TAG;
     }
+
+    /**
+     * Retrieving diaporama's images
+     * @return array Diaporama's images.
+     */
+    public function getImages()
+    {
+        return DiaporamaImageQuery::create()->findByDiaporamaId($this->getId());
+    }
 }
