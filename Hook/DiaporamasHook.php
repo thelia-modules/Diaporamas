@@ -10,6 +10,7 @@ namespace Diaporamas\Hook;
 
 use Diaporamas\Diaporamas;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
+use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
 use Thelia\Core\Translation\Translator;
 use Thelia\Tools\URL;
@@ -22,5 +23,15 @@ class DiaporamasHook extends BaseHook
             'url' => URL::getInstance()->absoluteUrl('/admin/module/Diaporamas/diaporama'),
             'title' => Translator::getInstance()->trans('diaporama.menu_title', array(), Diaporamas::BO_MESSAGE_DOMAIN)
         ));
+    }
+
+    public function onMainContentBottom(HookRenderEvent $event)
+    {
+        //$event->add($this->render('diaporama-load.html'));
+    }
+
+    public function onMainJsInit(HookRenderEvent $event)
+    {
+        $event->add($this->render('diaporama-load.html'));
     }
 }

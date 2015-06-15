@@ -15,4 +15,5 @@ use Diaporamas\Event\Base\DiaporamaEvents as BaseDiaporamaEvents;
 class DiaporamaEvents extends BaseDiaporamaEvents
 {
     const DIAPORAMA_HTML = 'diaporamas.diaporama.html';
+    const DIAPORAMA_PARSE = 'diaporamas.diaporama.replace_shortcodes';
 }

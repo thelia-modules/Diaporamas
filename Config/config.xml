@@ -31,6 +31,8 @@
     <hooks>
         <hook id="diaporamas.diaporama.hook" class="Diaporamas\Hook\DiaporamasHook" scope="request">
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
+            <tag name="hook.event_listener" event="main.content-bottom" type="front" method="onMainContentBottom"/>
+            <tag name="hook.event_listener" event="main.javascript-initialization" type="front" method="onMainJsInit"/>
         </hook>
     </hooks>
 </config>

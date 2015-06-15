@@ -7,25 +7,11 @@
 namespace Diaporamas\Action;
 
 use Diaporamas\Action\Base\DiaporamaAction as  BaseDiaporamaAction;
-use Diaporamas\Controller\DiaporamaController;
-use Diaporamas\Controller\DiaporamaImageFileController;
 use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Event\DiaporamaEvents;
-use Diaporamas\Event\DiaporamaImageEvent;
-use Diaporamas\Event\DiaporamaImageEvents;
 use Diaporamas\Model\Diaporama;
-use Symfony\Component\DependencyInjection\Container;
-use Thelia\Core\Event\Brand\BrandEvent;
-use Thelia\Core\Event\Category\CategoryEvent;
-use Thelia\Core\Event\Content\ContentEvent;
-use Thelia\Core\Event\Folder\FolderEvent;
-use Thelia\Core\Event\Product\ProductEvent;
-use Thelia\Core\Event\TheliaEvents;
-use Thelia\Core\HttpFoundation\Request;
-use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Template\ParserInterface;
 use Thelia\Core\Template\TemplateHelper;
-use Thelia\Tools\URL;
 
 /**
  * Class DiaporamaAction
@@ -65,28 +51,17 @@ class DiaporamaAction extends BaseDiaporamaAction
         $subscribedEvents = parent::getSubscribedEvents();
 
         $newSubscriptions = array(
-            TheliaEvents::PRODUCT_CREATE => array('updateProductDescription', 150),
-            TheliaEvents::PRODUCT_UPDATE => array('updateProductDescription', 150),
-            TheliaEvents::CATEGORY_CREATE => array('updateCategoryDescription', 150),
-            TheliaEvents::CATEGORY_UPDATE => array('updateCategoryDescription', 150),
-            TheliaEvents::FOLDER_CREATE => array('updateFolderDescription', 150),
-            TheliaEvents::FOLDER_UPDATE => array('updateFolderDescription', 150),
-            TheliaEvents::CONTENT_CREATE => array('updateContentDescription', 150),
-            TheliaEvents::CONTENT_UPDATE => array('updateContentDescription', 150),
-            TheliaEvents::BRAND_CREATE => array('updateBrandDescription', 150),
-            TheliaEvents::BRAND_UPDATE => array('updateBrandDescription', 150),
-//            TheliaEvents::BEFORE_CREATE_COUPON => array('updateCouponDescription', 128),
-//            TheliaEvents::BEFORE_UPDATE_COUPON => array('updateCouponDescription', 128),
-//            TheliaEvents::BEFORE_CREATESALE => array('updateSaleDescription', 128),
-//            TheliaEvents::BEFORE_UPDATESALE => array('updateSaleDescription', 128),
-//            DiaporamaImageEvents::CREATE => array('updateDiaporamaImageDescription', 150),
-//            DiaporamaImageEvents::UPDATE => array('updateDiaporamaImageDescription', 150),
-            DiaporamaEvents::DIAPORAMA_HTML => array('getDiaporamaDescription', 128)
+            DiaporamaEvents::DIAPORAMA_HTML => array('getDiaporamaDescription', 128),
+            DiaporamaEvents::DIAPORAMA_PARSE => array('parseDiaporamaDescription', 128),
         );
 
         return array_merge($subscribedEvents, $newSubscriptions);
     }
 
+    /**
+     * Get Diaporama HTML code to put in a page.
+     * @param DiaporamaEvent $event
+     */
     public function getDiaporamaDescription(DiaporamaEvent $event)
     {
         $event->__set(
@@ -99,6 +74,21 @@ class DiaporamaAction extends BaseDiaporamaAction
         );
     }
 
+    /**
+     * Parsing a description, in order to replace shortcodes with their HTML codes
+     * @param DiaporamaEvent $event
+     */
+    public function parseDiaporamaDescription(DiaporamaEvent $event)
+    {
+        $event->__set('entity_description', $this->updateDescription($event->__get('entity_description')));
+    }
+
+    /**
+     * Parsing a description, in order to replace shortcodes with their HTML codes.
+     *
+     * Internal and reusable method to do it.
+     * @param string $description The description
+     */
     protected function updateDescription($description)
     {
         $shortcodeTags = array();
@@ -123,6 +113,13 @@ class DiaporamaAction extends BaseDiaporamaAction
         return str_replace(array_keys($diaporamaHtmlCodes), array_values($diaporamaHtmlCodes), $description);
     }
 
+    /**
+     * Internal and reusable method to retrieve HTML code
+     * @param string $shortcode The shortcode
+     * @param int $width Width for images
+     * @param int $height Height for images
+     * @return string The HTML code
+     */
     protected function getShortcodeHTML($shortcode, $width, $height)
     {
         $this->parser->setTemplateDefinition(
@@ -137,47 +134,4 @@ class DiaporamaAction extends BaseDiaporamaAction
             )
         );
     }
-
-    public function updateProductDescription(ProductEvent $event)
-    {
-        $event->setDescription($this->updateDescription($event->getDescription()));
-    }
-
-    public function updateCategoryDescription(CategoryEvent $event)
-    {
-        $event->setDescription($this->updateDescription($event->getDescription()));
-    }
-
-    public function updateFolderDescription(FolderEvent $event)
-    {
-        $event->setDescription($this->updateDescription($event->getDescription()));
-    }
-
-    public function updateContentDescription(ContentEvent $event)
-    {
-        $event->setDescription($this->updateDescription($event->getDescription()));
-    }
-
-    public function updateBrandDescription(BrandEvent $event)
-    {
-        $event->setDescription($this->updateDescription($event->getDescription()));
-    }
-
-//    public function updateDiaporamaImageDescription(DiaporamaImageEvent $event)
-//    {     // TODO : test
-//        $diaporamaImage = $event->getDiaporamaImage();
-//        $event->setDescription($this->updateDescription($event->getDescription()));
-//    }
-
-//    public function updateSaleDescription(SaleEvent $event)
-//    { // TODO
-//        $diaporamaImage = $event->getDiaporamaImage();
-//        $diaporamaImage->setDescription($this->updateDescription($diaporamaImage->getDescription()));
-//    }
-//
-//    public function updateCouponDescription(CouponCreateOrUpdateEvent $event)
-//    { // TODO
-//        $diaporamaImage = $event->get();
-//        $diaporamaImage->setDescription($this->updateDescription($diaporamaImage->getDescription()));
-//    }
 }

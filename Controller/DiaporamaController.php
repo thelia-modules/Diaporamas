@@ -54,7 +54,6 @@ class DiaporamaController extends BaseDiaporamaController
     {
         $width = $this->getRequest()->query->get('width');
         $height = $this->getRequest()->query->get('height');
-
         $event = new DiaporamaEvent();
         $event->__set('image_width', $width);
         $event->__set('image_height', $height);
@@ -62,13 +61,13 @@ class DiaporamaController extends BaseDiaporamaController
         return new Response($event->__get('diaporama_html'));
     }
 
-    public function doGetDiaporamaHtmlAction($shortcode, $width, $height)
+    public function replaceShortcodesAction()
     {
-        return $this->render('diaporama-html', array(
-            'shortcode' => $shortcode,
-            'width' => intval($width),
-            'height' => intval($height),
-        ));
+        $description = $this->getRequest()->request->get('description');
+        $event = new DiaporamaEvent();
+        $event->__set('entity_description', $description);
+        $this->dispatch(DiaporamaEvents::DIAPORAMA_PARSE, $event);
+        return new Response($event->__get('entity_description'));
     }
 
     public function getDiaporamaDataAction($shortcode)

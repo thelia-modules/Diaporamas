@@ -75,4 +75,8 @@
         <default key="_controller">Diaporamas:Diaporama:getDiaporamaData</default>
         <requirement key="shortcode">[\w\-]{1,32}</requirement>
     </route>
+
+    <route id="diporamas.diaporama.replace_shortcodes" path="/admin/module/Diaporamas/diaporama/replace_shortcodes" methods="post">
+        <default key="_controller">Diaporamas:Diaporama:replaceShortcodes</default>
+    </route>
 </routes>
