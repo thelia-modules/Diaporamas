@@ -1,5 +1,5 @@
 {
-	"name": "thelia/diapramas-module",
+	"name": "thelia/diaporamas-module",
 	"type": "thelia-module",
 	"require": {
 		"thelia/installer": "~1.1"
