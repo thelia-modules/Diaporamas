@@ -1,10 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ducher
- * Date: 12/06/15
- * Time: 15:58
- */
+/*************************************************************************************/
+/*      This file is part of the "Diaporamas" Thelia 2 module.                       */
+/*                                                                                   */
+/*      Copyright (c) OpenStudio                                                     */
+/*      email : dev@thelia.net                                                       */
+/*      web : http://www.thelia.net                                                  */
+/*                                                                                   */
+/*      For the full copyright and license information, please view the LICENSE.txt  */
+/*      file that was distributed with this source code.                             */
+/*************************************************************************************/
 
 namespace Diaporamas\Hook;
 
