@@ -127,16 +127,13 @@ information about them.
 3. Installation
 ---
 
-Install it as a Thelia module by downloading the zip archive and extracting it in ```thelia/local/modules``` or by uploading it with the backoffice (at ```/admin/modules```).
-
-<!-- ,
+Install it as a Thelia module by downloading the zip archive and extracting it in ```thelia/local/modules``` or by uploading it with the backoffice (at ```/admin/modules```),
 or by requiring it with Composer:
 
 ```json
-
 "require": {
-    "thelia/diaporamas-module": "~1.0"
+    "thelia/diaporamas-module": "~0.1"
 }
-``` -->
+```
 
 Note: The module will create a `thelia/local/media/images/diaporama` folder to store diaporama images.

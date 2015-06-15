@@ -29,11 +29,6 @@ class DiaporamasHook extends BaseHook
         ));
     }
 
-    public function onMainContentBottom(HookRenderEvent $event)
-    {
-        //$event->add($this->render('diaporama-load.html'));
-    }
-
     public function onMainJsInit(HookRenderEvent $event)
     {
         $event->add($this->render('diaporama-load.html'));
