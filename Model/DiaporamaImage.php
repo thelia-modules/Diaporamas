@@ -146,4 +146,11 @@ class DiaporamaImage extends BaseDiaporamaImage implements FileModelInterface, B
 
         return $breadcrumb;
     }
+
+    public function createQuery()
+    {
+        $query = DiaporamaImageQuery::create();
+        !is_null($this->diaporama_id) and $query->filterByDiaporamaId($this->diaporama_id);
+        return $query;
+    }
 }

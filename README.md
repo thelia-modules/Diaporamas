@@ -9,7 +9,7 @@
     file that was distributed with this source code.
 -->
 
-Diaporamas module v0.1
+Diaporamas module v0.1.2
 ===
 
 Author: [Romain Ducher](mailto://rducher@openstudio.fr)
@@ -132,7 +132,7 @@ or by requiring it with Composer:
 
 ```json
 "require": {
-    "thelia/diaporamas-module": "~0.1"
+    "thelia/diaporamas-module": "~0.1.2"
 }
 ```
 
