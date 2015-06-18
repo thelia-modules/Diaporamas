@@ -9,7 +9,7 @@
     file that was distributed with this source code.
 -->
 
-Diaporamas module v0.1.2
+Diaporamas module v0.1.3
 ===
 
 Author: [Romain Ducher](mailto://rducher@openstudio.fr)
@@ -108,8 +108,10 @@ information about them.
 | `DiaporamaEvents::CREATE` | `DiaporamaEvent` | Creating a diaporama |
 | `DiaporamaEvents::UPDATE` | `DiaporamaEvent` | Updating a diaporama |
 | `DiaporamaEvents::DELETE` | `DiaporamaEvent` | Deleting a diaporama |
-| `DiaporamaEvents::DIAPORAMA_HTML` | `DiaporamaEvent` | While retrieving diaporama's HTML |
-| `DiaporamaEvents::DIAPORAMA_PARSE` | `DiaporamaEvent` | While parsing descriptions to insert diaporama's HTML |
+| `DiaporamaEvents::DIAPORAMA_HTML` | `DiaporamaEvent` | While retrieving diaporama's HTML in the back office |
+| `DiaporamaEvents::DIAPORAMA_PARSE` | `DiaporamaEvent` | While parsing descriptions to insert diaporama's HTML in the back office |
+| `DiaporamaEvents::DIAPORAMA_HTML_FRONT` | `DiaporamaEvent` | Same as `DiaporamaEvents::DIAPORAMA_HTML` but for front office |
+| `DiaporamaEvents::DIAPORAMA_PARSE_FRONT` | `DiaporamaEvent` | Same as `DiaporamaEvents::DIAPORAMA_PARSE` but for front office |
 | `DiaporamaImageEvents::CREATE` | `DiaporamaImageEvent` | Creating a diaporama image |
 | `DiaporamaImageEvents::UPDATE` | `DiaporamaImageEvent` | Updating a diaporama image |
 | `DiaporamaImageEvents::DELETE` | `DiaporamaImageEvent` | Deleting a diaporama image |
@@ -120,8 +122,10 @@ information about them.
 
 | Endpoint | Description |
 | -------- | ----------- |
-| GET `/admin/module/Diaporamas/diaporama/{shortcode}/html` | HTML code for the [£ shortcode £] diaporama. |
-| GET `/admin/module/Diaporamas/diaporama/{shortcode}/data` | Data for the [£ shortcode £] diaporama. It returns general data for the diaporama and information about diaporama images too. |
+| GET `/admin/module/Diaporamas/diaporama/{shortcode}/html` | HTML code for the [£ shortcode £] diaporama. For the back office. |
+| GET `/admin/module/Diaporamas/diaporama/{shortcode}/data` | Data for the [£ shortcode £] diaporama. It returns general data for the diaporama and information about diaporama images too. For the back office. |
+| GET `/diaporama/{shortcode}/html` | Same as "GET `/admin/module/Diaporamas/diaporama/{shortcode}/html`" but for the front office. |
+| GET `/diaporama/{shortcode}/data` | Same as "GET `/admin/module/Diaporamas/diaporama/{shortcode}/data`" but for the front office. |
 
 
 3. Installation
@@ -132,7 +136,7 @@ or by requiring it with Composer:
 
 ```json
 "require": {
-    "thelia/diaporamas-module": "~0.1.2"
+    "thelia/diaporamas-module": "~0.1.3"
 }
 ```
 
