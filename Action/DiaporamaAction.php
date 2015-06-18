@@ -15,6 +15,7 @@ namespace Diaporamas\Action;
 use Diaporamas\Action\Base\DiaporamaAction as  BaseDiaporamaAction;
 use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Event\DiaporamaEvents;
+use Diaporamas\Event\DiaporamaHtmlEvent;
 use Diaporamas\Model\Diaporama;
 use Thelia\Core\Template\ParserInterface;
 use Thelia\Core\Template\TemplateHelper;
@@ -68,15 +69,10 @@ class DiaporamaAction extends BaseDiaporamaAction
      * Get Diaporama HTML code to put in a page.
      * @param DiaporamaEvent $event
      */
-    public function getDiaporamaDescription(DiaporamaEvent $event)
+    public function getDiaporamaDescription(DiaporamaHtmlEvent $event)
     {
-        $event->__set(
-            'diaporama_html',
-            $this->getShortcodeHTML(
-                $event->getShortcode(),
-                $event->__get('image_width'),
-                $event->__get('image_height')
-            )
+        $event->setDiaporamaHtml(
+            $this->getShortcodeHTML($event->getShortcode(), $event->getImageWidth(), $event->getImageHeight())
         );
     }
 
@@ -84,9 +80,9 @@ class DiaporamaAction extends BaseDiaporamaAction
      * Parsing a description, in order to replace shortcodes with their HTML codes
      * @param DiaporamaEvent $event
      */
-    public function parseDiaporamaDescription(DiaporamaEvent $event)
+    public function parseDiaporamaDescription(DiaporamaHtmlEvent $event)
     {
-        $event->__set('entity_description', $this->updateDescription($event->__get('entity_description')));
+        $event->setEntityDescription($this->updateDescription($event->getEntityDescription()));
     }
 
     /**
