@@ -49,7 +49,9 @@
     {javascripts file='assets/js/jquery-ui-1.10.3.custom.min.js'}
         <script src="{$asset_url}"></script>
     {/javascripts}
-    <script>{include 'assets/js/edit-diaporama-image.js'}</script>
+    {javascripts file='assets/js/edit-diaporama-image.js' source='Diaporamas' template='default'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
 {/block}
 
 {block name="javascript-last-call"}

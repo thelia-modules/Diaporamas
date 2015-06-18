@@ -79,4 +79,13 @@
     <route id="diporamas.diaporama.replace_shortcodes" path="/admin/module/Diaporamas/diaporama/replace_shortcodes" methods="post">
         <default key="_controller">Diaporamas:Diaporama:replaceShortcodes</default>
     </route>
+
+    <!-- Diaporama HTML for Front -->
+    <route id="diporamas.diaporama.html.front" path="/diaporama/{shortcode}/html" methods="get">
+        <default key="_controller">Diaporamas:DiaporamaFront:getDiaporamaHtml</default>
+        <requirement key="shortcode">[\w\-]{1,32}</requirement>
+    </route>
+    <route id="diporamas.diaporama.replace_shortcodes.front" path="/diaporama/replace_shortcodes" methods="post">
+        <default key="_controller">Diaporamas:DiaporamaFront:replaceShortcodes</default>
+    </route>
 </routes>

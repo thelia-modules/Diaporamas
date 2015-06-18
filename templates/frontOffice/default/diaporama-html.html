@@ -1,0 +1,33 @@
+{*
+    HTML template for rendering a diaporama.
+
+    Parameters:
+        - shortcode : diaporama shortcode, without surrounding [£ £].
+        - width : image width.
+        - height : image height.
+*}
+{default_translation_domain domain='diaporamas.bo.default'}
+{loop name='diaporama' type='diaporama' shortcode="$shortcode"}
+<div class="diaporama diaporama-{$SHORTCODE}">
+    <p>
+        Titre : {$TITLE}<br/>
+        Shortcode : <code>[&pound;{$SHORTCODE}&pound;]</code>
+    </p>
+    <!-- Comme pour n'importe quelle image de Thelia, avec grosso modo ici une source qui serait 'diaporama' -->
+    {loop name='diaporama-image' type='diaporama-image' source_id={$ID} width="$width" height="$height" visible=true order='manual'}
+    <div id="diaporama-image-{$ID}" class="image diaporama-image diaporama-image-{$SHORTCODE}">
+        <img src="{if $PROCESSING_ERROR}http://placehold.it/{$width}x{$height}&text={intl l='Image+file+not+found'}{else}{$IMAGE_URL nofilter}{/if}" alt="{$TITLE}" />
+        <p>
+            Image {$LOOP_COUNT} / {$LOOP_TOTAL}<br/>
+            Titre : {$TITLE}<br/>
+            Chapo : {$CHAPO}<br/>
+            Description : {$DESCRIPTION}<br/>
+            Postscriptum : {$POSTSCRIPTUM}
+        </p>
+    </div>
+    {/loop}
+    {elseloop rel='diaporama-image'}
+    <p>Pas d'image pour ce diaporama.</p>
+    {/elseloop}
+</div>
+{/loop}

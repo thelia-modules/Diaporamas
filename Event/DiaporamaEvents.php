@@ -22,4 +22,6 @@ class DiaporamaEvents extends BaseDiaporamaEvents
 {
     const DIAPORAMA_HTML = 'diaporamas.diaporama.html';
     const DIAPORAMA_PARSE = 'diaporamas.diaporama.replace_shortcodes';
+    const DIAPORAMA_HTML_FRONT = 'diaporamas.diaporama.html.front';
+    const DIAPORAMA_PARSE_FRONT = 'diaporamas.diaporama.replace_shortcodes.front';
 }

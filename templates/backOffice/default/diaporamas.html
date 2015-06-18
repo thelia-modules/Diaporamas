@@ -143,7 +143,11 @@
 
 {block name="javascript-initialization"}
     {* Display list JS *}
-    <script>{include 'assets/js/diaporama-list.js'}</script>
+    {javascripts file='assets/js/diaporama-list.js' source='Diaporamas' template='default'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
     {* Delete diaporama JS *}
-    <script>{include 'assets/js/delete-diaporama.js'}</script>
+    {javascripts file='assets/js/delete-diaporama.js' source='Diaporamas' template='default'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
 {/block}
