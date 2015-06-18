@@ -108,10 +108,10 @@ information about them.
 | `DiaporamaEvents::CREATE` | `DiaporamaEvent` | Creating a diaporama |
 | `DiaporamaEvents::UPDATE` | `DiaporamaEvent` | Updating a diaporama |
 | `DiaporamaEvents::DELETE` | `DiaporamaEvent` | Deleting a diaporama |
-| `DiaporamaEvents::DIAPORAMA_HTML` | `DiaporamaEvent` | While retrieving diaporama's HTML in the back office |
-| `DiaporamaEvents::DIAPORAMA_PARSE` | `DiaporamaEvent` | While parsing descriptions to insert diaporama's HTML in the back office |
-| `DiaporamaEvents::DIAPORAMA_HTML_FRONT` | `DiaporamaEvent` | Same as `DiaporamaEvents::DIAPORAMA_HTML` but for front office |
-| `DiaporamaEvents::DIAPORAMA_PARSE_FRONT` | `DiaporamaEvent` | Same as `DiaporamaEvents::DIAPORAMA_PARSE` but for front office |
+| `DiaporamaEvents::DIAPORAMA_HTML` | `DiaporamaHtmlEvent` | While retrieving diaporama's HTML in the back office |
+| `DiaporamaEvents::DIAPORAMA_PARSE` | `DiaporamaHtmlEvent` | While parsing descriptions to insert diaporama's HTML in the back office |
+| `DiaporamaEvents::DIAPORAMA_HTML_FRONT` | `DiaporamaHtmlEvent` | Same as `DiaporamaEvents::DIAPORAMA_HTML` but for front office |
+| `DiaporamaEvents::DIAPORAMA_PARSE_FRONT` | `DiaporamaHtmlEvent` | Same as `DiaporamaEvents::DIAPORAMA_PARSE` but for front office |
 | `DiaporamaImageEvents::CREATE` | `DiaporamaImageEvent` | Creating a diaporama image |
 | `DiaporamaImageEvents::UPDATE` | `DiaporamaImageEvent` | Updating a diaporama image |
 | `DiaporamaImageEvents::DELETE` | `DiaporamaImageEvent` | Deleting a diaporama image |
