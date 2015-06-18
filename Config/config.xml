@@ -16,6 +16,10 @@
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="thelia.parser" />
         </service>
+        <service id="action.diaporamas.diaporama_table.front" class="Diaporamas\Action\DiaporamaFrontAction" scope="request">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="thelia.parser" />
+        </service>
         <service id="diaporamas.form.type.diaporama_id" class="Diaporamas\Form\Type\DiaporamaIdType">
             <argument id="thelia.translator" type="service"/>
             <tag name="thelia.form.type"/>
