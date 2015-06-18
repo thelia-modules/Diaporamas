@@ -19,31 +19,31 @@ namespace Diaporamas\Event;
 class DiaporamaHtmlEvent extends DiaporamaEvent
 {
     /** @var string */
-    protected $entity_description = null;
+    protected $entityDescription = null;
 
     /** @var int */
-    protected $image_width = null;
+    protected $imageWidth = null;
 
     /** @var int */
-    protected $image_height = null;
+    protected $imageHeight = null;
 
     /** @var string */
-    protected $diaporama_html = null;
+    protected $diaporamaHtml = null;
 
     /**
      * @return string
      */
     public function getEntityDescription()
     {
-        return $this->entity_description;
+        return $this->entityDescription;
     }
 
     /**
-     * @param string $entity_description
+     * @param string $entityDescription
      */
-    public function setEntityDescription($entity_description)
+    public function setEntityDescription($entityDescription)
     {
-        $this->entity_description = $entity_description;
+        $this->entityDescription = $entityDescription;
     }
 
     /**
@@ -51,15 +51,15 @@ class DiaporamaHtmlEvent extends DiaporamaEvent
      */
     public function getImageWidth()
     {
-        return $this->image_width;
+        return $this->imageWidth;
     }
 
     /**
-     * @param int $image_width
+     * @param int $imageWidth
      */
-    public function setImageWidth($image_width)
+    public function setImageWidth($imageWidth)
     {
-        $this->image_width = $image_width;
+        $this->imageWidth = $imageWidth;
     }
 
     /**
@@ -67,15 +67,15 @@ class DiaporamaHtmlEvent extends DiaporamaEvent
      */
     public function getImageHeight()
     {
-        return $this->image_height;
+        return $this->imageHeight;
     }
 
     /**
-     * @param int $image_height
+     * @param int $imageHeight
      */
-    public function setImageHeight($image_height)
+    public function setImageHeight($imageHeight)
     {
-        $this->image_height = $image_height;
+        $this->imageHeight = $imageHeight;
     }
 
     /**
@@ -83,14 +83,14 @@ class DiaporamaHtmlEvent extends DiaporamaEvent
      */
     public function getDiaporamaHtml()
     {
-        return $this->diaporama_html;
+        return $this->diaporamaHtml;
     }
 
     /**
-     * @param string $diaporama_html
+     * @param string $diaporamaHtml
      */
-    public function setDiaporamaHtml($diaporama_html)
+    public function setDiaporamaHtml($diaporamaHtml)
     {
-        $this->diaporama_html = $diaporama_html;
+        $this->diaporamaHtml = $diaporamaHtml;
     }
 }
