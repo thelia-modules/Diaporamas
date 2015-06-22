@@ -11,7 +11,6 @@
 <div class="diaporama diaporama-{$SHORTCODE}">
     <p>
         Titre : {$TITLE}<br/>
-        Shortcode : <code>[&pound;{$SHORTCODE}&pound;]</code>
     </p>
     <!-- Comme pour n'importe quelle image de Thelia, avec grosso modo ici une source qui serait 'diaporama' -->
     {loop name='diaporama-image' type='diaporama-image' source_id={$ID} width="$width" height="$height" visible=true order='manual'}
@@ -31,3 +30,4 @@
     {/elseloop}
 </div>
 {/loop}
+{elseloop rel='diaporama'}[£ {$shortcode} £]{/elseloop}

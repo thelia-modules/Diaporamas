@@ -17,6 +17,7 @@ use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Event\DiaporamaEvents;
 use Diaporamas\Event\DiaporamaHtmlEvent;
 use Diaporamas\Model\Diaporama;
+use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Template\ParserInterface;
 use Thelia\Core\Template\TemplateHelper;
 
@@ -95,21 +96,22 @@ class DiaporamaAction extends BaseDiaporamaAction
     {
         $shortcodeTags = array();
 
-        if (preg_match_all(Diaporama::SHORTCODETAG_REGEX, $description, $shortcodeTags)) {
-            $tagFormat = "[£ %s £]";
-        } elseif (preg_match_all(Diaporama::SHORTCODETAG_HTMLENTITIES_REGEX, $description, $shortcodeTags)) {
-            $tagFormat = "[&pound; %s &pound;]";
-        } else {
+        if (!preg_match_all(Diaporama::SHORTCODETAG_HTMLENTITIES_REGEX, $description, $shortcodeTags)) {
             return $description;
         }
 
+        // Array with all the captured shortcodes once
         $shortcodeTags = array_unique($shortcodeTags[0]);
+        error_log(var_export($shortcodeTags, true));
 
         $diaporamaHtmlCodes = array();
 
         foreach ($shortcodeTags as $shortcodeTag) {
-            sscanf($shortcodeTag, $tagFormat, $shortcode);
-            $diaporamaHtmlCodes[$shortcodeTag] = $this->getShortcodeHTML($shortcode, 200, 100);
+            $toParseshortcodeTag = str_replace(['&pound;', '&nbsp;'], ['£', ' '], $shortcodeTag);
+            sscanf($toParseshortcodeTag, "[£ %s £]", $shortcode);
+            if (Diaporama::existsByShortcode($shortcode)) {
+                $diaporamaHtmlCodes[$shortcodeTag] = $this->getShortcodeHTML($shortcode, 200, 100);
+            }
         }
 
         return str_replace(array_keys($diaporamaHtmlCodes), array_values($diaporamaHtmlCodes), $description);
