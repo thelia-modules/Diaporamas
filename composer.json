@@ -2,7 +2,8 @@
 	"name": "thelia/diaporamas-module",
 	"type": "thelia-module",
 	"require": {
-		"thelia/installer": "~1.1"
+		"thelia/installer": "~1.1",
+		"thelia/smarty-filter-module": "~1.2"
 	},
 	"extra": {
 		"installer-name": "Diaporamas"
