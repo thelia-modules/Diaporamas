@@ -12,7 +12,8 @@
 
 namespace Diaporamas\Filter;
 
-use Diaporamas\Event\DiaporamaEvent;
+use Diaporamas\Event\DiaporamaEvents;
+use Diaporamas\Event\DiaporamaHtmlEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ShortcodeFilter
@@ -26,10 +27,10 @@ class ShortcodeFilter
 
     public function filter($tpl_output, $smarty)
     {
-        $event = new DiaporamaEvent();
-        $event->__set('entity_description', $tpl_output);
+        $event = new DiaporamaHtmlEvent();
+        $event->setEntityDescription($tpl_output);
         $event->setDispatcher($this->dispatcher);
-        $this->dispatcher->dispatch('diaporamas.diaporama.replace_shortcodes.front', $event);
-        return $event->__get('entity_description');
+        $this->dispatcher->dispatch(DiaporamaEvents::DIAPORAMA_PARSE_FRONT, $event);
+        return $event->getEntityDescription();
     }
 }

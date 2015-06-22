@@ -28,47 +28,4 @@ class DiaporamasHook extends BaseHook
             'title' => Translator::getInstance()->trans('diaporama.menu_title', array(), Diaporamas::BO_MESSAGE_DOMAIN)
         ));
     }
-
-    public function onMainJsInit(HookRenderEvent $event)
-    {
-        $event->add($this->render('diaporama-load.html'));
-    }
-
-    public function onProductBottom(HookRenderEvent $event)
-    {
-        $this->renderJs($event, 'product');
-    }
-
-    public function onCategoryBottom(HookRenderEvent $event)
-    {
-        $this->renderJs($event, 'category');
-    }
-
-    public function onFolderBottom(HookRenderEvent $event)
-    {
-        $this->renderJs($event, 'folder');
-    }
-
-    public function onContentBottom(HookRenderEvent $event)
-    {
-        $this->renderJs($event, 'content');
-    }
-
-    public function onBrandBottom(HookRenderEvent $event)
-    {
-        $this->renderJs($event, 'brand');
-    }
-
-    protected function renderJs(HookRenderEvent $event, $entity)
-    {
-        $event->add("<script>var diaporama_entity_selector = '{$this->selectors[$entity]}';</script>");
-    }
-
-    protected $selectors = array(
-        'product' => 'div#description',
-        'category' => 'div.description',
-        'folder' => 'div.folder-description',
-        'content' => 'div.description',
-        'brand' => 'div.description',
-    );
 }
