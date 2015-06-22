@@ -47,11 +47,15 @@ products, categories, brands, folders or contents in Thelia.
 
 To delete diaporamas, go to the diaporama list and click on the Trash Icon of the diaporama you want to delete.
 
+The module uses the [SmartyFilter module](https://github.com/thelia-modules/SmartyFilter) to change shortcodes into
+diaporamas. For this, the Smarty filter whose code is `diaporamas.filter.shortcodes` has to be activated. The filter
+is activated automatically while activating the Diaporamas module.
+
 
 2. API
 ---
 
-The module provides some entities for using Diaporamas in Thelia
+The module provides some entities for using Diaporamas in Thelia.
 
 ### 2.1. Loops
 
@@ -130,6 +134,9 @@ information about them.
 
 3. Installation
 ---
+
+The Diaporamas module requires the [SmartyFilter module](https://github.com/thelia-modules/SmartyFilter). It is used to replace shortcodes with their corresponding HTML codes.
+[Install it](https://github.com/thelia-modules/SmartyFilter#installation) and activate it before activating the Diaporamas module.
 
 Install it as a Thelia module by downloading the zip archive and extracting it in ```thelia/local/modules``` or by uploading it with the backoffice (at ```/admin/modules```),
 or by requiring it with Composer:
