@@ -28,16 +28,26 @@ class Diaporama extends BaseDiaporama
 
     const SHORTCODETAG_REGEX = '/\[£\s[\w\-]{1,32}\s£\]/';
 
-    const SHORTCODETAG_HTMLENTITIES_REGEX = '/\[&pound;\s[\w\-]{1,32}\s&pound;\]/';
+    const SHORTCODETAG_HTMLENTITIES_REGEX = '/\[(£|&pound;)(\s|&nbsp;)+[\w\-]{1,32}(\s|&nbsp;)+(£|&pound;)\]/';
 
     /**
      * Retrieving a diaporama with its shortcode
      * @param string $shortcode Diaporama shortcode
-     * @return Diaporama|null The corresponding diaporama with the [£$shortcode£] shortcode if it exists, null otherwise
+     * @return Diaporama|null The diaporama whose shortcode is [£ $shortcode £] if it exists, null otherwise.
      */
     public static function getByShortcode($shortcode)
     {
         return DiaporamaQuery::create()->findOneByShortcode($shortcode);
+    }
+
+    /**
+     * Telling if a diaporama exists according to its shortcode
+     * @param string $shortcode Diaporama shortcode
+     * @return Diaporama|null true if the diaporama with the [£ $shortcode £] shortcode exists, false otherwise.
+     */
+    public static function existsByShortcode($shortcode)
+    {
+        return DiaporamaQuery::create()->filterByShortcode($shortcode)->count() > 0;
     }
 
     /**
