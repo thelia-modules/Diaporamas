@@ -16,6 +16,7 @@ use Diaporamas\Controller\Base\DiaporamaController as BaseDiaporamaController;
 use Diaporamas\Diaporamas;
 use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Event\DiaporamaEvents;
+use Diaporamas\Event\DiaporamaHtmlEvent;
 use Diaporamas\Loop\DiaporamaImage as DiaporamaImageLoop;
 use Diaporamas\Model\Diaporama;
 use Diaporamas\Model\DiaporamaImage;
@@ -60,20 +61,21 @@ class DiaporamaController extends BaseDiaporamaController
     {
         $width = $this->getRequest()->query->get('width');
         $height = $this->getRequest()->query->get('height');
-        $event = new DiaporamaEvent();
-        $event->__set('image_width', $width);
-        $event->__set('image_height', $height);
+        $event = new DiaporamaHtmlEvent();
+        $event->setShortcode($shortcode);
+        $event->setImageWidth($width);
+        $event->setImageHeight($height);
         $this->dispatch(DiaporamaEvents::DIAPORAMA_HTML, $event);
-        return new Response($event->__get('diaporama_html'));
+        return new Response($event->getDiaporamaHtml());
     }
 
     public function replaceShortcodesAction()
     {
         $description = $this->getRequest()->request->get('description');
-        $event = new DiaporamaEvent();
-        $event->__set('entity_description', $description);
+        $event = new DiaporamaHtmlEvent();
+        $event->setEntityDescription($description);
         $this->dispatch(DiaporamaEvents::DIAPORAMA_PARSE, $event);
-        return new Response($event->__get('entity_description'));
+        return new Response($event->getEntityDescription());
     }
 
     public function getDiaporamaDataAction($shortcode)
