@@ -19,6 +19,9 @@
         <email>rducher@openstudio.fr</email>
     </author>
     <type>classic</type>
+    <required>
+        <module>SmartyFilter</module>
+    </required>
     <thelia>2.1.0</thelia>
     <stability>beta</stability>
 </module>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<smartyfilters xmlns="urn:thelia:module:smarty-filter">
+    <smartyfilter code="diaporamas.filter.shortcodes">
+        <descriptive locale="fr_FR">
+            <title>ShortcodeFilter</title>
+            <description>Filter replacing diaporama shortcodes</description>
+            <type>output</type>
+        </descriptive>
+    </smartyfilter>
+</smartyfilters>

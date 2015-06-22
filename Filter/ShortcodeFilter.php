@@ -10,22 +10,27 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
-namespace Diaporamas\Hook;
+namespace Diaporamas\Filter;
 
-use Diaporamas\Diaporamas;
-use Thelia\Core\Event\Hook\HookRenderBlockEvent;
-use Thelia\Core\Event\Hook\HookRenderEvent;
-use Thelia\Core\Hook\BaseHook;
-use Thelia\Core\Translation\Translator;
-use Thelia\Tools\URL;
+use Diaporamas\Event\DiaporamaEvents;
+use Diaporamas\Event\DiaporamaHtmlEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class DiaporamasHook extends BaseHook
+class ShortcodeFilter
 {
-    public function onMainTopMenuTools(HookRenderBlockEvent $event)
+    protected $dispatcher;
+
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
-        $event->add(array(
-            'url' => URL::getInstance()->absoluteUrl('/admin/module/Diaporamas/diaporama'),
-            'title' => Translator::getInstance()->trans('diaporama.menu_title', array(), Diaporamas::BO_MESSAGE_DOMAIN)
-        ));
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function filter($tpl_output, $smarty)
+    {
+        $event = new DiaporamaHtmlEvent();
+        $event->setEntityDescription($tpl_output);
+        $event->setDispatcher($this->dispatcher);
+        $this->dispatcher->dispatch(DiaporamaEvents::DIAPORAMA_PARSE_FRONT, $event);
+        return $event->getEntityDescription();
     }
 }

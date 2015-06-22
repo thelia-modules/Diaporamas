@@ -31,19 +31,15 @@
             <argument id="thelia.translator" type="service"/>
             <tag name="thelia.form.type"/>
         </service>
+        <service id="diaporamas.filter.shortcodes" class="Diaporamas\Filter\ShortcodeFilter" >
+            <tag name="thelia.parser.register_output_filter"/>
+            <argument id="event_dispatcher" type="service"/>
+        </service>
     </services>
     <hooks>
         <hook id="diaporamas.diaporama.hook" class="Diaporamas\Hook\DiaporamasHook" scope="request">
             <!-- For Diaporama insertion in Tools menu -->
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
-
-            <!-- Some hooks for injecting Diaporamas HTML codes in descriptions (through AJAX calls). -->
-            <tag name="hook.event_listener" event="main.javascript-initialization" type="front" method="onMainJsInit"/>
-            <tag name="hook.event_listener" event="product.bottom" type="front" method="onProductBottom"/>
-            <tag name="hook.event_listener" event="category.bottom" type="front" method="onCategoryBottom"/>
-            <tag name="hook.event_listener" event="folder.bottom" type="front" method="onFolderBottom"/>
-            <tag name="hook.event_listener" event="content.bottom" type="front" method="onContentBottom"/>
-            <tag name="hook.event_listener" event="brand.bottom" type="front" method="onBrandBottom"/>
         </hook>
     </hooks>
 </config>
