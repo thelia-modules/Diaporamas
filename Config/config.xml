@@ -31,6 +31,10 @@
             <argument id="thelia.translator" type="service"/>
             <tag name="thelia.form.type"/>
         </service>
+        <service id="diaporamas.filter.shortcodes" class="Diaporamas\Filter\ShortcodeFilter" >
+            <tag name="thelia.parser.register_output_filter"/>
+            <argument id="event_dispatcher" type="service"/>
+        </service>
     </services>
     <hooks>
         <hook id="diaporamas.diaporama.hook" class="Diaporamas\Hook\DiaporamasHook" scope="request">
