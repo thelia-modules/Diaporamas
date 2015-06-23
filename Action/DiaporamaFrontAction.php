@@ -13,7 +13,6 @@
 
 namespace Diaporamas\Action;
 
-use Diaporamas\Action\Base\DiaporamaAction;
 use Diaporamas\Event\DiaporamaEvents;
 use Thelia\Core\Template\TemplateHelper;
 
