@@ -17,7 +17,6 @@ use Diaporamas\Event\DiaporamaEvent;
 use Diaporamas\Event\DiaporamaEvents;
 use Diaporamas\Event\DiaporamaHtmlEvent;
 use Diaporamas\Model\Diaporama;
-use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Template\ParserInterface;
 use Thelia\Core\Template\TemplateHelper;
 
