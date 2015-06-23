@@ -13,7 +13,6 @@
 
 namespace Diaporamas\Action;
 
-use Diaporamas\Action\Base\DiaporamaAction;
 use Diaporamas\Event\DiaporamaEvents;
 use Thelia\Core\Template\TemplateHelper;
 
@@ -63,10 +62,13 @@ class DiaporamaFrontAction extends DiaporamaAction
      */
     public static function getSubscribedEvents()
     {
-        // Those 2 events only. Parent events are already subscribed in the parent action.
-        return array(
+        $subscribedEvents = parent::getSubscribedEvents();
+
+        $newSubscriptions = array(
             DiaporamaEvents::DIAPORAMA_HTML_FRONT => array('getDiaporamaDescription', 128),
             DiaporamaEvents::DIAPORAMA_PARSE_FRONT => array('parseDiaporamaDescription', 128),
         );
+
+        return array_merge($subscribedEvents, $newSubscriptions);
     }
 }
