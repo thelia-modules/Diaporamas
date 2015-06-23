@@ -15,6 +15,7 @@ namespace Diaporamas\Filter;
 use Diaporamas\Event\DiaporamaEvents;
 use Diaporamas\Event\DiaporamaHtmlEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Template\ParserInterface;
 use Thelia\Core\Template\TemplateDefinition;
 
