@@ -13,7 +13,7 @@
         <language>en_US</language>
         <language>fr_FR</language>
     </languages>
-    <version>0.1.6</version>
+    <version>0.1.5</version>
     <author>
         <name>Romain Ducher</name>
         <email>rducher@openstudio.fr</email>
