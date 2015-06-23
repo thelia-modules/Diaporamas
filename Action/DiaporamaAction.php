@@ -101,7 +101,6 @@ class DiaporamaAction extends BaseDiaporamaAction
 
         // Array with all the captured shortcodes once
         $shortcodeTags = array_unique($shortcodeTags[0]);
-        error_log(var_export($shortcodeTags, true));
 
         $diaporamaHtmlCodes = array();
 
