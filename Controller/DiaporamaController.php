@@ -117,13 +117,13 @@ class DiaporamaController extends BaseDiaporamaController
                 $result['images'][] = array(
                     'id' => $row->get('ID'),
                     'position' => $row->get('POSITION'),
-                    'visible' => boolval($row->get('VISIBLE')),
+                    'visible' => (bool)$row->get('VISIBLE'),
                     'title' => is_null($row->get('TITLE')) ? '' : $row->get('TITLE'),
                     'chapo' => is_null($row->get('CHAPO')) ? '' : $row->get('CHAPO'),
                     'description' => is_null($row->get('DESCRIPTION')) ? '' : $row->get('DESCRIPTION'),
                     'postscriptum' =>is_null($row->get('POSTSCRIPTUM')) ? '' : $row->get('POSTSCRIPTUM'),
                     'image_url' => $row->get('IMAGE_URL'),
-                    'processing_error' => boolval($row->get('PROCESSING_ERROR')),
+                    'processing_error' => (bool)$row->get('PROCESSING_ERROR'),
                 );
             }
         }
